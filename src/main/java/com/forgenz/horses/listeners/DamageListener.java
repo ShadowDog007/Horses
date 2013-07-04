@@ -28,16 +28,20 @@
 
 package com.forgenz.horses.listeners;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgeListener;
-import com.forgenz.forgecore.v1_0.bukkit.ForgePlugin;
+import com.forgenz.horses.Horses;
+import com.forgenz.horses.Messages;
 import com.forgenz.horses.PlayerHorse;
+import com.forgenz.horses.config.HorsesConfig;
 
 /**
  * Protects owned horses from being killed by players
@@ -45,7 +49,7 @@ import com.forgenz.horses.PlayerHorse;
  */
 public class DamageListener extends ForgeListener
 {
-	public DamageListener(ForgePlugin plugin)
+	public DamageListener(Horses plugin)
 	{
 		super(plugin);
 		
@@ -74,39 +78,68 @@ public class DamageListener extends ForgeListener
 			return;
 		}
 		
-		// Don't let any players hurt the poor horsey
-		if (event.getDamager().getType() == EntityType.PLAYER)
-		{
-			//Player player = (Player) event.getDamager();
-			// TODO send the player a message to tell them whats happening
-			
-			event.setCancelled(true);
-			return;
-		}
+		// Fetch the config
+		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		
-		// Make sure the damager isn't a projectile fired by a player
-		if (event.getDamager() instanceof Projectile)
+		// Find a player which tried to hurt the horse
+		Player player = getPlayerDamager(event.getDamager());
+				
+		// Don't let any players hurt the poor horsey
+		if (player != null)
 		{
-			Projectile p = (Projectile) event.getDamager();
-			
-			if (p.getShooter().getType() == EntityType.PLAYER)
+			// If we are protecting horses from their owners, check if the damager is their owner
+			if (cfg.protectFromOwner && horseData.getStable().getOwner().equals(player.getName()))
 			{
-				// TODO send the player a message to tell them whats happening
 				event.setCancelled(true);
-				return;
+			}
+			// If this is set we don't let any players hurt the horse
+			else if (cfg.protectFromPlayers)
+			{
+				Messages.Event_Damage_Error_CantHurtOthersHorses.sendMessage(player);
+				event.setCancelled(true);
 			}
 		}
-		// Make sure the damager isn't a player blowing up TNT
-		else if (event.getDamager().getType() == EntityType.PRIMED_TNT)
+		else
 		{
-			TNTPrimed tnt = (TNTPrimed) event.getDamager();
-			
-			if (tnt.getSource() != null && tnt.getSource().getType() == EntityType.PLAYER)
+			// If set, don't let mobs hurt the horse
+			if (cfg.protectFromMobs)
 			{
-				// TODO send the player a message to tell them whats happening
 				event.setCancelled(true);
-				return;
 			}
 		}
+	}
+	
+	private Player getPlayerDamager(Entity entity)
+	{
+		if (entity == null)
+			return null;
+		
+		if (entity.getType() == EntityType.PLAYER)
+			return (Player) entity;
+		
+		if (entity.getType() == EntityType.PRIMED_TNT)
+			return castPlayer(((TNTPrimed) entity).getSource());
+		
+		if (entity instanceof Projectile)
+			return castPlayer(((Projectile) entity).getShooter());
+		
+		return null;
+	}
+	
+	private Player castPlayer(Entity entity)
+	{
+		if (entity == null)
+			return null;
+		
+		if (entity.getType() == EntityType.PLAYER)
+			return (Player) entity;
+		
+		return null;
+	}
+	
+	@Override
+	public Horses getPlugin()
+	{
+		return (Horses) super.getPlugin();
 	}
 }
