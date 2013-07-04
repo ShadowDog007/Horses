@@ -60,6 +60,8 @@ public class PlayerListener extends ForgeListener
 			// If they do we remove it
 			horse.removeHorse();
 		}
+		
+		getPlugin().getHorseDatabase().unload(stable);
 	}
 	
 	@Override

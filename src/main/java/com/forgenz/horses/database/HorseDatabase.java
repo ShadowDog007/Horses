@@ -87,4 +87,10 @@ public abstract class HorseDatabase implements ForgeCore
 	{
 		return plugin;
 	}
+
+	public void unload(Stable stable)
+	{
+		saveStable(stable);
+		playerStables.remove(stable.getOwner());
+	}
 }
