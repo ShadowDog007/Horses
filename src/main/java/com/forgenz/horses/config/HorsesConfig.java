@@ -50,6 +50,8 @@ public class HorsesConfig implements ForgeCore
 	public final int maxHorses;
 	public final boolean allowRenameFromNameTag, requireNameTagForRenaming, deleteHorseOnDeath;
 	
+	public final boolean startWithSaddle;
+	
 	public final Pattern rejectedHorseNamePattern;
 	
 	
@@ -68,6 +70,8 @@ public class HorsesConfig implements ForgeCore
 		allowRenameFromNameTag = BukkitConfigUtil.getAndSet(cfg, "AllowRenamedFromNameTag", Boolean.class, false);
 		requireNameTagForRenaming = BukkitConfigUtil.getAndSet(cfg, "RequireNameTagForRenaming", Boolean.class, false);
 		deleteHorseOnDeath = BukkitConfigUtil.getAndSet(cfg, "DeleteHorseOnDeath", Boolean.class, true);
+		
+		startWithSaddle = BukkitConfigUtil.getAndSet(cfg, "StartWithSaddle", Boolean.class, true);
 		
 		String defPattern = "f.?u.?c.?k|d.?[1i].?(c.?k?|c|k)|c.?u.?n.?t";
 		String pattern = BukkitConfigUtil.getAndSet(cfg, "RejectedHorseNamePattern", String.class, defPattern);

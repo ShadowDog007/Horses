@@ -109,6 +109,7 @@ public class YamlDatabase extends HorseDatabase
 			HorseType type = HorseType.exactValueOf(horseSect.getString("type", HorseType.White.toString()));
 			double maxHealth = horseSect.getDouble("maxhealth");
 			double health = horseSect.getDouble("health");
+			boolean saddle = horseSect.getBoolean("saddle", getPlugin().getHorsesConfig().startWithSaddle);
 			
 			stable.addHorse(new PlayerHorse(getPlugin(), stable, horse, type, maxHealth, health));
 		}
@@ -128,6 +129,7 @@ public class YamlDatabase extends HorseDatabase
 			horseSect.set("type", horse.getType().toString());
 			horseSect.set("maxhealth", horse.getMaxHealth());
 			horseSect.set("health", horse.getHealth());
+			horseSect.set("saddle", horse.hasSaddle());
 		}
 		
 		try

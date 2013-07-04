@@ -43,6 +43,7 @@ import com.forgenz.forgecore.v1_0.command.ForgeCommand;
 import com.forgenz.forgecore.v1_0.command.ForgeCommandArgument;
 import com.forgenz.horses.HorseType;
 import com.forgenz.horses.Horses;
+import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
 import com.forgenz.horses.config.HorseTypeConfig;
 import com.forgenz.horses.config.HorsesConfig;
@@ -125,7 +126,14 @@ public class BuyCommand extends ForgeCommand
 		}
 		
 		// Create the horse for the player
-		stable.createHorse(args.getArg(0), type, player.hasPermission("horses.vip"));
+		PlayerHorse horse = stable.createHorse(args.getArg(0), type, player.hasPermission("horses.vip"));
+		
+		if (cfg.startWithSaddle)
+		{
+			horse.setHasSaddle(true);
+		}
+		
+		horse.saveChanges();
 		
 		Command_Buy_Success_Completion.sendMessage(player, args.getCommandUsed(), args.getArg(0));
 	}

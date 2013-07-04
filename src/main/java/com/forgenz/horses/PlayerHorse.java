@@ -61,6 +61,8 @@ public class PlayerHorse implements ForgeCore
 	private double maxHealth;
 	private double health;
 	
+	private boolean hasSaddle = false;
+	
 	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health)
 	{
 		this.plugin = plugin;
@@ -70,8 +72,6 @@ public class PlayerHorse implements ForgeCore
 		this.type = type;
 		this.maxHealth = maxHealth;
 		this.health = health;
-		
-		saveChanges();
 	}
 	
 	public Stable getStable()
@@ -167,6 +167,25 @@ public class PlayerHorse implements ForgeCore
 		}
 	}
 	
+	public void setHasSaddle(boolean hasSaddle)
+	{
+		this.hasSaddle = hasSaddle;
+	}
+	
+	public boolean hasSaddle()
+	{
+		if (horse != null && horse.isValid())
+		{
+			EntityHorse h = (EntityHorse) ((CraftHorse) horse).getHandle();
+			NBTTagCompound nbt = new NBTTagCompound();
+			h.b(nbt);
+			
+			this.hasSaddle = nbt.hasKey("SaddleItem");
+		}
+		
+		return hasSaddle;
+	}
+	
 	public void removeHorse()
 	{
 		if (horse != null)
@@ -239,6 +258,15 @@ public class PlayerHorse implements ForgeCore
 		nbt.setBoolean("Tame", true);
 		nbt.setInt("Type", type.getType());
 		nbt.setInt("Variant", type.getVariant());
+		
+		// Create the saddle
+		if (hasSaddle())
+		{
+			NBTTagCompound saddle = new NBTTagCompound();
+			saddle.setShort("id", (short) 73);
+			saddle.setByte("count", (byte) 1);
+			nbt.setCompound("SaddleItem", saddle);
+		}
 		ehorse.a(nbt);
 		
 		horse = (Horse) ehorse.getBukkitEntity();
@@ -267,7 +295,7 @@ public class PlayerHorse implements ForgeCore
 		return false;
 	}
 	
-	protected void saveChanges()
+	public void saveChanges()
 	{
 		getPlugin().getHorseDatabase().saveHorse(this);
 	}
