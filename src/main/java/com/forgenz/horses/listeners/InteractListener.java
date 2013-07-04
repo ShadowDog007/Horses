@@ -74,7 +74,7 @@ public class InteractListener extends ForgeListener
 		if (!event.getPlayer().getName().equals(horseData.getStable().getOwner()))
 		{
 			// If not we deny access to the horse
-			// TODO Tell the player what is happening
+			Messages.Event_Interact_Error_CantInteractWithThisHorse.sendMessage(event.getPlayer(), horseData.getStable().getOwner());
 			event.setCancelled(true);
 			return;
 		}

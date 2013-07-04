@@ -84,6 +84,7 @@ public enum Messages implements ForgeLocaleEnum
 	Command_Type_Description("Lists all the types of horses you can buy"),
 	
 	// EventListener messages
+	Event_Interact_Error_CantInteractWithThisHorse("&cYou can not interact with &b%1$s's &chorse"),
 	Event_Interact_Error_CantRenameWithTag("&cYou are not allowed to rename your horses with name tags"),
 	
 	// Misc Command messages
