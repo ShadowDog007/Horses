@@ -77,7 +77,8 @@ public enum Messages implements ForgeLocaleEnum
 	
 	// Command Summon messages
 	Command_Summon_Error_AlreadySummoning("&cYou are already summoning a horse"),
-	Command_Summon_Success_SummonedHorse("&eSummoned &b%s"),
+	Command_Summon_Success_SummoningHorse("&eYou are summoning &b%1$s&e. Wait &b%2d &eseconds"),
+	Command_Summon_Success_SummonedHorse("&eSummoned &b%1$s"),
 	Command_Summon_Description("Summons the given horse to your side"),
 	
 	// Command Type messages

@@ -110,6 +110,7 @@ public class SummonCommand extends ForgeCommand
 				
 				task.runTaskLater(getPlugin(), tickDelay);
 				summonTasks.put(player.getName(), task);
+				Command_Summon_Success_SummoningHorse.sendMessage(player, horse.getName(), tickDelay / 20);
 			}
 		}
 	}
