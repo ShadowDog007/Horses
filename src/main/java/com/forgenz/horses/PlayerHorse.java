@@ -34,6 +34,7 @@ import net.minecraft.server.v1_6_R1.EntityHorse;
 import net.minecraft.server.v1_6_R1.NBTTagCompound;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_6_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_6_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_6_R1.entity.CraftHorse;
@@ -62,6 +63,7 @@ public class PlayerHorse implements ForgeCore
 	private double health;
 	
 	private boolean hasSaddle = false;
+	private Material armour;
 	
 	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health)
 	{
@@ -186,6 +188,38 @@ public class PlayerHorse implements ForgeCore
 		return hasSaddle;
 	}
 	
+	public boolean hasArmour()
+	{
+		return getArmour() != null;
+	}
+	
+	public void setArmour(Material material)
+	{
+		armour = material;
+	}
+	
+	public Material getArmour()
+	{
+		if (horse != null && horse.isValid())
+		{
+			EntityHorse h = (EntityHorse) ((CraftHorse) horse).getHandle();
+			NBTTagCompound nbt = new NBTTagCompound();
+			h.b(nbt);
+			
+			if (nbt.hasKey("ArmorItem"))
+			{
+				nbt = nbt.getCompound("ArmourItem");
+				armour = Material.getMaterial(nbt.getShort("id"));
+			}
+			else
+			{
+				armour = null;
+			}
+		}
+		
+		return armour;
+	}
+	
 	public void removeHorse()
 	{
 		if (horse != null)
@@ -263,10 +297,19 @@ public class PlayerHorse implements ForgeCore
 		if (hasSaddle())
 		{
 			NBTTagCompound saddle = new NBTTagCompound();
-			saddle.setShort("id", (short) 329);
+			saddle.setShort("id", (short) Material.SADDLE.getId());
 			saddle.setByte("count", (byte) 1);
 			nbt.setCompound("SaddleItem", saddle);
 		}
+		
+		if (hasArmour())
+		{
+			NBTTagCompound saddle = new NBTTagCompound();
+			saddle.setShort("id", (short) armour.getId());
+			saddle.setByte("count", (byte) 1);
+			nbt.setCompound("ArmorItem", saddle);
+		}
+		
 		ehorse.a(nbt);
 		
 		horse = (Horse) ehorse.getBukkitEntity();

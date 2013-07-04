@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -111,8 +112,11 @@ public class YamlDatabase extends HorseDatabase
 			double health = horseSect.getDouble("health");
 			boolean saddle = horseSect.getBoolean("saddle", getPlugin().getHorsesConfig().startWithSaddle);
 			
+			Material armour = Material.getMaterial(horseSect.getString("armour", "null"));
+			
 			PlayerHorse horseData = new PlayerHorse(getPlugin(), stable, horse, type, maxHealth, health);
 			horseData.setHasSaddle(saddle);
+			horseData.setArmour(armour);
 			
 			stable.addHorse(horseData);
 		}
@@ -133,6 +137,7 @@ public class YamlDatabase extends HorseDatabase
 			horseSect.set("maxhealth", horse.getMaxHealth());
 			horseSect.set("health", horse.getHealth());
 			horseSect.set("saddle", horse.hasSaddle());
+			horseSect.set("armour", horse.hasArmour() ? horse.getArmour().toString() : "none");
 		}
 		
 		try
