@@ -38,6 +38,7 @@ public enum Messages implements ForgeLocaleEnum
 	// Command BUY messages
 	Command_Buy_Error_Type("Type &b/horses &etypes to see valid horse types"),
 	Command_Buy_Error_InvalidHorseType("&cThere is no horse type like %s"),
+	Command_Buy_Error_NoPermissionForThisType("&cYou don't have permission to buy %1$s horses"),
 	Command_Buy_Error_TooManyHorses("&cYou can't have more than &b%d &chorses"),
 	Command_Buy_Error_AlreadyHaveAHorseWithThatName("&cYou already have a horse named &b%s"),
 	Command_Buy_Error_CantAffordHorse("&cYou can't afford to buy a horse of this type. You need $%.2f"),

@@ -80,6 +80,12 @@ public class BuyCommand extends ForgeCommand
 			return;
 		}
 		
+		if (!player.hasPermission(type.getPermission()))
+		{
+			Command_Buy_Error_NoPermissionForThisType.sendMessage(player);
+			return;
+		}
+		
 		// Check the horses name is valid
 		if (cfg.rejectedHorseNamePattern.matcher(args.getArg(0)).find())
 		{
