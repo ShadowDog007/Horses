@@ -111,7 +111,10 @@ public class YamlDatabase extends HorseDatabase
 			double health = horseSect.getDouble("health");
 			boolean saddle = horseSect.getBoolean("saddle", getPlugin().getHorsesConfig().startWithSaddle);
 			
-			stable.addHorse(new PlayerHorse(getPlugin(), stable, horse, type, maxHealth, health));
+			PlayerHorse horseData = new PlayerHorse(getPlugin(), stable, horse, type, maxHealth, health);
+			horseData.setHasSaddle(saddle);
+			
+			stable.addHorse(horseData);
 		}
 	}
 
