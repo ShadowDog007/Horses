@@ -69,7 +69,9 @@ public class SummonCommand extends ForgeCommand
 	{
 		final Player player = (Player) sender;
 		
-		if (summonTasks.containsKey(player.getName()))
+		final String playerName = player.getName();
+		
+		if (summonTasks.containsKey(playerName))
 		{
 			Command_Summon_Error_AlreadySummoning.sendMessage(player);
 			return;
@@ -104,12 +106,12 @@ public class SummonCommand extends ForgeCommand
 							Command_Summon_Success_SummonedHorse.sendMessage(player, horse.getName());
 						}
 						
-						summonTasks.remove(player.getName());
+						summonTasks.remove(playerName);
 					}
 				};
 				
 				task.runTaskLater(getPlugin(), tickDelay);
-				summonTasks.put(player.getName(), task);
+				summonTasks.put(playerName, task);
 				Command_Summon_Success_SummoningHorse.sendMessage(player, horse.getName(), tickDelay / 20);
 			}
 		}
