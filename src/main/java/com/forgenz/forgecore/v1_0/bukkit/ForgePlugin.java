@@ -61,14 +61,21 @@ public abstract class ForgePlugin extends JavaPlugin implements ForgeCoreEntity
 	
 	protected boolean setupEconomy()
 	{
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
-		
-		if (economyProvider != null)
+		try
 		{
-			econ = economyProvider.getProvider();
+			RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
+			
+			if (economyProvider != null)
+			{
+				econ = economyProvider.getProvider();
+			}
+			
+			return econ != null;
 		}
-		
-		return econ != null;
+		catch (Exception e)
+		{
+			return false;
+		}
 	}
 	
 	public Economy getEconomy()
