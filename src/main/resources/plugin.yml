@@ -19,6 +19,7 @@ permissions:
     description: Gives access to all player commands
     children:
       horses.command.list: true
+      horses.command.dismiss: true
       horses.command.rename: true
       horses.command.summon: true
       horses.command.types: true
@@ -27,6 +28,8 @@ permissions:
 
     horses.command.list:
       description: Gives access to the /horses list command
+    horses.command.dismiss:
+      description: Gives access to the /horses dismiss command
     horses.command.rename:
       description: Gives access to the /horses rename command
     horses.command.summon:
