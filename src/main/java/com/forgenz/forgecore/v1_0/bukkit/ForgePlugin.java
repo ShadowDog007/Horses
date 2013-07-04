@@ -72,7 +72,7 @@ public abstract class ForgePlugin extends JavaPlugin implements ForgeCoreEntity
 			
 			return econ != null;
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
 			return false;
 		}
