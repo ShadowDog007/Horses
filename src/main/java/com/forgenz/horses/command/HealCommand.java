@@ -55,7 +55,7 @@ public class HealCommand extends ForgeCommand
 		registerAlias("heal", true);
 		registerPermission("horses.command.heal");
 		
-		registerArgument(new ForgeCommandArgument("^[0-9]+$", Pattern.CASE_INSENSITIVE, true, Command_Heal_Error_HealAmountInvalid.toString()));
+		registerArgument(new ForgeCommandArgument("^[0-9]+$", Pattern.CASE_INSENSITIVE, false, Command_Heal_Error_HealAmountInvalid.toString()));
 		
 		setAllowOp(true);
 		setAllowConsole(false);
