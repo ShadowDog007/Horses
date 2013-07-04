@@ -46,6 +46,11 @@ public enum Messages implements ForgeLocaleEnum
 	Command_Buy_Success_Completion("&eType &b/%1$s summon &3%2$s &eto summon your new horse"),
 	Command_Buy_Description("Buys a horse of the given type"),
 	
+	// Command Dismiss messages
+	Command_Dismiss_Error_NoActiveHorses("&cYou have to have an active horse to dismis one"),
+	Command_Dismiss_Description("Dismisses your currently active horse"),
+	Command_Dismiss_Success_DismissedHorse("&eDismissed &b%1$s"),
+	
 	// Command Heal messages
 	Command_Heal_Error_HealAmountInvalid("Must provide a whole number"),
 	Command_Heal_Error_NoActiveHorses("&cMust have an active horse to heal one"),
