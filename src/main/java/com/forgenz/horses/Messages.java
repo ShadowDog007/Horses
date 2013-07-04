@@ -66,6 +66,7 @@ public enum Messages implements ForgeLocaleEnum
 	Command_List_Description("Lists all the horses you/the player have in the stables"),
 	
 	// Command Rename Messages
+	Command_Rename_Error_RequireNametag("&cYou need to be holding a nametag to rename your horse"),
 	Command_Rename_Success_Renamed("&eRenamed &b%1$s &eto &b%2$s"),
 	Command_Rename_Description("Lets you rename one of your horses"),
 	

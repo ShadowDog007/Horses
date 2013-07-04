@@ -32,8 +32,10 @@ import static com.forgenz.horses.Messages.*;
 
 import java.util.regex.Pattern;
 
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgePlugin;
 import com.forgenz.forgecore.v1_0.command.ForgeArgs;
@@ -87,6 +89,19 @@ public class RenameCommand extends ForgeCommand
 		{
 			Misc_Command_Error_IllegalHorseNamePattern.sendMessage(player);
 			return;
+		}
+		
+		if (cfg.requireNameTagForRenaming)
+		{
+			if (player.getItemInHand().getType() != Material.NAME_TAG)
+			{
+				Command_Rename_Error_RequireNametag.sendMessage(player);
+				return;
+			}
+			else
+			{
+				player.setItemInHand(new ItemStack(Material.AIR));
+			}
 		}
 		
 		Command_Rename_Success_Renamed.sendMessage(player, horse.getName(), args.getArg(1));
