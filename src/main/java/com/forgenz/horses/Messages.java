@@ -55,6 +55,7 @@ public enum Messages implements ForgeLocaleEnum
 	
 	// Command List messages
 	Command_List_Error_InvalidCharactersPlayerName("This player is offline or does not exist"),
+	Command_List_Error_NoPermissionToListPlayersHorses("&cYou do not have permission to view other players horses"),
 	Command_List_Error_CouldNotFindPlayer("&cCould not find a player named like %s"),
 	Command_List_Error_NoHorses("&cYou have no horses :("),
 	Command_List_Success_InitialMessage("&eYour horses:"),

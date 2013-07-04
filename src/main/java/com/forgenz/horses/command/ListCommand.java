@@ -66,6 +66,12 @@ public class ListCommand extends ForgeCommand
 		Player player = null;
 		if (args.getNumArgs() >= 1)
 		{
+			if (!sender.hasPermission("horses.command.list.all"))
+			{
+				Command_List_Error_NoPermissionToListPlayersHorses.sendMessage(sender);
+				return;
+			}
+			
 			player = Bukkit.getPlayer(args.getArg(0));
 			
 			if (player == null)
