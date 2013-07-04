@@ -35,6 +35,7 @@ import com.forgenz.forgecore.v1_0.bukkit.ForgePlugin;
 import com.forgenz.forgecore.v1_0.command.ForgeCommandHandler;
 import com.forgenz.forgecore.v1_0.locale.ForgeLocale;
 import com.forgenz.horses.command.BuyCommand;
+import com.forgenz.horses.command.DismissCommand;
 import com.forgenz.horses.command.HealCommand;
 import com.forgenz.horses.command.ListCommand;
 import com.forgenz.horses.command.RenameCommand;
@@ -72,6 +73,9 @@ public class Horses extends ForgePlugin
 	{
 		plugin = this;
 		
+		// Try setup Economy
+		setupEconomy();
+		
 		// Setup messages
 		locale = new ForgeLocale(this);
 		locale.registerEnumMessages(Messages.class);
@@ -84,6 +88,7 @@ public class Horses extends ForgePlugin
 		
 		// Register each command
 		commandHandler.registerCommand(new BuyCommand(this));
+		commandHandler.registerCommand(new DismissCommand(this));
 		commandHandler.registerCommand(new HealCommand(this));
 		commandHandler.registerCommand(new ListCommand(this));
 		commandHandler.registerCommand(new RenameCommand(this));
