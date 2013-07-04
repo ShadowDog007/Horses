@@ -1,0 +1,83 @@
+main: com.forgenz.horsess.Horses
+name: Horses2
+version: 0.3.0
+author: ShadowDog007
+website: 'http://dev.bukkit.org/bukkit-plugins/horse-stables/'
+
+commands:
+  horses:
+    description: Virtual Stables System main command
+
+permissions:
+  horses.vip:
+    description: Gives the player special bonuses
+    default: false
+
+  horses.set.user:
+    default: true
+    description: Gives access to all player commands
+    children:
+      horses.command.list: true
+      horses.command.rename: true
+      horses.command.summon: true
+      horses.command.types: true
+      horses.command.heal: true
+      horses.command.buy: true
+
+    horses.command.list:
+      description: Gives access to the /horses list command
+    horses.command.rename:
+      description: Gives access to the /horses rename command
+    horses.command.summon:
+      description: Gives access to the /horses summon command
+    horses.command.types:
+      description: Gives access to the /horses types command
+    horses.command.heal:
+      description: Gives access to the /horses heal command
+    horses.command.buy:
+      description: Gives access to the /horses buy command
+
+  horses.type.white: {default: true}
+  horses.type.creamy: {default: true}
+  horses.type.chestnut: {default: true}
+  horses.type.brown: {default: true}
+  horses.type.black: {default: true}
+  horses.type.gray: {default: true}
+  horses.type.darkbrown: {default: true}
+  
+  horses.type.blazewhite: {default: true}
+  horses.type.blazecreamy: {default: true}
+  horses.type.blazechestnut: {default: true}
+  horses.type.blazebrown: {default: true}
+  horses.type.blazeblack: {default: true}
+  horses.type.blazegray: {default: true}
+  horses.type.blazedarkbrown: {default: true}
+  
+  horses.type.paintwhite: {default: true}
+  horses.type.paintcreamy: {default: true}
+  horses.type.paintchestnut: {default: true}
+  horses.type.paintbrown: {default: true}
+  horses.type.paintblack: {default: true}
+  horses.type.paintgray: {default: true}
+  horses.type.paintdarkbrown: {default: true}
+  
+  horses.type.leopardwhite: {default: true}
+  horses.type.leopardcreamy: {default: true}
+  horses.type.leopardchestnut: {default: true}
+  horses.type.leopardbrown: {default: true}
+  horses.type.leopardblack: {default: true}
+  horses.type.leopardgray: {default: true}
+  horses.type.leoparddarkbrown: {default: true}
+  
+  horses.type.sootywhite: {default: true}
+  horses.type.sootycreamy: {default: true}
+  horses.type.sootychestnut: {default: true}
+  horses.type.sootybrown: {default: true}
+  horses.type.sootyblack: {default: true}
+  horses.type.sootygray: {default: true}
+  horses.type.sootydarkbrown: {default: true}
+  
+  horses.type.donkey: {default: true}
+  horses.type.mule: {default: true}
+  horses.type.undead: {default: true}
+  horses.type.skeleton: {default: true}

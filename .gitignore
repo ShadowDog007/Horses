@@ -1,0 +1,35 @@
+# Eclipse stuff
+/.classpath
+/.project
+/.settings
+
+# NetBeans
+/nbproject
+/build.xml
+
+# vim
+.*.sw[a-p]
+
+# various other potential build files
+/build
+/bin
+/dist
+/*.jardesc
+
+# Mac filesystem dust
+.DS_Store
+
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Maven Stuff #
+/target
+mvn_*.bat
+
+# Libraries #
+!/lib/integration/*.jar
+
