@@ -45,6 +45,7 @@ import com.forgenz.horses.config.HorsesConfig;
 import com.forgenz.horses.database.HorseDatabase;
 import com.forgenz.horses.database.YamlDatabase;
 import com.forgenz.horses.listeners.DamageListener;
+import com.forgenz.horses.listeners.HorseDeathListener;
 import com.forgenz.horses.listeners.InteractListener;
 import com.forgenz.horses.listeners.PlayerListener;
 import com.forgenz.horses.metrics.Metrics;
@@ -104,6 +105,7 @@ public class Horses extends ForgePlugin
 		// Register the Listeners
 		if (config.protectFromOwner || config.protectFromPlayers || config.protectFromMobs)
 			new DamageListener(this);
+		new HorseDeathListener(this);
 		new InteractListener(this);
 		new PlayerListener(this);
 		

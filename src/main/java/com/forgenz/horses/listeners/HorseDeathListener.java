@@ -58,27 +58,36 @@ public class HorseDeathListener extends ForgeListener
 			return;
 		}
 		
+		// Fetch the horse involved
 		Horse horse = (Horse) event.getEntity();
 		
+		// Fetch data for the horse
 		PlayerHorse horseData = PlayerHorse.getFromEntity(horse);
 		
+		// Fetch the config
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		
+		// Check if we should delete the horse
 		if (cfg.deleteHorseOnDeath)
 		{
 			horseData.deleteHorse();
 			return;
 		}
 		
+		// Fetch the type config
 		HorseTypeConfig typeCfg = cfg.getHorseTypeConfig(horseData.getType());
 		
+		// Remove the horse and update values
 		horseData.removeHorse();
 		
+		// Fetch vip status
 		boolean vip = Bukkit.getPlayerExact(horseData.getStable().getOwner()).hasPermission("horses.vip");
 		
+		// Fetch hp & maxHp
 		double maxHealth = vip ? typeCfg.vipHorseMaxHp : typeCfg.defaultHorseMaxHp;
 		double health = vip ? typeCfg.vipHorseHp : typeCfg.defaultHorseHp;
 		
+		// Set hp and max hp
 		horseData.setMaxHealth(maxHealth);
 		horseData.setMaxHealth(health);
 	}
