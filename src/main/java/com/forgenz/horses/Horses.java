@@ -48,6 +48,7 @@ import com.forgenz.horses.listeners.DamageListener;
 import com.forgenz.horses.listeners.HorseDeathListener;
 import com.forgenz.horses.listeners.InteractListener;
 import com.forgenz.horses.listeners.PlayerListener;
+import com.forgenz.horses.listeners.TeleportListener;
 import com.forgenz.horses.metrics.Metrics;
 
 public class Horses extends ForgePlugin
@@ -108,6 +109,7 @@ public class Horses extends ForgePlugin
 		new HorseDeathListener(this);
 		new InteractListener(this);
 		new PlayerListener(this);
+		new TeleportListener(this);
 		
 		// Start metrics
 		try
