@@ -176,7 +176,7 @@ public class PlayerHorse implements ForgeCore
 	
 	public boolean hasSaddle()
 	{
-		if (horse != null && horse.isValid())
+		if (horse != null)
 		{
 			EntityHorse h = (EntityHorse) ((CraftHorse) horse).getHandle();
 			NBTTagCompound nbt = new NBTTagCompound();
@@ -200,7 +200,7 @@ public class PlayerHorse implements ForgeCore
 	
 	public Material getArmour()
 	{
-		if (horse != null && horse.isValid())
+		if (horse != null)
 		{
 			EntityHorse h = (EntityHorse) ((CraftHorse) horse).getHandle();
 			NBTTagCompound nbt = new NBTTagCompound();
@@ -208,7 +208,7 @@ public class PlayerHorse implements ForgeCore
 			
 			if (nbt.hasKey("ArmorItem"))
 			{
-				nbt = nbt.getCompound("ArmourItem");
+				nbt = nbt.getCompound("ArmorItem");
 				armour = Material.getMaterial(nbt.getShort("id"));
 			}
 			else
@@ -229,6 +229,9 @@ public class PlayerHorse implements ForgeCore
 				maxHealth = (float) horse.getMaxHealth();
 				health = (float) horse.getHealth();
 			}
+			
+			hasSaddle();
+			hasArmour();
 			
 			horse.remove();
 			
