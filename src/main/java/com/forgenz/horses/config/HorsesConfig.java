@@ -47,7 +47,7 @@ public class HorsesConfig implements ForgeCore
 	private ForgePlugin plugin;
 	
 	public final int summonTickDelay;
-	public final int maxHorses;
+	public final int maxHorses , vipMaxHorses;
 	public final boolean allowRenameFromNameTag, requireNameTagForRenaming, deleteHorseOnDeath;
 	public final boolean protectFromOwner, protectFromPlayers, protectFromMobs;
 	
@@ -67,6 +67,7 @@ public class HorsesConfig implements ForgeCore
 		
 		summonTickDelay = BukkitConfigUtil.getAndSet(cfg, "SummonTickDelay", Number.class, 200).intValue();
 		maxHorses = BukkitConfigUtil.getAndSet(cfg, "MaxHorses", Number.class, 5).intValue();
+		vipMaxHorses = BukkitConfigUtil.getAndSet(cfg, "VIPMaxHorses", Number.class, 5).intValue();
 		
 		allowRenameFromNameTag = BukkitConfigUtil.getAndSet(cfg, "AllowRenamedFromNameTag", Boolean.class, false);
 		requireNameTagForRenaming = BukkitConfigUtil.getAndSet(cfg, "RequireNameTagForRenaming", Boolean.class, false);

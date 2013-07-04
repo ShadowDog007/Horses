@@ -96,8 +96,9 @@ public class BuyCommand extends ForgeCommand
 		
 		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
 		
+		int maxHorses = player.hasPermission("horses.vip") ? cfg.vipMaxHorses : cfg.maxHorses;
 		// Check if the player has too many horses
-		if (stable.getHorseCount() >= cfg.maxHorses)
+		if (stable.getHorseCount() >= maxHorses)
 		{
 			Command_Buy_Error_TooManyHorses.sendMessage(player, cfg.maxHorses);
 			return;
