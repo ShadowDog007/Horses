@@ -263,7 +263,7 @@ public class PlayerHorse implements ForgeCore
 		if (hasSaddle())
 		{
 			NBTTagCompound saddle = new NBTTagCompound();
-			saddle.setShort("id", (short) 73);
+			saddle.setShort("id", (short) 329);
 			saddle.setByte("count", (byte) 1);
 			nbt.setCompound("SaddleItem", saddle);
 		}
