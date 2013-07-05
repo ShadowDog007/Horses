@@ -130,7 +130,7 @@ public class Horses extends ForgePlugin
 		database = new YamlDatabase(this);
 		
 		// Register the Listeners
-		if (config.protectFromOwner || config.protectFromPlayers || config.protectFromMobs || config.protectFromBurning)
+		if (config.invincibleHorses || config.protectFromOwner || config.protectFromPlayers || config.protectFromMobs || config.protectFromBurning)
 			new DamageListener(this);
 		new HorseDeathListener(this);
 		new InteractListener(this);

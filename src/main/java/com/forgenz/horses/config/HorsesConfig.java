@@ -51,7 +51,7 @@ public class HorsesConfig implements ForgeCore
 	public final int summonTickDelay;
 	public final int maxHorses , vipMaxHorses;
 	public final boolean allowRenameFromNameTag, requireNameTagForRenaming, deleteHorseOnDeath, protectFromBurning;
-	public final boolean protectFromOwner, protectFromPlayers, protectFromMobs;
+	public final boolean invincibleHorses, protectFromOwner, protectFromPlayers, protectFromMobs;
 	
 	public final boolean startWithSaddle;
 	
@@ -80,6 +80,7 @@ public class HorsesConfig implements ForgeCore
 		requireNameTagForRenaming = BukkitConfigUtil.getAndSet(cfg, "RequireNameTagForRenaming", Boolean.class, false);
 		deleteHorseOnDeath = BukkitConfigUtil.getAndSet(cfg, "DeleteHorseOnDeath", Boolean.class, true);
 		
+		invincibleHorses = BukkitConfigUtil.getAndSet(cfg, "InvincibleHorses", Boolean.class, false);
 		protectFromOwner = BukkitConfigUtil.getAndSet(cfg, "ProtectFromOwner", Boolean.class, true);
 		protectFromPlayers = BukkitConfigUtil.getAndSet(cfg, "ProtectFromPlayers", Boolean.class, true);
 		protectFromMobs = BukkitConfigUtil.getAndSet(cfg, "ProtectFromMobs", Boolean.class, false);

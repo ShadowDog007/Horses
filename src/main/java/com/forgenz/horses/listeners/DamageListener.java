@@ -35,7 +35,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -79,9 +78,16 @@ public class DamageListener extends ForgeListener
 			// Else let the horse die
 			return;
 		}
-
+		
 		// Fetch the config
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
+		
+		// Invincible!!
+		if (cfg.invincibleHorses)
+		{
+			event.setCancelled(true);
+			return;
+		}
 		
 		if (cfg.protectFromBurning)
 		{
@@ -90,33 +96,19 @@ public class DamageListener extends ForgeListener
 				case FIRE:
 				case FIRE_TICK:
 					event.setCancelled(true);
+					return;
 				default:
 			}
 		}
+		
+		if (event.getClass() == EntityDamageByEntityEvent.class)
+		{
+			onEntityDamageByEntity((EntityDamageByEntityEvent) event, horse, horseData);
+		}
 	}
 	
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-	public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
-	{
-		// Ignore any entities which are not horses
-		if (event.getEntityType() != EntityType.HORSE)
-		{
-			return;
-		}
-		
-		// Fetch our lovely horse :)
-		Horse horse = (Horse) event.getEntity();
-		
-		// Check if the Horse is owned
-		PlayerHorse horseData = PlayerHorse.getFromEntity(horse); 
-		
-		// If the horse has player data then they are owned and managed by Horses
-		if (horseData == null)
-		{
-			// Else let the horse die
-			return;
-		}
-		
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event, Horse horse, PlayerHorse horseData)
+	{		
 		// Fetch the config
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		
