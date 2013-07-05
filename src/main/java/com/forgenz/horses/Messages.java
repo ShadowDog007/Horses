@@ -47,6 +47,10 @@ public enum Messages implements ForgeLocaleEnum
 	Command_Buy_Success_Completion("&eType &b/%1$s summon &3%2$s &eto summon your new horse"),
 	Command_Buy_Description("Buys a horse of the given type"),
 	
+	// Command Delete messages
+	Command_Delete_Success_DeletedHorse("&eDeleted &b%1$s &efrom your stable"),
+	Command_Delete_Description("Deletes the given horse from your stable"),
+	
 	// Command Dismiss messages
 	Command_Dismiss_Error_NoActiveHorses("&cYou have to have an active horse to dismis one"),
 	Command_Dismiss_Error_WorldGuard_CantUseDismissHere("&cYou can't dismiss your horse in this area"),

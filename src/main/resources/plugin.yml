@@ -25,6 +25,7 @@ permissions:
       horses.command.types: true
       horses.command.heal: true
       horses.command.buy: true
+      horses.command.delete: true
 
     horses.command.list:
       description: Gives access to the /horses list command
@@ -40,6 +41,8 @@ permissions:
       description: Gives access to the /horses heal command
     horses.command.buy:
       description: Gives access to the /horses buy command
+    horses.command.delete
+      description: Gives access to the /horses delete command
 
   horses.type.white: {default: true}
   horses.type.creamy: {default: true}

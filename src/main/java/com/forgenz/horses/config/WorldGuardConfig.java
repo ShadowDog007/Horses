@@ -46,7 +46,7 @@ public class WorldGuardConfig implements ForgeCore
 {
 	private final Horses plugin;
 	
-	public final Set<String> commandSummonAllowedRegions, commandDismissAllowedRegions, commandBuyAllowedRegions, commandSellAllowedRegions;
+	public final Set<String> commandSummonAllowedRegions, commandDismissAllowedRegions, commandBuyAllowedRegions/*, commandSellAllowedRegions*/;
 	
 	@SuppressWarnings("unchecked")
 	public WorldGuardConfig(Horses plugin)
@@ -108,7 +108,7 @@ public class WorldGuardConfig implements ForgeCore
 		cfg.set("Dismiss", list);
 		
 		
-		// Sell command
+		/*// Sell command
 		set = new HashSet<String>();
 		if (cfg.isList("Sell"))
 		{
@@ -121,7 +121,7 @@ public class WorldGuardConfig implements ForgeCore
 			list = Collections.emptyList();
 		}
 		commandSellAllowedRegions = (Set<String>) (set.isEmpty() ? Collections.emptySet() : Collections.unmodifiableSet(set));
-		cfg.set("Sell", list);
+		cfg.set("Sell", list);*/
 	}
 	
 	@Override
