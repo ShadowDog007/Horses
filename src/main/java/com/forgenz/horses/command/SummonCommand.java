@@ -33,6 +33,7 @@ import static com.forgenz.horses.Messages.*;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -44,10 +45,12 @@ import com.forgenz.forgecore.v1_0.command.ForgeCommandArgument;
 import com.forgenz.horses.Horses;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
+import com.forgenz.horses.config.HorsesConfig;
 
 public class SummonCommand extends ForgeCommand
 {
 	private final HashMap<String, BukkitRunnable> summonTasks = new HashMap<String, BukkitRunnable>();
+	private final Location cacheLoc = new Location(null, 0.0, 0.0, 0.0);
 	
 	public SummonCommand(ForgePlugin plugin)
 	{
@@ -84,36 +87,43 @@ public class SummonCommand extends ForgeCommand
 		if (horse == null)
 		{
 			Misc_Command_Error_NoHorseNamed.sendMessage(player, args.getArg(0));
+			return;
+		}
+		
+		HorsesConfig cfg = getPlugin().getHorsesConfig();
+		// Check if the player is in the correct region to use this command
+		if (cfg.worldGuardCfg != null && !cfg.worldGuardCfg.allowCommand(cfg.worldGuardCfg.commandSummonAllowedRegions, player.getLocation(cacheLoc)))
+		{
+			Command_Summon_Error_WorldGuard_CantUseSummonHere.sendMessage(player);
+			return;
+		}
+		
+		int tickDelay = getPlugin().getHorsesConfig().summonTickDelay;
+		if (tickDelay <= 0)
+		{
+			horse.spawnHorse(player);
+			Command_Summon_Success_SummonedHorse.sendMessage(player, horse.getName());
 		}
 		else
 		{
-			int tickDelay = getPlugin().getHorsesConfig().summonTickDelay;
-			if (tickDelay <= 0)
+			BukkitRunnable task = new BukkitRunnable()
 			{
-				horse.spawnHorse(player);
-				Command_Summon_Success_SummonedHorse.sendMessage(player, horse.getName());
-			}
-			else
-			{
-				BukkitRunnable task = new BukkitRunnable()
+				@Override
+				public void run()
 				{
-					@Override
-					public void run()
+					if (player.isValid())
 					{
-						if (player.isValid())
-						{
-							horse.spawnHorse(player);
-							Command_Summon_Success_SummonedHorse.sendMessage(player, horse.getName());
-						}
-						
-						summonTasks.remove(playerName);
+						horse.spawnHorse(player);
+						Command_Summon_Success_SummonedHorse.sendMessage(player, horse.getName());
 					}
-				};
-				
-				task.runTaskLater(getPlugin(), tickDelay);
-				summonTasks.put(playerName, task);
-				Command_Summon_Success_SummoningHorse.sendMessage(player, horse.getName(), tickDelay / 20);
-			}
+
+					summonTasks.remove(playerName);
+				}
+			};
+
+			task.runTaskLater(getPlugin(), tickDelay);
+			summonTasks.put(playerName, task);
+			Command_Summon_Success_SummoningHorse.sendMessage(player, horse.getName(), tickDelay / 20);
 		}
 	}
 

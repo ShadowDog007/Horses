@@ -50,7 +50,10 @@ public class BukkitConfigUtil
 		}
 		catch (FileNotFoundException e) {}
 		catch (IOException e) {}
-		catch (InvalidConfigurationException e) {}
+		catch (InvalidConfigurationException e)
+		{
+			file.renameTo(new File(file.getPath() + ".broken"));
+		}
 		
 		return cfg;
 	}

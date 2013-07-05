@@ -69,6 +69,13 @@
   		<scope>system</scope>
   		<systemPath>${project.basedir}/lib/integration/worldguard-5.7.5.jar</systemPath>
   	</dependency>
+  	<dependency>
+  		<groupId>WorldEdit</groupId>
+  		<artifactId>WorldEdit</artifactId>
+  		<version>5.5.7</version>
+  		<scope>system</scope>
+  		<systemPath>${project.basedir}/lib/integration/worldedit-5.5.7.jar</systemPath>
+  	</dependency>
   </dependencies>
   <name>Horses</name>
   <url>http://dev.bukkit.org/bukkit-plugins/horse-stables/</url>

@@ -2,6 +2,7 @@ package com.forgenz.horses.command;
 
 import static com.forgenz.horses.Messages.*;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -10,9 +11,12 @@ import com.forgenz.forgecore.v1_0.command.ForgeCommand;
 import com.forgenz.horses.Horses;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
+import com.forgenz.horses.config.HorsesConfig;
 
 public class DismissCommand extends ForgeCommand
 {
+	private final Location cacheLoc = new Location(null, 0.0, 0.0, 0.0);
+	
 	public DismissCommand(Horses plugin)
 	{
 		super(plugin);
@@ -40,6 +44,15 @@ public class DismissCommand extends ForgeCommand
 		if (horse == null)
 		{
 			Command_Dismiss_Error_NoActiveHorses.sendMessage(player);
+			return;
+		}
+		
+		// Fetch Config
+		HorsesConfig cfg = getPlugin().getHorsesConfig();
+		// Check if the player is in the correct region to use this command
+		if (cfg.worldGuardCfg != null && !cfg.worldGuardCfg.allowCommand(cfg.worldGuardCfg.commandDismissAllowedRegions, player.getLocation(cacheLoc)))
+		{
+			Command_Dismiss_Error_WorldGuard_CantUseDismissHere.sendMessage(player);
 			return;
 		}
 		

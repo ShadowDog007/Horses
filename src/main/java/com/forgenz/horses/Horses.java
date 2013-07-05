@@ -28,8 +28,13 @@
 
 package com.forgenz.horses;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
+
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgePlugin;
 import com.forgenz.forgecore.v1_0.command.ForgeCommandHandler;
@@ -78,6 +83,22 @@ public class Horses extends ForgePlugin
 		// Try setup Economy
 		setupEconomy();
 		
+		File configurationFile = new File(getDataFolder(), "config.yml");
+		try
+		{
+			YamlConfiguration cfg = new YamlConfiguration();
+			
+			cfg.load(configurationFile);
+		}
+		catch (InvalidConfigurationException e)
+		{
+			configurationFile.renameTo(new File(getDataFolder(), "config.yml.broken"));
+		}
+		catch (FileNotFoundException e) {}
+		catch (IOException e) {}
+		
+		reloadConfig();
+		
 		// Setup messages
 		locale = new ForgeLocale(this);
 		locale.registerEnumMessages(Messages.class);
@@ -99,6 +120,9 @@ public class Horses extends ForgePlugin
 		
 		// Setup the config
 		config = new HorsesConfig(this);
+		
+		// Try setup WorldGuard
+		setupWorldGuard(config.worldGuardCfg != null);
 		
 		// Setup the database
 		database = new YamlDatabase(this);

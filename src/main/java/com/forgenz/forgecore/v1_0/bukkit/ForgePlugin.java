@@ -32,16 +32,19 @@ import java.util.logging.Level;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.forgenz.forgecore.v1_0.ForgeCoreEntity;
 import com.forgenz.forgecore.v1_0.util.RandomUtil;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public abstract class ForgePlugin extends JavaPlugin implements ForgeCoreEntity
 {
 	private String listenerKey;
 	
+	private WorldGuardPlugin worldGuard;
 	private Economy econ;
 	
 	protected ForgePlugin()
@@ -58,6 +61,31 @@ public abstract class ForgePlugin extends JavaPlugin implements ForgeCoreEntity
 	public abstract void onEnable();
 	
 	public abstract void onDisable();
+	
+	protected boolean setupWorldGuard(boolean setup)
+	{
+		if (!setup)
+		{
+			worldGuard = null;
+			return false;
+		}
+		
+		Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
+		
+		if (plugin == null || !(plugin instanceof WorldGuardPlugin))
+		{
+			worldGuard = null;
+			return false;
+		}
+		
+		worldGuard = (WorldGuardPlugin) plugin;
+		return true;
+	}
+	
+	public WorldGuardPlugin getWorldGuard()
+	{
+		return worldGuard;
+	}
 	
 	protected boolean setupEconomy()
 	{

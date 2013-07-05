@@ -38,13 +38,15 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.forgenz.forgecore.v1_0.ForgeCore;
-import com.forgenz.forgecore.v1_0.bukkit.ForgePlugin;
 import com.forgenz.forgecore.v1_0.util.BukkitConfigUtil;
 import com.forgenz.horses.HorseType;
+import com.forgenz.horses.Horses;
 
 public class HorsesConfig implements ForgeCore
 {
-	private ForgePlugin plugin;
+	private Horses plugin;
+	
+	public final WorldGuardConfig worldGuardCfg;
 	
 	public final int summonTickDelay;
 	public final int maxHorses , vipMaxHorses;
@@ -58,12 +60,17 @@ public class HorsesConfig implements ForgeCore
 	
 	public final Map<String, HorseTypeConfig> horseTypeConfigs;
 	
-	public HorsesConfig(ForgePlugin plugin)
+	public HorsesConfig(Horses plugin)
 	{
 		this.plugin = plugin;
 		
 		// Fetch the main config
 		FileConfiguration cfg = plugin.getConfig();
+		
+		if (BukkitConfigUtil.getAndSet(cfg, "EnableWorldGuardIntegration", Boolean.class, false))
+			worldGuardCfg = new WorldGuardConfig(plugin);
+		else
+			worldGuardCfg = null;
 		
 		summonTickDelay = BukkitConfigUtil.getAndSet(cfg, "SummonTickDelay", Number.class, 200).intValue();
 		maxHorses = BukkitConfigUtil.getAndSet(cfg, "MaxHorses", Number.class, 5).intValue();
@@ -118,7 +125,7 @@ public class HorsesConfig implements ForgeCore
 	}
 
 	@Override
-	public ForgePlugin getPlugin()
+	public Horses getPlugin()
 	{
 		return plugin;
 	}

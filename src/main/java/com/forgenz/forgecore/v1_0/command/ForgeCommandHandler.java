@@ -255,7 +255,7 @@ public final class ForgeCommandHandler extends ForgeCommand implements ForgeCore
 		// Validate the arguments
 		if (!subCommand.validateArguments(sender, arguments))
 		{
-			sender.sendMessage(String.format("%1$sType %2$s/%s help %3$s%s %1$sto see how to use this command", ChatColor.YELLOW, ChatColor.AQUA, ChatColor.DARK_AQUA, label, arguments.getSubCommandAlias()));
+			sender.sendMessage(String.format("%1$sType %2$s/%4$s help %3$s%5$s %1$sto see how to use this command", ChatColor.YELLOW, ChatColor.AQUA, ChatColor.DARK_AQUA, label, arguments.getSubCommandAlias()));
 			return true;
 		}
 		

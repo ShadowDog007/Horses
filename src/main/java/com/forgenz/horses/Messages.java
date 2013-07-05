@@ -39,6 +39,7 @@ public enum Messages implements ForgeLocaleEnum
 	Command_Buy_Error_Type("Type &b/horses &etypes to see valid horse types"),
 	Command_Buy_Error_InvalidHorseType("&cThere is no horse type like %s"),
 	Command_Buy_Error_NoPermissionForThisType("&cYou don't have permission to buy %1$s horses"),
+	Command_Buy_Error_WorldGuard_CantUseBuyHere("&cYou can't buy horses in this area"),
 	Command_Buy_Error_TooManyHorses("&cYou can't have more than &b%d &chorses"),
 	Command_Buy_Error_AlreadyHaveAHorseWithThatName("&cYou already have a horse named &b%s"),
 	Command_Buy_Error_CantAffordHorse("&cYou can't afford to buy a horse of this type. You need $%.2f"),
@@ -48,6 +49,7 @@ public enum Messages implements ForgeLocaleEnum
 	
 	// Command Dismiss messages
 	Command_Dismiss_Error_NoActiveHorses("&cYou have to have an active horse to dismis one"),
+	Command_Dismiss_Error_WorldGuard_CantUseDismissHere("&cYou can't dismiss your horse in this area"),
 	Command_Dismiss_Description("Dismisses your currently active horse"),
 	Command_Dismiss_Success_DismissedHorse("&eDismissed &b%1$s"),
 	
@@ -76,6 +78,7 @@ public enum Messages implements ForgeLocaleEnum
 	Command_Rename_Description("Lets you rename one of your horses"),
 	
 	// Command Summon messages
+	Command_Summon_Error_WorldGuard_CantUseSummonHere("&cYou can't summon horses in this area"),
 	Command_Summon_Error_AlreadySummoning("&cYou are already summoning a horse"),
 	Command_Summon_Success_SummoningHorse("&eYou are summoning &b%1$s&e. Wait &b%2$d &eseconds"),
 	Command_Summon_Success_SummonedHorse("&eSummoned &b%1$s"),

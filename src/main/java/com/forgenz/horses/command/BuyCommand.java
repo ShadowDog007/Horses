@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -50,6 +51,8 @@ import com.forgenz.horses.config.HorsesConfig;
 
 public class BuyCommand extends ForgeCommand
 {
+	private final Location cacheLoc = new Location(null, 0.0, 0.0, 0.0);
+	
 	public BuyCommand(ForgePlugin plugin)
 	{
 		super(plugin);
@@ -73,22 +76,33 @@ public class BuyCommand extends ForgeCommand
 		
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		
+		// Fetch the horse type
 		HorseType type = HorseType.closeValueOf(args.getArg(1));
 		
+		// Check if it is a valid horse type
 		if (type == null)
 		{
 			Command_Buy_Error_InvalidHorseType.sendMessage(player, args.getArg(1));
 			return;
 		}
 		
+		// Check if the player has permission to use this horse type
 		if (!player.hasPermission(type.getPermission()))
 		{
 			Command_Buy_Error_NoPermissionForThisType.sendMessage(player);
 			return;
 		}
 		
+		// Check if the player is in the correct region to use this command
+		if (cfg.worldGuardCfg != null && !cfg.worldGuardCfg.allowCommand(cfg.worldGuardCfg.commandBuyAllowedRegions, player.getLocation(cacheLoc)))
+		{
+			Command_Buy_Error_WorldGuard_CantUseBuyHere.sendMessage(player);
+			return;
+		}
+		
 		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
 		
+		// Calculate how many horses the player can have
 		int maxHorses = player.hasPermission("horses.vip") ? cfg.vipMaxHorses : cfg.maxHorses;
 		// Check if the player has too many horses
 		if (stable.getHorseCount() >= maxHorses)
@@ -97,6 +111,7 @@ public class BuyCommand extends ForgeCommand
 			return;
 		}
 		
+		// Check if the player already has a horse with this name
 		if (stable.findHorse(args.getArg(0), true) != null)
 		{
 			Command_Buy_Error_AlreadyHaveAHorseWithThatName.sendMessage(player, args.getArg(0));
