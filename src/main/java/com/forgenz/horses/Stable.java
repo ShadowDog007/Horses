@@ -97,17 +97,21 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 		{
 			Iterator<PlayerHorse> it = horses.iterator();
 			
+			name = name.toLowerCase();
+			
 			while (it.hasNext())
 			{
 				PlayerHorse horse = it.next();
 				
-				if (horse.getName().equalsIgnoreCase(name))
+				String horseName = horse.getName().toLowerCase();
+				
+				if (horseName.equals(name))
 					return horse;
 				else if (exact)
 					continue;
-				else if (horse.getName().startsWith(name))
+				else if (horseName.startsWith(name))
 					bestMatch = horse;
-				else if (bestMatch != null && horse.getName().contains(name))
+				else if (bestMatch != null && horseName.contains(name))
 					bestMatch = horse;
 			}
 		}
