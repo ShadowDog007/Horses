@@ -31,11 +31,14 @@ package com.forgenz.horses.listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgeListener;
 import com.forgenz.horses.Horses;
+import com.forgenz.horses.Messages;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.config.HorseTypeConfig;
 import com.forgenz.horses.config.HorsesConfig;
@@ -68,10 +71,29 @@ public class HorseDeathListener extends ForgeListener
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		
 		// Check if we should delete the horse
-		if (cfg.deleteHorseOnDeath)
+		if (cfg.deleteHorseOnDeath || cfg.deleteHorseOnDeathByPlayer)
 		{
-			horseData.deleteHorse();
-			return;
+			boolean delete = cfg.deleteHorseOnDeath;
+			if (!delete && cfg.deleteHorseOnDeathByPlayer)
+			{
+				 if (event.getEntity().getLastDamageCause().getClass() == EntityDamageByEntityEvent.class)
+				 {
+					 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
+					 Player killer = DamageListener.getPlayerDamager(e.getDamager());
+					 
+					 if (killer != null)
+					 {
+						 delete = true;
+					 }
+				 }
+			}
+			
+			if (delete)
+			{
+				Messages.Event_Death_HorseDiedAndWasDeleted.sendMessage(Bukkit.getPlayerExact(horseData.getStable().getOwner()), horseData.getName());
+				horseData.deleteHorse();
+				return;
+			}
 		}
 		
 		// Fetch the type config

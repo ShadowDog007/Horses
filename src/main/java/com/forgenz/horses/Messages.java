@@ -100,6 +100,7 @@ public enum Messages implements ForgeLocaleEnum
 	Event_Interact_Error_CantInteractWithThisHorse("&cYou can not interact with &b%1$s's &chorse"),
 	Event_Interact_Error_CantRenameWithTag("&cYou are not allowed to rename your horses with name tags"),
 	Event_Damage_Error_CantHurtOthersHorses("&cYou can not hurt other peoples horses"),
+	Event_Death_HorseDiedAndWasDeleted("&b%1$s &edied and was removed from your stable"),
 	
 	// Misc Command messages
 	Misc_Command_Error_CantBeUsedFromConsole("&cCan only use this command as a player"),
@@ -133,7 +134,7 @@ public enum Messages implements ForgeLocaleEnum
 	
 	public void sendMessage(CommandSender sender)
 	{
-		if (message.getMessage().length() == 0)
+		if (sender == null || message.getMessage().length() == 0)
 		{
 			return;
 		}
@@ -143,7 +144,7 @@ public enum Messages implements ForgeLocaleEnum
 	
 	public void sendMessage(CommandSender sender, Object ...args)
 	{
-		if (message.getMessage().length() == 0)
+		if (sender == null || message.getMessage().length() == 0)
 		{
 			return;
 		}

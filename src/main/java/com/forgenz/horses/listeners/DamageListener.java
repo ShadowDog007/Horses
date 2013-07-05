@@ -140,7 +140,7 @@ public class DamageListener extends ForgeListener
 		}
 	}
 	
-	private Player getPlayerDamager(Entity entity)
+	public static Player getPlayerDamager(Entity entity)
 	{
 		if (entity == null)
 			return null;
@@ -157,7 +157,7 @@ public class DamageListener extends ForgeListener
 		return null;
 	}
 	
-	private Player castPlayer(Entity entity)
+	public static Player castPlayer(Entity entity)
 	{
 		if (entity == null)
 			return null;
