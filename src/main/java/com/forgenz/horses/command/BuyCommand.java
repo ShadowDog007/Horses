@@ -87,13 +87,6 @@ public class BuyCommand extends ForgeCommand
 			return;
 		}
 		
-		// Check the horses name is valid
-		if (cfg.rejectedHorseNamePattern.matcher(args.getArg(0)).find())
-		{
-			Misc_Command_Error_IllegalHorseNamePattern.sendMessage(player);
-			return;
-		}
-		
 		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
 		
 		int maxHorses = player.hasPermission("horses.vip") ? cfg.vipMaxHorses : cfg.maxHorses;
@@ -107,6 +100,13 @@ public class BuyCommand extends ForgeCommand
 		if (stable.findHorse(args.getArg(0), true) != null)
 		{
 			Command_Buy_Error_AlreadyHaveAHorseWithThatName.sendMessage(player, args.getArg(0));
+			return;
+		}
+		
+		// Check the horses name is valid
+		if (cfg.rejectedHorseNamePattern.matcher(args.getArg(0)).find())
+		{
+			Misc_Command_Error_IllegalHorseNamePattern.sendMessage(player);
 			return;
 		}
 		

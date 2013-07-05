@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>Horses</groupId>
   <artifactId>Horses</artifactId>
-  <version>0.3.12</version>
+  <version>0.4.0</version>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -40,6 +40,11 @@
 	  <id>vault-repo</id>
 	  <url>http://ci.herocraftonline.com/plugin/repository/everything/</url>
     </repository>
+    <!-- sk98q's Repo -->
+    <repository>
+      <id>sk89q-repo</id>
+      <url>http://maven.sk89q.com/repo/</url>
+    </repository>
   </repositories>
   <dependencies>
   	<dependency>
@@ -56,6 +61,13 @@
   		<groupId>org.bukkit</groupId>
   		<artifactId>craftbukkit</artifactId>
   		<version>1.6.1-R0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>worldguard</groupId>
+  		<artifactId>WorldGuard</artifactId>
+  		<version>5.7.5</version>
+  		<scope>system</scope>
+  		<systemPath>${project.basedir}/lib/integration/worldguard-5.7.5.jar</systemPath>
   	</dependency>
   </dependencies>
   <name>Horses</name>
