@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -131,7 +132,8 @@ public class YamlDatabase extends HorseDatabase
 		
 		for (PlayerHorse horse : stable)
 		{
-			ConfigurationSection horseSect = BukkitConfigUtil.getAndSetConfigurationSection(sect, horse.getName());
+			String colourCodedDisplayName = horse.getDisplayName().replaceAll(Character.toString(ChatColor.COLOR_CHAR), "&");
+			ConfigurationSection horseSect = BukkitConfigUtil.getAndSetConfigurationSection(sect, colourCodedDisplayName);
 			
 			horseSect.set("type", horse.getType().toString());
 			horseSect.set("maxhealth", horse.getMaxHealth());

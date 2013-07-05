@@ -28,7 +28,7 @@ public class DeleteCommand extends ForgeCommand
 		registerAlias("delete", true);
 		registerPermission("horses.command.delete");
 		
-		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,16}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_InvalidName.toString()));
+		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,20}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_InvalidName.toString()));
 		
 		setAllowOp(true);
 		setAllowConsole(false);
@@ -53,7 +53,7 @@ public class DeleteCommand extends ForgeCommand
 			return;
 		}
 		
-		Command_Delete_Success_DeletedHorse.sendMessage(player, horse.getName());
+		Command_Delete_Success_DeletedHorse.sendMessage(player, horse.getDisplayName());
 		horse.deleteHorse();	
 	}
 	

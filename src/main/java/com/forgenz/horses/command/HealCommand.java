@@ -95,11 +95,11 @@ public class HealCommand extends ForgeCommand
 				return;
 			}
 			
-			Command_Heal_Success_HealedForCost.sendMessage(player, horse.getName(), actualHealAmount, cost);
+			Command_Heal_Success_HealedForCost.sendMessage(player, horse.getDisplayName(), actualHealAmount, cost);
 		}
 		else
 		{
-			Command_Heal_Success_HealedWithoutCost.sendMessage(player, horse.getName(), actualHealAmount);
+			Command_Heal_Success_HealedWithoutCost.sendMessage(player, horse.getDisplayName(), actualHealAmount);
 		}
 		
 		horse.addHealth(actualHealAmount);

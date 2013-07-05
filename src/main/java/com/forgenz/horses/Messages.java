@@ -104,6 +104,8 @@ public enum Messages implements ForgeLocaleEnum
 	Event_Death_HorseDiedAndWasDeleted("&b%1$s &edied and was removed from your stable"),
 	
 	// Misc Command messages
+	Misc_Command_Error_CantUseColor("&cYou don't have permission to use coloured horse names"),
+	Misc_Command_Error_CantUseFormattingCodes("&cYou don't have permission to use formatting codes in your horses name"),
 	Misc_Command_Error_CantBeUsedFromConsole("&cCan only use this command as a player"),
 	Misc_Command_Error_NoHorseNamed("&cYou don't have a horse named like &e%s"),
 	Misc_Command_Error_InvalidName("You don't have a horse named this"),

@@ -57,7 +57,7 @@ public class RenameCommand extends ForgeCommand
 		registerPermission("horses.command.rename");
 		
 		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,16}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_InvalidName.toString()));
-		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,16}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_NameValidCharacters.toString()));
+		registerArgument(new ForgeCommandArgument("^[a-z0-9_&]{0,16}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_NameValidCharacters.toString()));
 		
 		setAllowOp(true);
 		setAllowConsole(false);
@@ -82,6 +82,22 @@ public class RenameCommand extends ForgeCommand
 			return;
 		}
 		
+		// Check if the player is allowed to use coloured names
+		if (args.getArg(1).contains("&"))
+		{
+			if (!player.hasPermission("horses.colour"))
+			{
+				Misc_Command_Error_CantUseColor.sendMessage(player);
+				return;
+			}
+			else if (!player.hasPermission("horses.formattingcodes") && PlayerHorse.FORMATTING_CODES_PATTERN.matcher(args.getArg(1)).find())
+			{
+				Misc_Command_Error_CantUseFormattingCodes.sendMessage(player);
+				return;
+			}
+		}
+			
+		
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		
 		// Check the horses name is valid
@@ -104,8 +120,9 @@ public class RenameCommand extends ForgeCommand
 			}
 		}
 		
-		Command_Rename_Success_Renamed.sendMessage(player, horse.getName(), args.getArg(1));
-		horse.rename(args.getArg(1));		
+		String oldDisplayName = horse.getDisplayName();
+		horse.rename(args.getArg(1));
+		Command_Rename_Success_Renamed.sendMessage(player, oldDisplayName, horse.getDisplayName());
 	}
 
 	@Override

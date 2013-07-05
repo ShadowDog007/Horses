@@ -60,7 +60,7 @@ public class BuyCommand extends ForgeCommand
 		registerAlias("buy", true);
 		registerPermission("horses.command.buy");
 		
-		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,16}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_NameValidCharacters.toString()));
+		registerArgument(new ForgeCommandArgument("^[a-z0-9_&]{0,16}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_NameValidCharacters.toString()));
 		registerArgument(new ForgeCommandArgument("^[a-z]{0,21}$", Pattern.CASE_INSENSITIVE, false, Command_Buy_Error_Type.toString()));
 		
 		setAllowOp(true);
@@ -91,6 +91,21 @@ public class BuyCommand extends ForgeCommand
 		{
 			Command_Buy_Error_NoPermissionForThisType.sendMessage(player);
 			return;
+		}
+		
+		// Check if the player is allowed to use coloured names
+		if (args.getArg(1).contains("&"))
+		{
+			if (!player.hasPermission("horses.colour"))
+			{
+				Misc_Command_Error_CantUseColor.sendMessage(player);
+				return;
+			}
+			else if (!player.hasPermission("horses.formattingcodes") && PlayerHorse.FORMATTING_CODES_PATTERN.matcher(args.getArg(1)).find())
+			{
+				Misc_Command_Error_CantUseFormattingCodes.sendMessage(player);
+				return;
+			}
 		}
 		
 		// Check if the player is in the correct region to use this command
@@ -151,7 +166,7 @@ public class BuyCommand extends ForgeCommand
 		
 		horse.saveChanges();
 		
-		Command_Buy_Success_Completion.sendMessage(player, args.getCommandUsed(), args.getArg(0));
+		Command_Buy_Success_Completion.sendMessage(player, args.getCommandUsed(), horse.getName());
 	}
 	
 	@Override

@@ -59,7 +59,7 @@ public class DismissCommand extends ForgeCommand
 		// Remove the horse from the world
 		stable.getActiveHorse().removeHorse();
 		// Notify the player
-		Command_Dismiss_Success_DismissedHorse.sendMessage(player, horse.getName());
+		Command_Dismiss_Success_DismissedHorse.sendMessage(player, horse.getDisplayName());
 	}
 	
 	@Override

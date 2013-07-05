@@ -26,24 +26,28 @@ permissions:
       horses.command.heal: true
       horses.command.buy: true
       horses.command.delete: true
+      horses.colour: true
 
-    horses.command.list:
-      description: Gives access to the /horses list command
-    horses.command.dismiss:
-      description: Gives access to the /horses dismiss command
-    horses.command.rename:
-      description: Gives access to the /horses rename command
-    horses.command.summon:
-      description: Gives access to the /horses summon command
-    horses.command.types:
-      description: Gives access to the /horses types command
-    horses.command.heal:
-      description: Gives access to the /horses heal command
-    horses.command.buy:
-      description: Gives access to the /horses buy command
-    horses.command.delete
-      description: Gives access to the /horses delete command
+  horses.command.list:
+    description: Gives access to the /horses list command
+  horses.command.dismiss:
+    description: Gives access to the /horses dismiss command
+  horses.command.rename:
+    description: Gives access to the /horses rename command
+  horses.command.summon:
+    description: Gives access to the /horses summon command
+  horses.command.types:
+    description: Gives access to the /horses types command
+  horses.command.heal:
+    description: Gives access to the /horses heal command
+  horses.command.buy:
+    description: Gives access to the /horses buy command
+  horses.command.delete:
+    description: Gives access to the /horses delete command
 
+  horses.colour: {default: true , description: 'Lets players use colour in their horses names'}
+  horses.formattingcodes: {default: false , description: 'Lets players use formatting codes in their horses names'}
+  
   horses.type.white: {default: true}
   horses.type.creamy: {default: true}
   horses.type.chestnut: {default: true}

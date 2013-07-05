@@ -29,10 +29,12 @@
 package com.forgenz.horses;
 
 import java.lang.reflect.Field;
+import java.util.regex.Pattern;
 
 import net.minecraft.server.v1_6_R1.EntityHorse;
 import net.minecraft.server.v1_6_R1.NBTTagCompound;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_6_R1.CraftServer;
@@ -52,12 +54,16 @@ public class PlayerHorse implements ForgeCore
 	private static final String OWNERSHIP_METADATA_KEY = "Horses.Ownership"; 
 	private static final Location cacheLoc = new Location(null, 0.0, 0.0, 0.0);
 	
+	public static final Pattern FORMATTING_CODES_PATTERN = Pattern.compile("&[klmnor]", Pattern.CASE_INSENSITIVE);
+	
 	private final Horses plugin;
 	private final Stable stable;
 	
 	private Horse horse;
 	
 	private String name;
+	private String displayName;
+	
 	private HorseType type;
 	private double maxHealth;
 	private double health;
@@ -70,7 +76,9 @@ public class PlayerHorse implements ForgeCore
 		this.plugin = plugin;
 		this.stable = stable;
 		
-		this.name = name;
+		this.displayName = ChatColor.translateAlternateColorCodes('&', name).replaceAll("&", "");
+		this.name = ChatColor.stripColor(this.displayName);
+		
 		this.type = type;
 		this.maxHealth = maxHealth;
 		this.health = health;
@@ -95,6 +103,11 @@ public class PlayerHorse implements ForgeCore
 	public String getName()
 	{
 		return name;
+	}
+	
+	public String getDisplayName()
+	{
+		return displayName;
 	}
 	
 	public HorseType getType()
@@ -320,7 +333,7 @@ public class PlayerHorse implements ForgeCore
 		if (horse != null)
 		{
 			// Set the horses name
-			horse.setCustomName(name);
+			horse.setCustomName(displayName);
 			horse.setCustomNameVisible(true);
 			
 			// Set the horses HP
@@ -372,11 +385,12 @@ public class PlayerHorse implements ForgeCore
 
 	public void rename(String name)
 	{
-		this.name = name;
+		this.displayName = ChatColor.translateAlternateColorCodes('&', name).replaceAll("&", "");
+		this.name = ChatColor.stripColor(this.displayName);
 		
 		if (horse != null && horse.isValid())
 		{
-			horse.setCustomName(name);//ChatColor.translateAlternateColorCodes('&', name));
+			horse.setCustomName(this.displayName);
 		}
 		
 		saveChanges();

@@ -99,7 +99,7 @@ public class ListCommand extends ForgeCommand
 			if (horses.length() > 0)
 				horses.append(Command_List_Success_HorseListSeparator);
 			// Horses name
-			horses.append(Command_List_Success_HorseNamePrefix).append(horse.getName());
+			horses.append(Command_List_Success_HorseNamePrefix).append(horse.getDisplayName());
 			// Horses type
 			horses.append(":").append(Command_List_Success_HorseTypePrefix).append(horse.getType());
 		}

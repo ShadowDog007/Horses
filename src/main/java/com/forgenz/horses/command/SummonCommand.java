@@ -102,7 +102,7 @@ public class SummonCommand extends ForgeCommand
 		if (tickDelay <= 0)
 		{
 			horse.spawnHorse(player);
-			Command_Summon_Success_SummonedHorse.sendMessage(player, horse.getName());
+			Command_Summon_Success_SummonedHorse.sendMessage(player, horse.getDisplayName());
 		}
 		else
 		{
@@ -114,7 +114,7 @@ public class SummonCommand extends ForgeCommand
 					if (player.isValid())
 					{
 						horse.spawnHorse(player);
-						Command_Summon_Success_SummonedHorse.sendMessage(player, horse.getName());
+						Command_Summon_Success_SummonedHorse.sendMessage(player, horse.getDisplayName());
 					}
 
 					summonTasks.remove(playerName);
@@ -123,7 +123,7 @@ public class SummonCommand extends ForgeCommand
 
 			task.runTaskLater(getPlugin(), tickDelay);
 			summonTasks.put(playerName, task);
-			Command_Summon_Success_SummoningHorse.sendMessage(player, horse.getName(), tickDelay / 20);
+			Command_Summon_Success_SummoningHorse.sendMessage(player, horse.getDisplayName(), tickDelay / 20);
 		}
 	}
 
