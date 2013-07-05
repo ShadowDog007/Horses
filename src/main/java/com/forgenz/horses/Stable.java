@@ -91,6 +91,8 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 	 */
 	public PlayerHorse findHorse(String name, boolean exact)
 	{
+		PlayerHorse bestMatch = null;
+		
 		synchronized (horses)
 		{
 			Iterator<PlayerHorse> it = horses.iterator();
@@ -99,14 +101,18 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 			{
 				PlayerHorse horse = it.next();
 				
-				if (exact ? horse.getName().equalsIgnoreCase(name) : horse.getName().toLowerCase().startsWith(name.toLowerCase()))
-				{
+				if (horse.getName().equalsIgnoreCase(name))
 					return horse;
-				}
+				else if (exact)
+					continue;
+				else if (horse.getName().startsWith(name))
+					bestMatch = horse;
+				else if (bestMatch != null && horse.getName().contains(name))
+					bestMatch = horse;
 			}
 		}
 		
-		return null;
+		return bestMatch;
 	}
 	
 	public PlayerHorse createHorse(String name, HorseType type, boolean vip)
