@@ -98,7 +98,10 @@ public class ListCommand extends ForgeCommand
 		{
 			if (horses.length() > 0)
 				horses.append(Command_List_Success_HorseListSeparator);
-			horses.append(Command_List_Success_HorseNamePrefix).append(horse.getName());//.append(":").append(Command_List_Success_HorseTypePrefix).append(horse.getType());
+			// Horses name
+			horses.append(Command_List_Success_HorseNamePrefix).append(horse.getName());
+			// Horses type
+			horses.append(":").append(Command_List_Success_HorseTypePrefix).append(horse.getType());
 		}
 		
 		if (horses.length() == 0)
@@ -107,7 +110,10 @@ public class ListCommand extends ForgeCommand
 		}
 		else
 		{
-			Command_List_Success_InitialMessage.sendMessage(sender);
+			if (player != sender)
+				horses.insert(0, String.format(Command_List_Success_InitialMessageOtherPlayer.toString(), player.getName()));
+			else
+				horses.insert(0, Command_List_Success_InitialMessage.toString());
 			sender.sendMessage(horses.toString());
 		}
 	}

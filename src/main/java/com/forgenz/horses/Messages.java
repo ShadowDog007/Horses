@@ -71,6 +71,7 @@ public enum Messages implements ForgeLocaleEnum
 	Command_List_Error_CouldNotFindPlayer("&cCould not find a player named like %s"),
 	Command_List_Error_NoHorses("&cYou have no horses :("),
 	Command_List_Success_InitialMessage("&eYour horses:"),
+	Command_List_Success_InitialMessageOtherPlayer("&e%1$s horses:"),
 	Command_List_Success_HorseNamePrefix("&b"),
 	Command_List_Success_HorseTypePrefix("&3"),
 	Command_List_Success_HorseListSeparator("&e, "),
