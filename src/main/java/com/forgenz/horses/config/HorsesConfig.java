@@ -48,6 +48,8 @@ public class HorsesConfig implements ForgeCore
 	
 	public final WorldGuardConfig worldGuardCfg;
 	
+	public boolean showAuthor;
+	
 	public final int summonTickDelay;
 	public final int maxHorses , vipMaxHorses;
 	public final boolean allowRenameFromNameTag, requireNameTagForRenaming, deleteHorseOnDeath, deleteHorseOnDeathByPlayer, protectFromBurning;
@@ -72,6 +74,7 @@ public class HorsesConfig implements ForgeCore
 		else
 			worldGuardCfg = null;
 		
+		showAuthor = BukkitConfigUtil.getAndSet(cfg, "ShowAuthorInCommand", Boolean.class, true);
 		summonTickDelay = BukkitConfigUtil.getAndSet(cfg, "SummonTickDelay", Number.class, 200).intValue();
 		maxHorses = BukkitConfigUtil.getAndSet(cfg, "MaxHorses", Number.class, 5).intValue();
 		vipMaxHorses = BukkitConfigUtil.getAndSet(cfg, "VIPMaxHorses", Number.class, 5).intValue();

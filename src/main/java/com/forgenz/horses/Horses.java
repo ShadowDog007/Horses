@@ -33,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -122,6 +123,15 @@ public class Horses extends ForgePlugin
 		
 		// Setup the config
 		config = new HorsesConfig(this);
+		
+		if (config.showAuthor)
+		{
+			commandHandler.setHeaderFormat(String.format("%1$s%3$s %2$sv%1$s%4$s %2$sby %1$s%5$s", ChatColor.DARK_GREEN, ChatColor.YELLOW, "Horses", ForgeCommandHandler.HEADER_REPLACE_VERSION, "ShadowDog007"));
+		}
+		else
+		{
+			commandHandler.setHeaderFormat(String.format("%1$s%3$s %2$sv%1$s%4$s", ChatColor.DARK_GREEN, ChatColor.YELLOW, "Horses", ForgeCommandHandler.HEADER_REPLACE_VERSION));
+		}
 		
 		// Try setup WorldGuard
 		setupWorldGuard(config.worldGuardCfg != null);
