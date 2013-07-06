@@ -67,6 +67,10 @@ public class HorseDeathListener extends ForgeListener
 		// Fetch data for the horse
 		PlayerHorse horseData = PlayerHorse.getFromEntity(horse);
 		
+		// No horse?
+		if (horseData == null)
+			return;
+		
 		// Fetch the config
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		
