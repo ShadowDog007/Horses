@@ -1,6 +1,6 @@
 main: com.forgenz.horses.Horses
 name: Horses
-version: 0.4.3
+version: 0.4.4
 author: ShadowDog007
 website: 'http://dev.bukkit.org/bukkit-plugins/horse-stables/'
 softdepend: [Vault]
@@ -44,6 +44,9 @@ permissions:
     description: Gives access to the /horses buy command
   horses.command.delete:
     description: Gives access to the /horses delete command
+  
+  horses.command.reload:
+    description: Gives access to the /horses reload command
 
   horses.colour: {default: true , description: 'Lets players use colour in their horses names'}
   horses.formattingcodes: {default: false , description: 'Lets players use formatting codes in their horses names'}

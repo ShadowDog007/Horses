@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>Horses</groupId>
   <artifactId>Horses</artifactId>
-  <version>0.4.3</version>
+  <version>0.4.4</version>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <testSourceDirectory>src/test/java</testSourceDirectory>

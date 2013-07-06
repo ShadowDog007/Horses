@@ -77,6 +77,11 @@ public enum Messages implements ForgeLocaleEnum
 	Command_List_Success_HorseListSeparator("&e, "),
 	Command_List_Description("Lists all the horses you/the player have in the stables"),
 	
+	// Command Reload messages
+	Command_Reload_Error_FailedToReload("&c~Failed to reload Horses, see console for details"),
+	Command_Reload_Success("&e~Reloaded successfully"),
+	Command_Reload_Description("Reloads Horses Configuration"),
+	
 	// Command Rename Messages
 	Command_Rename_Error_RequireNametag("&cYou need to be holding a nametag to rename your horse"),
 	Command_Rename_Success_Renamed("&eRenamed &b%1$s &eto &b%2$s"),
