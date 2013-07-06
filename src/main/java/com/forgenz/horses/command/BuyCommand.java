@@ -94,7 +94,7 @@ public class BuyCommand extends ForgeCommand
 		}
 		
 		// Check if the player is allowed to use coloured names
-		if (args.getArg(1).contains("&"))
+		if (args.getArg(0).contains("&"))
 		{
 			if (!player.hasPermission("horses.colour"))
 			{
