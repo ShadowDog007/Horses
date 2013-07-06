@@ -90,7 +90,7 @@ public class HorseDismissTask extends BukkitRunnable implements ForgeCore
 				continue;
 			}
 			
-			if (horseData.getHorse().getLocation(horseLocCache).distanceSquared(playerLocCache) > 1024)
+			if (horseData.getHorse().getLocation(horseLocCache).distanceSquared(player.getLocation(playerLocCache)) > 1024)
 			{
 				Messages.Event_MovedTooFarAway.sendMessage(player, horseData.getDisplayName());
 				horseData.removeHorse();
