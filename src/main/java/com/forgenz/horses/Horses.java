@@ -57,6 +57,7 @@ import com.forgenz.horses.listeners.InteractListener;
 import com.forgenz.horses.listeners.PlayerListener;
 import com.forgenz.horses.listeners.TeleportListener;
 import com.forgenz.horses.metrics.Metrics;
+import com.forgenz.horses.tasks.HorseDismissTask;
 
 public class Horses extends ForgePlugin
 {
@@ -66,6 +67,8 @@ public class Horses extends ForgePlugin
 	private HorsesConfig config;
 	private HorseDatabase database;
 	private ForgeCommandHandler commandHandler;
+	
+	private HorseDismissTask horseDismissTask;
 	
 	public static Horses getInstance()
 	{
@@ -147,6 +150,9 @@ public class Horses extends ForgePlugin
 		new PlayerListener(this);
 		new TeleportListener(this);
 		
+		horseDismissTask = new HorseDismissTask(this);
+		horseDismissTask.runTaskTimer(this, 20L, 10L);
+		
 		// Start metrics
 		try
 		{
@@ -168,6 +174,7 @@ public class Horses extends ForgePlugin
 		unregisterListeners();
 		
 		database.saveAll();
+		horseDismissTask.cancel();
 		commandHandler = null;
 		database = null;
 		config = null;

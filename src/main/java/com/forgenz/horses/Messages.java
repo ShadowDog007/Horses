@@ -103,6 +103,8 @@ public enum Messages implements ForgeLocaleEnum
 	Event_Damage_Error_CantHurtOthersHorses("&cYou can not hurt other peoples horses"),
 	Event_Death_HorseDiedAndWasDeleted("&b%1$s &edied and was removed from your stable"),
 	
+	Event_MovedTooFarAway("&b%1$s &ewandered off and was dismissed"),
+	
 	// Misc Command messages
 	Misc_Command_Error_CantUseColor("&cYou don't have permission to use coloured horse names"),
 	Misc_Command_Error_CantUseFormattingCodes("&cYou don't have permission to use formatting codes in your horses name"),
