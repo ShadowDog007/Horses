@@ -81,6 +81,9 @@ public class HorseDismissTask extends BukkitRunnable implements ForgeCore
 			
 			PlayerHorse horseData = stable.getActiveHorse();
 			
+			if (horseData == null)
+				continue;
+			
 			if (horseData.getHorse().getWorld() != player.getWorld())
 			{
 				horseData.removeHorse();
