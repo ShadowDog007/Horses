@@ -204,18 +204,24 @@ public class PlayerHorse implements ForgeCore
 	
 	public void setHasChest(boolean hasChest)
 	{
+		if (type != HorseType.Mule && type != HorseType.Donkey)
+			return;
+		
 		this.hasChest = hasChest;
 	}
 	
 	public boolean hasChest()
 	{
+		if (type != HorseType.Mule && type != HorseType.Donkey)
+			return false;
+		
 		if (horse != null)
 		{
 			EntityHorse h = (EntityHorse) ((CraftHorse) horse).getHandle();
 			NBTTagCompound nbt = new NBTTagCompound();
 			h.b(nbt);
 			
-			this.hasChest = nbt.hasKey("ChestedHorse");
+			this.hasChest = nbt.getBoolean("ChestedHorse");
 		}
 		
 		return hasChest;
