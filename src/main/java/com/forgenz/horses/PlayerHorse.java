@@ -70,6 +70,7 @@ public class PlayerHorse implements ForgeCore
 	
 	private boolean hasSaddle = false;
 	private Material armour;
+	private boolean hasChest = false;
 	
 	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health)
 	{
@@ -201,6 +202,25 @@ public class PlayerHorse implements ForgeCore
 		return hasSaddle;
 	}
 	
+	public void setHasChest(boolean hasChest)
+	{
+		this.hasChest = hasChest;
+	}
+	
+	public boolean hasChest()
+	{
+		if (horse != null)
+		{
+			EntityHorse h = (EntityHorse) ((CraftHorse) horse).getHandle();
+			NBTTagCompound nbt = new NBTTagCompound();
+			h.b(nbt);
+			
+			this.hasChest = nbt.hasKey("ChestedHorse");
+		}
+		
+		return hasChest;
+	}
+	
 	public boolean hasArmour()
 	{
 		return getArmour() != null;
@@ -245,6 +265,7 @@ public class PlayerHorse implements ForgeCore
 			
 			hasSaddle();
 			hasArmour();
+			hasChest();
 			
 			horse.remove();
 			
@@ -318,12 +339,17 @@ public class PlayerHorse implements ForgeCore
 			nbt.setCompound("SaddleItem", saddle);
 		}
 		
+		if (hasChest())
+		{
+			nbt.setBoolean("ChestedHorse", true);
+		}
+		
 		if (hasArmour())
 		{
-			NBTTagCompound saddle = new NBTTagCompound();
-			saddle.setShort("id", (short) armour.getId());
-			saddle.setByte("count", (byte) 1);
-			nbt.setCompound("ArmorItem", saddle);
+			NBTTagCompound armour = new NBTTagCompound();
+			armour.setShort("id", (short) this.armour.getId());
+			armour.setByte("count", (byte) 1);
+			nbt.setCompound("ArmorItem", armour);
 		}
 		
 		ehorse.a(nbt);

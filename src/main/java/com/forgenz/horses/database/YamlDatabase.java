@@ -112,12 +112,15 @@ public class YamlDatabase extends HorseDatabase
 			double maxHealth = horseSect.getDouble("maxhealth");
 			double health = horseSect.getDouble("health");
 			boolean saddle = horseSect.getBoolean("saddle", getPlugin().getHorsesConfig().startWithSaddle);
+			boolean hasChest = type == HorseType.Mule || type == HorseType.Donkey ? horseSect.getBoolean("chest", false) : false;
 			
 			Material armour = Material.getMaterial(horseSect.getString("armour", "null"));
 			
 			PlayerHorse horseData = new PlayerHorse(getPlugin(), stable, horse, type, maxHealth, health);
 			horseData.setHasSaddle(saddle);
 			horseData.setArmour(armour);
+			horseData.setHasChest(hasChest);
+			
 			
 			stable.addHorse(horseData);
 		}
@@ -140,6 +143,10 @@ public class YamlDatabase extends HorseDatabase
 			horseSect.set("health", horse.getHealth());
 			horseSect.set("saddle", horse.hasSaddle());
 			horseSect.set("armour", horse.hasArmour() ? horse.getArmour().toString() : "none");
+			if (horse.getType() == HorseType.Mule || horse.getType() == HorseType.Donkey)
+			{
+				horseSect.set("chest", horse.hasChest());
+			}
 		}
 		
 		try
