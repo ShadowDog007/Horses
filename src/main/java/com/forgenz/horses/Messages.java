@@ -37,13 +37,13 @@ public enum Messages implements ForgeLocaleEnum
 {
 	// Command BUY messages
 	Command_Buy_Error_Type("Type &b/horses &etypes to see valid horse types"),
-	Command_Buy_Error_InvalidHorseType("&cThere is no horse type like %s"),
+	Command_Buy_Error_InvalidHorseType("&cThere is no horse type like %1$s"),
 	Command_Buy_Error_NoPermissionForThisType("&cYou don't have permission to buy %1$s horses"),
 	Command_Buy_Error_WorldGuard_CantUseBuyHere("&cYou can't buy horses in this area"),
-	Command_Buy_Error_TooManyHorses("&cYou can't have more than &b%d &chorses"),
+	Command_Buy_Error_TooManyHorses("&cYou can't have more than &b%1$d &chorses"),
 	Command_Buy_Error_AlreadyHaveAHorseWithThatName("&cYou already have a horse named &b%s"),
 	Command_Buy_Error_CantAffordHorse("&cYou can't afford to buy a horse of this type. You need $%.2f"),
-	Command_Buy_Success_BoughtHorse("&eYou purchased your horse for $%.2f"),
+	Command_Buy_Success_BoughtHorse("&eYou purchased your horse for $%1$.2f"),
 	Command_Buy_Success_Completion("&eType &b/%1$s summon &3%2$s &eto summon your new horse"),
 	Command_Buy_Description("Buys a horse of the given type"),
 	
@@ -52,7 +52,7 @@ public enum Messages implements ForgeLocaleEnum
 	Command_Delete_Description("Deletes the given horse from your stable"),
 	
 	// Command Dismiss messages
-	Command_Dismiss_Error_NoActiveHorses("&cYou have to have an active horse to dismis one"),
+	Command_Dismiss_Error_NoActiveHorses("&cYou have to have an active horse to dismiss one"),
 	Command_Dismiss_Error_WorldGuard_CantUseDismissHere("&cYou can't dismiss your horse in this area"),
 	Command_Dismiss_Description("Dismisses your currently active horse"),
 	Command_Dismiss_Success_DismissedHorse("&eDismissed &b%1$s"),
@@ -114,7 +114,7 @@ public enum Messages implements ForgeLocaleEnum
 	Misc_Command_Error_CantUseColor("&cYou don't have permission to use coloured horse names"),
 	Misc_Command_Error_CantUseFormattingCodes("&cYou don't have permission to use formatting codes in your horses name"),
 	Misc_Command_Error_CantBeUsedFromConsole("&cCan only use this command as a player"),
-	Misc_Command_Error_NoHorseNamed("&cYou don't have a horse named like &e%s"),
+	Misc_Command_Error_NoHorseNamed("&cYou don't have a horse named like &e%1$s"),
 	Misc_Command_Error_InvalidName("You don't have a horse named this"),
 	Misc_Command_Error_NameValidCharacters("Your horses name can only contain letters, numbers and underscores"),
 	Misc_Command_Error_IllegalHorseNamePattern("&cThis name contains an illegal pattern try another one"),
