@@ -8,6 +8,7 @@ softdepend: [Vault]
 commands:
   horses:
     description: Virtual Stables System main command
+    aliases: [h, horse]
 
 permissions:
   horses.vip:
