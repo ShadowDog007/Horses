@@ -159,13 +159,6 @@ public class BuyCommand extends ForgeCommand
 		// Create the horse for the player
 		PlayerHorse horse = stable.createHorse(args.getArg(0), type, player.hasPermission("horses.vip"));
 		
-		if (cfg.startWithSaddle)
-		{
-			horse.setHasSaddle(true);
-		}
-		
-		horse.saveChanges();
-		
 		Command_Buy_Success_Completion.sendMessage(player, args.getCommandUsed(), horse.getName());
 	}
 	

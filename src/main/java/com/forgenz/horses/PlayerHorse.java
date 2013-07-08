@@ -72,7 +72,7 @@ public class PlayerHorse implements ForgeCore
 	private Material armour;
 	private boolean hasChest = false;
 	
-	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health)
+	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, Horse horse)
 	{
 		this.plugin = plugin;
 		this.stable = stable;
@@ -83,6 +83,19 @@ public class PlayerHorse implements ForgeCore
 		this.type = type;
 		this.maxHealth = maxHealth;
 		this.health = health;
+		
+		this.horse = horse;
+		
+		if (this.horse != null)
+		{
+			getMaxHealth();
+			getHealth();
+			hasSaddle();
+			hasChest();
+			getArmour();
+			this.horse = null;
+			horse.remove();
+		}
 	}
 	
 	public Stable getStable()

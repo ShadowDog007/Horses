@@ -28,16 +28,25 @@
 
 package com.forgenz.horses.listeners;
 
+import static com.forgenz.horses.Messages.Command_Buy_Error_TooManyHorses;
+import static com.forgenz.horses.Messages.Misc_Command_Error_CantUseColor;
+import static com.forgenz.horses.Messages.Misc_Command_Error_CantUseFormattingCodes;
+
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgeListener;
+import com.forgenz.horses.HorseType;
 import com.forgenz.horses.Horses;
 import com.forgenz.horses.Messages;
 import com.forgenz.horses.PlayerHorse;
+import com.forgenz.horses.Stable;
+import com.forgenz.horses.config.HorsesConfig;
 
 public class InteractListener extends ForgeListener
 {
@@ -63,13 +72,22 @@ public class InteractListener extends ForgeListener
 		// Check if the Horse is owned
 		PlayerHorse horseData = PlayerHorse.getFromEntity(horse); 
 		
-		// If the horse has player data then they are owned and managed by Horses
-		if (horseData == null)
+		// Check how we should handle the event
+		if (horseData != null)
 		{
-			// Else let the player have their way with the horse
-			return;
+			handleOwnedHorse(event, horseData, event.getPlayer());
 		}
-		
+		else
+		{
+			handleUnownedHorse(event, horse, event.getPlayer());
+		}
+	}
+	
+	/**
+	 * Handles interaction with an owned horse
+	 */
+	private void handleOwnedHorse(PlayerInteractEntityEvent event, PlayerHorse horseData, Player player)
+	{
 		// Check if the player owns the horse
 		if (!event.getPlayer().getName().equals(horseData.getStable().getOwner()))
 		{
@@ -79,26 +97,110 @@ public class InteractListener extends ForgeListener
 			return;
 		}
 		
-		// Stop players from renaming their horses with name tags
+		// Can the player rename their horse??
 		if (event.getPlayer().getItemInHand().getType() == Material.NAME_TAG)
 		{
-			if (false && getPlugin().getHorsesConfig().allowRenameFromNameTag)
+			// Check if they are allowed to rename their horse
+			if (getPlugin().getHorsesConfig().allowRenameFromNameTag)
 			{
-				if (getPlugin().getHorsesConfig().rejectedHorseNamePattern.matcher("new name").find())
+				ItemMeta meta = event.getPlayer().getItemInHand().getItemMeta();
+				String name = meta.getDisplayName();
+				
+				if (name == null)
+				{
+					Messages.Event_Interact_Error_RenameWithTagMustSetAName.sendMessage(player);
+					event.setCancelled(true);
+				}
+				else if (getPlugin().getHorsesConfig().rejectedHorseNamePattern.matcher("new name").find())
 				{
 					Messages.Misc_Command_Error_IllegalHorseNamePattern.sendMessage(event.getPlayer());
+					event.setCancelled(true);
 				}
 				else
 				{
-					Messages.Command_Rename_Success_Renamed.sendMessage(event.getPlayer(), horseData.getName(), "new name");
-					horseData.rename("new name");
+					String oldName = horseData.getDisplayName();
+					horseData.rename(name);
+					Messages.Command_Rename_Success_Renamed.sendMessage(event.getPlayer(), oldName, horseData.getDisplayName());
 				}
+				return;
 			}
 			else
 			{
 				Messages.Event_Interact_Error_CantRenameWithTag.sendMessage(event.getPlayer());
 			}
 			event.setCancelled(true);
+		}
+	}
+	
+	private void handleUnownedHorse(PlayerInteractEntityEvent event, Horse horse, Player player)
+	{
+		HorsesConfig cfg = getPlugin().getHorsesConfig();
+		
+		if (event.getPlayer().getItemInHand().getType() == Material.NAME_TAG)
+		{
+			if (cfg.allowClaimingWithTag)
+			{
+				ItemMeta meta = event.getPlayer().getItemInHand().getItemMeta();
+				String name = meta.getDisplayName();
+				
+				event.setCancelled(true);
+				
+				if (name == null)
+				{
+					Messages.Event_Interact_Error_ClaimWithTagMustSetAName.sendMessage(player);
+				}
+				else if (getPlugin().getHorsesConfig().rejectedHorseNamePattern.matcher("new name").find())
+				{
+					Messages.Misc_Command_Error_IllegalHorseNamePattern.sendMessage(event.getPlayer());
+				}
+				else
+				{
+					Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
+					boolean vip = player.hasPermission("horses.vip");
+					
+					// Calculate how many horses the player can have
+					int maxHorses = vip ? cfg.vipMaxHorses : cfg.maxHorses;
+					// Check if the player has too many horses
+					if (stable.getHorseCount() >= maxHorses)
+					{
+						Command_Buy_Error_TooManyHorses.sendMessage(player, maxHorses);
+						return;
+					}
+					
+					// Check if the player is allowed to use coloured names
+					if (name.contains("&"))
+					{
+						if (!player.hasPermission("horses.colour"))
+						{
+							Misc_Command_Error_CantUseColor.sendMessage(player);
+							return;
+						}
+						else if (!player.hasPermission("horses.formattingcodes") && PlayerHorse.FORMATTING_CODES_PATTERN.matcher(name).find())
+						{
+							Misc_Command_Error_CantUseFormattingCodes.sendMessage(player);
+							return;
+						}
+					}
+					
+					if (stable.findHorse(name, true) != null)
+					{
+						Messages.Command_Buy_Error_AlreadyHaveAHorseWithThatName.sendMessage(player, name);
+						return;
+					}
+					
+					HorseType type = HorseType.valueOf(horse);
+					
+					PlayerHorse horseData = stable.createHorse(name, type, player.hasPermission("horses.vip"), horse);
+					
+					Messages.Command_Buy_Success_Completion.sendMessage(player, "horses", horseData.getDisplayName());
+				}
+			}
+			else if (cfg.blockRenamingOnNaturalHorses)
+			{
+				Messages.Event_Interact_Error_RenamingNaturalHorsesBlocked.sendMessage(player);
+				event.setCancelled(true);
+			}
+			return;
 		}
 	}
 	

@@ -28,6 +28,11 @@
 
 package com.forgenz.horses;
 
+import net.minecraft.server.v1_6_R1.EntityHorse;
+
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftHorse;
+import org.bukkit.entity.Horse;
+
 
 public enum HorseType
 {
@@ -141,5 +146,31 @@ public enum HorseType
 			}
 		}
 		return null;
+	}
+	
+	public static HorseType valueOf(Horse horse)
+	{
+		CraftHorse chorse = (CraftHorse) horse;
+		EntityHorse mhorse = (EntityHorse) chorse.getHandle();
+		
+		switch (mhorse.bP())
+		{
+			case 0:
+				HorseType[] a = values();
+				int var = mhorse.bQ();
+				for (int i = 0; i < a.length; ++i)
+					if (a[i].getVariant() == var)
+						return a[i];
+			case 1:
+				return Donkey;
+			case 2:
+				return Mule;
+			case 3:
+				return Undead;
+			case 4:
+				return Skeleton;
+			default:	
+				return null;
+		}
 	}
 }

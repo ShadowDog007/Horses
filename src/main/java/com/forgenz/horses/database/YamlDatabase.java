@@ -116,7 +116,7 @@ public class YamlDatabase extends HorseDatabase
 			
 			Material armour = Material.getMaterial(horseSect.getString("armour", "null"));
 			
-			PlayerHorse horseData = new PlayerHorse(getPlugin(), stable, horse, type, maxHealth, health);
+			PlayerHorse horseData = new PlayerHorse(getPlugin(), stable, horse, type, maxHealth, health, null);
 			horseData.setHasSaddle(saddle);
 			horseData.setArmour(armour);
 			horseData.setHasChest(hasChest);

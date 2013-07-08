@@ -104,10 +104,12 @@ public enum Messages implements ForgeLocaleEnum
 	
 	// EventListener messages
 	Event_Interact_Error_CantInteractWithThisHorse("&cYou can not interact with &b%1$s's &chorse"),
+	Event_Interact_Error_RenameWithTagMustSetAName("&cYou have to set a name on your Name Tag to rename this horse"),
+	Event_Interact_Error_ClaimWithTagMustSetAName("&cYou have to set a name on your Name Tag to claim this horse"),
 	Event_Interact_Error_CantRenameWithTag("&cYou are not allowed to rename your horses with name tags"),
+	Event_Interact_Error_RenamingNaturalHorsesBlocked("&cYou can only rename owned horses"),
 	Event_Damage_Error_CantHurtOthersHorses("&cYou can not hurt other peoples horses"),
 	Event_Death_HorseDiedAndWasDeleted("&b%1$s &edied and was removed from your stable"),
-	
 	Event_MovedTooFarAway("&b%1$s &ewandered off and was dismissed"),
 	
 	// Misc Command messages

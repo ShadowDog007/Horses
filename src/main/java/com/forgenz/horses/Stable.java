@@ -33,6 +33,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bukkit.entity.Horse;
+
 import com.forgenz.forgecore.v1_0.ForgeCore;
 import com.forgenz.horses.config.HorseTypeConfig;
 
@@ -121,18 +123,28 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 	
 	public PlayerHorse createHorse(String name, HorseType type, boolean vip)
 	{
+		return createHorse(name, type, vip, null);
+	}
+	
+	public PlayerHorse createHorse(String name, HorseType type, boolean vip, Horse horse)
+	{
 		HorseTypeConfig cfg = getPlugin().getHorsesConfig().getHorseTypeConfig(type);
 		
 		float hp = vip ? cfg.vipHorseHp : cfg.defaultHorseHp;
 		float maxHp = vip ? cfg.vipHorseMaxHp : cfg.defaultHorseMaxHp;
 		
-		PlayerHorse horse = new PlayerHorse(plugin, this, name, type, hp, maxHp);
+		PlayerHorse horseData = new PlayerHorse(plugin, this, name, type, hp, maxHp, horse);
 		
-		horses.add(horse);
+		horses.add(horseData);
 		
-		getPlugin().getHorseDatabase().saveHorse(horse);
+		if (getPlugin().getHorsesConfig().startWithSaddle)
+		{
+			horseData.setHasSaddle(true);
+		}
 		
-		return horse;
+		getPlugin().getHorseDatabase().saveHorse(horseData);
+		
+		return horseData;
 	}
 
 	@Override
