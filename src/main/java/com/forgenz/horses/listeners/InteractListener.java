@@ -31,6 +31,7 @@ package com.forgenz.horses.listeners;
 import static com.forgenz.horses.Messages.Command_Buy_Error_TooManyHorses;
 import static com.forgenz.horses.Messages.Misc_Command_Error_CantUseColor;
 import static com.forgenz.horses.Messages.Misc_Command_Error_CantUseFormattingCodes;
+import static com.forgenz.horses.Messages.Misc_Command_Error_HorseNameTooLong;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -153,6 +154,12 @@ public class InteractListener extends ForgeListener
 				}
 				else
 				{
+					if (name.length() > cfg.maxHorseNameLength)
+					{
+						Misc_Command_Error_HorseNameTooLong.sendMessage(player, cfg.maxHorseNameLength);
+						return;
+					}
+					
 					Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
 					boolean vip = player.hasPermission("horses.vip");
 					

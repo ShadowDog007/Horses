@@ -51,7 +51,7 @@ public class HorsesConfig implements ForgeCore
 	public boolean showAuthor;
 	
 	public final int summonTickDelay;
-	public final int maxHorses , vipMaxHorses;
+	public final int maxHorses , vipMaxHorses, maxHorseNameLength;
 	public final boolean blockRenamingOnNaturalHorses, allowClaimingWithTag, allowRenameFromNameTag, requireNameTagForRenaming, deleteHorseOnDeath, deleteHorseOnDeathByPlayer, protectFromBurning;
 	public final boolean invincibleHorses, protectFromOwner, protectFromPlayers, protectFromMobs;
 	
@@ -78,6 +78,11 @@ public class HorsesConfig implements ForgeCore
 		summonTickDelay = BukkitConfigUtil.getAndSet(cfg, "SummonTickDelay", Number.class, 200).intValue();
 		maxHorses = BukkitConfigUtil.getAndSet(cfg, "MaxHorses", Number.class, 5).intValue();
 		vipMaxHorses = BukkitConfigUtil.getAndSet(cfg, "VIPMaxHorses", Number.class, 5).intValue();
+		
+		int maxHorseNameLength = BukkitConfigUtil.getAndSet(cfg, "MaxHorseNameLength", Number.class, 20).intValue();
+		if (maxHorseNameLength > 30)
+			maxHorseNameLength = 30;
+		this.maxHorseNameLength = maxHorseNameLength;
 		
 		blockRenamingOnNaturalHorses = BukkitConfigUtil.getAndSet(cfg, "BlockRenamingOnNaturalHorses", Boolean.class, false);
 		allowClaimingWithTag = BukkitConfigUtil.getAndSet(cfg, "AllowClaimingFromNameTag", Boolean.class, true);

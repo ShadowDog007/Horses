@@ -61,7 +61,7 @@ public class BuyCommand extends ForgeCommand
 		registerAlias("buy", true);
 		registerPermission("horses.command.buy");
 		
-		registerArgument(new ForgeCommandArgument("^[a-z0-9_&]{0,16}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_NameValidCharacters.toString()));
+		registerArgument(new ForgeCommandArgument("^[a-z0-9_&]+$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_NameValidCharacters.toString()));
 		registerArgument(new ForgeCommandArgument("^[a-z]{0,21}$", Pattern.CASE_INSENSITIVE, false, Command_Buy_Error_Type.toString()));
 		
 		setAllowOp(true);
@@ -93,6 +93,12 @@ public class BuyCommand extends ForgeCommand
 		if (!player.hasPermission(type.getPermission()))
 		{
 			Command_Buy_Error_NoPermissionForThisType.sendMessage(player);
+			return;
+		}
+		
+		if (args.getArg(0).length() > cfg.maxHorseNameLength)
+		{
+			Misc_Command_Error_HorseNameTooLong.sendMessage(player, cfg.maxHorseNameLength);
 			return;
 		}
 		
