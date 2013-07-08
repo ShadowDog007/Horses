@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -76,6 +77,8 @@ public class BuyCommand extends ForgeCommand
 		
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		
+		String name = args.getArg(0);
+		
 		// Fetch the horse type
 		HorseType type = HorseType.closeValueOf(args.getArg(1));
 		
@@ -106,6 +109,10 @@ public class BuyCommand extends ForgeCommand
 				Misc_Command_Error_CantUseFormattingCodes.sendMessage(player);
 				return;
 			}
+			
+			// Filter out colour for use elsewhere
+			name = ChatColor.translateAlternateColorCodes('&', name);
+			name = ChatColor.stripColor(name);
 		}
 		
 		// Check if the player is in the correct region to use this command
@@ -127,14 +134,14 @@ public class BuyCommand extends ForgeCommand
 		}
 		
 		// Check if the player already has a horse with this name
-		if (stable.findHorse(args.getArg(0), true) != null)
+		if (stable.findHorse(name, true) != null)
 		{
 			Command_Buy_Error_AlreadyHaveAHorseWithThatName.sendMessage(player, args.getArg(0));
 			return;
 		}
 		
 		// Check the horses name is valid
-		if (cfg.rejectedHorseNamePattern.matcher(args.getArg(0)).find())
+		if (cfg.rejectedHorseNamePattern.matcher(name).find())
 		{
 			Misc_Command_Error_IllegalHorseNamePattern.sendMessage(player);
 			return;

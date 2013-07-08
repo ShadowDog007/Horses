@@ -32,6 +32,7 @@ import static com.forgenz.horses.Messages.Command_Buy_Error_TooManyHorses;
 import static com.forgenz.horses.Messages.Misc_Command_Error_CantUseColor;
 import static com.forgenz.horses.Messages.Misc_Command_Error_CantUseFormattingCodes;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
@@ -141,17 +142,14 @@ public class InteractListener extends ForgeListener
 			if (cfg.allowClaimingWithTag)
 			{
 				ItemMeta meta = event.getPlayer().getItemInHand().getItemMeta();
-				String name = meta.getDisplayName();
+				String name , displayName;
+				name = displayName = meta.getDisplayName();
 				
 				event.setCancelled(true);
 				
 				if (name == null)
 				{
 					Messages.Event_Interact_Error_ClaimWithTagMustSetAName.sendMessage(player);
-				}
-				else if (getPlugin().getHorsesConfig().rejectedHorseNamePattern.matcher("new name").find())
-				{
-					Messages.Misc_Command_Error_IllegalHorseNamePattern.sendMessage(event.getPlayer());
 				}
 				else
 				{
@@ -180,6 +178,10 @@ public class InteractListener extends ForgeListener
 							Misc_Command_Error_CantUseFormattingCodes.sendMessage(player);
 							return;
 						}
+						
+						// Filter out colour for the final check
+						name = ChatColor.translateAlternateColorCodes('&', name);
+						name = ChatColor.stripColor(name);
 					}
 					
 					if (stable.findHorse(name, true) != null)
@@ -188,9 +190,17 @@ public class InteractListener extends ForgeListener
 						return;
 					}
 					
+
+					// Make sure we have no naughty words
+					if (getPlugin().getHorsesConfig().rejectedHorseNamePattern.matcher(name).find())
+					{
+						Messages.Misc_Command_Error_IllegalHorseNamePattern.sendMessage(event.getPlayer());
+						return;
+					}
+					
 					HorseType type = HorseType.valueOf(horse);
 					
-					PlayerHorse horseData = stable.createHorse(name, type, player.hasPermission("horses.vip"), horse);
+					PlayerHorse horseData = stable.createHorse(displayName, type, player.hasPermission("horses.vip"), horse);
 					
 					Messages.Command_Buy_Success_Completion.sendMessage(player, "horses", horseData.getDisplayName());
 				}
