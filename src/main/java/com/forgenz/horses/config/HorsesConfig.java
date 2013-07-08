@@ -50,6 +50,7 @@ public class HorsesConfig implements ForgeCore
 	
 	public boolean showAuthor;
 	
+	public final long deathCooldown;
 	public final int summonTickDelay;
 	public final int maxHorses , vipMaxHorses, maxHorseNameLength;
 	public final boolean blockRenamingOnNaturalHorses, allowClaimingWithTag, allowRenameFromNameTag, requireNameTagForRenaming, deleteHorseOnDeath, deleteHorseOnDeathByPlayer, protectFromBurning;
@@ -75,6 +76,9 @@ public class HorsesConfig implements ForgeCore
 			worldGuardCfg = null;
 		
 		showAuthor = BukkitConfigUtil.getAndSet(cfg, "ShowAuthorInCommand", Boolean.class, true);
+		
+		deathCooldown = Math.abs(BukkitConfigUtil.getAndSet(cfg, "HorseDeathSummonCooldown", Number.class, 0).longValue()) * 1000;
+		
 		summonTickDelay = BukkitConfigUtil.getAndSet(cfg, "SummonTickDelay", Number.class, 200).intValue();
 		maxHorses = BukkitConfigUtil.getAndSet(cfg, "MaxHorses", Number.class, 5).intValue();
 		vipMaxHorses = BukkitConfigUtil.getAndSet(cfg, "VIPMaxHorses", Number.class, 5).intValue();
@@ -90,6 +94,7 @@ public class HorsesConfig implements ForgeCore
 		requireNameTagForRenaming = BukkitConfigUtil.getAndSet(cfg, "RequireNameTagForRenaming", Boolean.class, false);
 		deleteHorseOnDeath = BukkitConfigUtil.getAndSet(cfg, "DeleteHorseOnDeath", Boolean.class, true);
 		deleteHorseOnDeathByPlayer = BukkitConfigUtil.getAndSet(cfg, "DeleteHorseOnDeathByPlayer", Boolean.class, true);
+		
 		
 		invincibleHorses = BukkitConfigUtil.getAndSet(cfg, "InvincibleHorses", Boolean.class, false);
 		protectFromOwner = BukkitConfigUtil.getAndSet(cfg, "ProtectFromOwner", Boolean.class, true);

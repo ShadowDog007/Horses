@@ -91,6 +91,15 @@ public class SummonCommand extends ForgeCommand
 		}
 		
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
+		
+		// Check if the horse is on a death cooldown
+		long timeDiff = System.currentTimeMillis() - horse.getLastDeath();
+		if (cfg.deathCooldown > timeDiff)
+		{
+			Command_Summon_Error_OnDeathCooldown.sendMessage(player, horse.getDisplayName(), (cfg.deathCooldown - timeDiff) / 1000);
+			return;
+		}
+		
 		// Check if the player is in the correct region to use this command
 		if (cfg.worldGuardCfg != null && !cfg.worldGuardCfg.allowCommand(cfg.worldGuardCfg.commandSummonAllowedRegions, player.getLocation(cacheLoc)))
 		{

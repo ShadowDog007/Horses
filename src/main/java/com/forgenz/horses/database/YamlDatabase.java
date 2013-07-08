@@ -109,6 +109,7 @@ public class YamlDatabase extends HorseDatabase
 			ConfigurationSection horseSect = sect.getConfigurationSection(horse);
 			
 			HorseType type = HorseType.exactValueOf(horseSect.getString("type", HorseType.White.toString()));
+			long lastDeath = horseSect.getLong("lastdeath") * 1000;
 			double maxHealth = horseSect.getDouble("maxhealth");
 			double health = horseSect.getDouble("health");
 			boolean saddle = horseSect.getBoolean("saddle", getPlugin().getHorsesConfig().startWithSaddle);
@@ -117,6 +118,7 @@ public class YamlDatabase extends HorseDatabase
 			Material armour = Material.getMaterial(horseSect.getString("armour", "null"));
 			
 			PlayerHorse horseData = new PlayerHorse(getPlugin(), stable, horse, type, maxHealth, health, null);
+			horseData.setLastDeath(lastDeath);
 			horseData.setHasSaddle(saddle);
 			horseData.setArmour(armour);
 			horseData.setHasChest(hasChest);
@@ -139,6 +141,7 @@ public class YamlDatabase extends HorseDatabase
 			ConfigurationSection horseSect = BukkitConfigUtil.getAndSetConfigurationSection(sect, colourCodedDisplayName);
 			
 			horseSect.set("type", horse.getType().toString());
+			horseSect.set("lastdeath", horse.getLastDeath() / 1000);
 			horseSect.set("maxhealth", horse.getMaxHealth());
 			horseSect.set("health", horse.getHealth());
 			horseSect.set("saddle", horse.hasSaddle());

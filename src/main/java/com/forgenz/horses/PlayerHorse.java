@@ -61,6 +61,8 @@ public class PlayerHorse implements ForgeCore
 	
 	private Horse horse;
 	
+	private long lastDeath = 0;
+	
 	private String name;
 	private String displayName;
 	
@@ -129,6 +131,16 @@ public class PlayerHorse implements ForgeCore
 		return type;
 	}
 	
+	public long getLastDeath()
+	{
+		return lastDeath;
+	}
+	
+	public void setLastDeath(long time)
+	{
+		lastDeath = time;
+	}
+	
 	public double getMaxHealth()
 	{
 		if (horse != null && horse.isValid())
@@ -164,6 +176,16 @@ public class PlayerHorse implements ForgeCore
 		if (horse != null)
 		{
 			horse.setMaxHealth(amount);
+		}
+	}
+	
+	public void setHealth(double amount)
+	{
+		health = amount;
+		
+		if (horse != null)
+		{
+			horse.setHealth(amount);
 		}
 	}
 	
