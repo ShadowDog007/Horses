@@ -43,6 +43,7 @@ import com.forgenz.forgecore.v1_0.command.ForgeCommandArgument;
 import com.forgenz.horses.Horses;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
+import com.forgenz.horses.config.HorseTypeConfig;
 
 public class ListCommand extends ForgeCommand
 {
@@ -101,7 +102,8 @@ public class ListCommand extends ForgeCommand
 			// Horses name
 			horses.append(Command_List_Success_HorseNamePrefix).append(horse.getDisplayName());
 			// Horses type
-			horses.append(":").append(Command_List_Success_HorseTypePrefix).append(horse.getType());
+			HorseTypeConfig cfg = getPlugin().getHorsesConfig().horseTypeConfigs.get(horse.getType().toString());
+			horses.append(":").append(Command_List_Success_HorseTypePrefix).append(cfg.displayName);
 		}
 		
 		if (horses.length() == 0)

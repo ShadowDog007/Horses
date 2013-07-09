@@ -28,25 +28,30 @@
 
 package com.forgenz.horses.config;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 import com.forgenz.forgecore.v1_0.ForgeCore;
 import com.forgenz.forgecore.v1_0.bukkit.ForgePlugin;
 import com.forgenz.forgecore.v1_0.util.BukkitConfigUtil;
+import com.forgenz.horses.HorseType;
 
 public class HorseTypeConfig implements ForgeCore
 {
 	private ForgePlugin plugin;
 	
 	// Health related stuff
+	public final String displayName;
 	public final float defaultHorseHp, defaultHorseMaxHp, vipHorseHp, vipHorseMaxHp, horseMaximumHpUpgrade;
 	
 	// Economy related stuff
 	public final double buyCost, healCost, hpUpgradeCost, renameCost;
 	
-	public HorseTypeConfig(ForgePlugin plugin, ConfigurationSection cfg)
+	public HorseTypeConfig(ForgePlugin plugin, ConfigurationSection cfg, HorseType type)
 	{
 		this.plugin = plugin;
+		
+		displayName = ChatColor.translateAlternateColorCodes('&', BukkitConfigUtil.getAndSet(cfg, "DisplayName", String.class, type.toString()));
 		
 		defaultHorseHp = BukkitConfigUtil.getAndSet(cfg, "DefaultHealth", Number.class, 12.0).floatValue();
 		defaultHorseMaxHp = BukkitConfigUtil.getAndSet(cfg, "DefaultMaxHealth", Number.class, 12.0).floatValue();

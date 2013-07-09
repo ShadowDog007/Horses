@@ -80,7 +80,7 @@ public class BuyCommand extends ForgeCommand
 		String name = args.getArg(0);
 		
 		// Fetch the horse type
-		HorseType type = HorseType.closeValueOf(args.getArg(1));
+		HorseType type = cfg.getHorseTypeLike(args.getArg(1));
 		
 		// Check if it is a valid horse type
 		if (type == null)

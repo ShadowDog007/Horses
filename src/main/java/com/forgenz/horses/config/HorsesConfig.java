@@ -129,18 +129,43 @@ public class HorsesConfig implements ForgeCore
 		this.horseTypeConfigs = Collections.unmodifiableMap(horseTypeConfigs);
 		
 		// Iterate through each type and setup type configs
-		// TODO Use the actual horse types
 		for (HorseType type : HorseType.values())
 		{
 			ConfigurationSection sect = BukkitConfigUtil.getAndSetConfigurationSection(cfg, "Horses.Types." + type);
 			
-			horseTypeConfigs.put(type.toString(), new HorseTypeConfig(plugin, sect));			
+			horseTypeConfigs.put(type.toString(), new HorseTypeConfig(plugin, sect, type));			
 		}
 	}
 	
 	public HorseTypeConfig getHorseTypeConfig(HorseType type)
 	{
 		return horseTypeConfigs.get(type.toString());
+	}
+	
+	public HorseType getHorseTypeLike(String like)
+	{
+		like = like.toLowerCase();
+		
+		for (HorseType type : HorseType.values())
+		{
+			if (horseTypeConfigs.get(type.toString()).displayName.toLowerCase().startsWith(like))
+			{
+				return type;
+			}
+		}
+		return null;
+	}
+	
+	public HorseType exactValueOf(String typeStr)
+	{		
+		for (HorseType type : HorseType.values())
+		{
+			if (horseTypeConfigs.get(type.toString()).displayName.equalsIgnoreCase(typeStr))
+			{
+				return type;
+			}
+		}
+		return null;
 	}
 
 	@Override

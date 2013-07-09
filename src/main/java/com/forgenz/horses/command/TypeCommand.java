@@ -83,11 +83,12 @@ public class TypeCommand extends ForgeCommand
 				bldr.append(Command_Type_TypeSeparator);
 			}
 			
-			bldr.append(Command_Type_HorseTypePrefix).append(type);
+			HorseTypeConfig cfg = getPlugin().getHorsesConfig().horseTypeConfigs.get(type.toString());
+			
+			bldr.append(Command_Type_HorseTypePrefix).append(cfg.displayName);
 			
 			if (getPlugin().getEconomy() != null)
 			{
-				HorseTypeConfig cfg = getPlugin().getHorsesConfig().getHorseTypeConfig(type);
 				bldr.append(Command_Type_TypeCostSeparator).append(Command_Type_HorseCostPrefix).append(cfg.buyCost);
 			}
 		}
