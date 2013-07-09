@@ -28,6 +28,7 @@
 
 package com.forgenz.horses.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
@@ -35,6 +36,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -104,6 +106,29 @@ public class DamageListener extends ForgeListener
 		if (event.getClass() == EntityDamageByEntityEvent.class)
 		{
 			onEntityDamageByEntity((EntityDamageByEntityEvent) event, horse, horseData);
+		}
+		
+		if (!event.isCancelled() && cfg.onlyHurtHorseIfOwnerCanBeHurt)
+		{
+			Player owner = Bukkit.getPlayerExact(horseData.getStable().getOwner());
+			if (owner == null)
+			{
+				return;
+			}
+			
+			EntityDamageEvent e = null;
+			
+			// Create a copy of the Damage event (But with 0 damage)
+			if (event.getClass() == EntityDamageEvent.class)
+				e = new EntityDamageEvent(owner, event.getCause(), 0.0);
+			else if (event.getClass() == EntityDamageByEntityEvent.class)
+				e = new EntityDamageByEntityEvent(((EntityDamageByEntityEvent) event).getDamager(), owner, event.getCause(), 0.0);
+			else if (event.getClass() == EntityDamageByBlockEvent.class)
+				e = new EntityDamageByBlockEvent(((EntityDamageByBlockEvent) event).getDamager(), owner, event.getCause(), 0.0);
+			
+			Bukkit.getPluginManager().callEvent(e);
+			
+			event.setCancelled(e.isCancelled());
 		}
 	}
 	
