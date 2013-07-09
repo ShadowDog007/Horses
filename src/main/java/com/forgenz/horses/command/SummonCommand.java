@@ -49,7 +49,7 @@ import com.forgenz.horses.config.HorsesConfig;
 
 public class SummonCommand extends ForgeCommand
 {
-	private final HashMap<String, BukkitRunnable> summonTasks = new HashMap<String, BukkitRunnable>();
+	private final HashMap<String, Long> summonTasks = new HashMap<String, Long>();
 	private final Location cacheLoc = new Location(null, 0.0, 0.0, 0.0);
 	
 	public SummonCommand(ForgePlugin plugin)
@@ -75,10 +75,18 @@ public class SummonCommand extends ForgeCommand
 		
 		final String playerName = player.getName();
 		
-		if (summonTasks.containsKey(playerName))
+		Long lastSummon = summonTasks.get(playerName);
+		if (lastSummon != null)
 		{
-			Command_Summon_Error_AlreadySummoning.sendMessage(player);
-			return;
+			if (System.nanoTime() - lastSummon > getPlugin().getHorsesConfig().summonTickDelay * 50)
+			{
+				summonTasks.remove(playerName);
+			}
+			else
+			{
+				Command_Summon_Error_AlreadySummoning.sendMessage(player);
+				return;
+			}
 		}
 		
 		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
@@ -147,7 +155,7 @@ public class SummonCommand extends ForgeCommand
 			};
 
 			task.runTaskLater(getPlugin(), tickDelay);
-			summonTasks.put(playerName, task);
+			summonTasks.put(playerName, System.currentTimeMillis());
 			Command_Summon_Success_SummoningHorse.sendMessage(player, horse.getDisplayName(), tickDelay / 20);
 		}
 	}
