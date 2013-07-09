@@ -52,6 +52,7 @@ public class ListCommand extends ForgeCommand
 		super(plugin);
 		
 		registerAlias("list", true);
+		registerAlias("l", false);
 		registerPermission("horses.command.list");
 		
 		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,16}$", Pattern.CASE_INSENSITIVE, true, Command_List_Error_InvalidCharactersPlayerName.toString()));

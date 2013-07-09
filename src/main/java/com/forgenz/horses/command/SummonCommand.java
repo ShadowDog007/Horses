@@ -57,6 +57,7 @@ public class SummonCommand extends ForgeCommand
 		super(plugin);
 		
 		registerAlias("summon", true);
+		registerAlias("s", true);
 		registerPermission("horses.command.summon");
 		
 		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,16}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_InvalidName.toString()));

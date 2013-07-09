@@ -59,6 +59,7 @@ public class BuyCommand extends ForgeCommand
 		super(plugin);
 		
 		registerAlias("buy", true);
+		registerAlias("b", false);
 		registerPermission("horses.command.buy");
 		
 		registerArgument(new ForgeCommandArgument("^[a-z0-9_&]+$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_NameValidCharacters.toString()));
