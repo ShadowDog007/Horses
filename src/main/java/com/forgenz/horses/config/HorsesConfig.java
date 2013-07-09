@@ -53,6 +53,7 @@ public class HorsesConfig implements ForgeCore
 	public final long deathCooldown;
 	public final int summonTickDelay;
 	public final int maxHorses , vipMaxHorses, maxHorseNameLength;
+	public final boolean dismissHorseOnTeleport;
 	public final boolean blockRenamingOnNaturalHorses, allowClaimingWithTag, allowRenameFromNameTag, requireNameTagForRenaming, deleteHorseOnDeath, deleteHorseOnDeathByPlayer, protectFromBurning;
 	public final boolean invincibleHorses, protectFromOwner, protectFromPlayers, protectFromMobs;
 	
@@ -88,6 +89,7 @@ public class HorsesConfig implements ForgeCore
 			maxHorseNameLength = 30;
 		this.maxHorseNameLength = maxHorseNameLength;
 		
+		dismissHorseOnTeleport = BukkitConfigUtil.getAndSet(cfg, "DismissHorseOnTeleport", Boolean.class, false);
 		blockRenamingOnNaturalHorses = BukkitConfigUtil.getAndSet(cfg, "BlockRenamingOnNaturalHorses", Boolean.class, false);
 		allowClaimingWithTag = BukkitConfigUtil.getAndSet(cfg, "AllowClaimingFromNameTag", Boolean.class, true);
 		allowRenameFromNameTag = BukkitConfigUtil.getAndSet(cfg, "AllowRenamedFromNameTag", Boolean.class, false);

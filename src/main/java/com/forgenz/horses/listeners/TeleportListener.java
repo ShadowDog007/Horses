@@ -56,8 +56,15 @@ public class TeleportListener extends ForgeListener
 		PlayerHorse horse = stable.getActiveHorse();
 		if (horse != null && horse.getHorse() != null && horse.getHorse().isValid())
 		{
-			// Teleport the horse with the player
-			horse.getHorse().teleport(event.getTo());
+			if (getPlugin().getHorsesConfig().dismissHorseOnTeleport)
+			{
+				horse.removeHorse();
+			}
+			else
+			{
+				// Teleport the horse with the player
+				horse.getHorse().teleport(event.getTo());
+			}
 		}
 	}
 	
