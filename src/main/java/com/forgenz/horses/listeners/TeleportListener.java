@@ -34,6 +34,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgeListener;
 import com.forgenz.horses.Horses;
+import com.forgenz.horses.Messages;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
 
@@ -58,7 +59,12 @@ public class TeleportListener extends ForgeListener
 		{
 			if (getPlugin().getHorsesConfig().dismissHorseOnTeleport)
 			{
-				horse.removeHorse();
+				// Check if the player moved too far away
+				if (event.getFrom().getWorld() != event.getTo().getWorld() || event.getFrom().distanceSquared(event.getTo()) > 1024)
+				{
+					Messages.Event_MovedTooFarAway.sendMessage(event.getPlayer(), horse.getDisplayName());
+					horse.removeHorse();
+				}
 			}
 			else
 			{
