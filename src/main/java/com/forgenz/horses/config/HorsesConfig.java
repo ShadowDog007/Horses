@@ -51,6 +51,7 @@ public class HorsesConfig implements ForgeCore
 	public boolean showAuthor;
 	
 	public final boolean onlyHurtHorseIfOwnerCanBeHurt;
+	public final boolean bypassSpawnProtection;
 	public final long deathCooldown;
 	public final int summonTickDelay;
 	public final int maxHorses , vipMaxHorses, maxHorseNameLength;
@@ -91,6 +92,7 @@ public class HorsesConfig implements ForgeCore
 		this.maxHorseNameLength = maxHorseNameLength;
 		
 		onlyHurtHorseIfOwnerCanBeHurt = BukkitConfigUtil.getAndSet(cfg, "OnlyHurtHorseIfOwnerCanBeHurt", Boolean.class, true);
+		bypassSpawnProtection = BukkitConfigUtil.getAndSet(cfg, "BypassSpawnProtection", Boolean.class, false);
 		dismissHorseOnTeleport = BukkitConfigUtil.getAndSet(cfg, "DismissHorseOnTeleport", Boolean.class, false);
 		blockRenamingOnNaturalHorses = BukkitConfigUtil.getAndSet(cfg, "BlockRenamingOnNaturalHorses", Boolean.class, false);
 		allowClaimingWithTag = BukkitConfigUtil.getAndSet(cfg, "AllowClaimingFromNameTag", Boolean.class, true);

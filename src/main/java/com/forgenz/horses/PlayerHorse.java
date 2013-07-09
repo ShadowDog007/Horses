@@ -334,6 +334,10 @@ public class PlayerHorse implements ForgeCore
 		
 		Location loc = player.getLocation(cacheLoc);
 		
+		// Prevent the horse from not being spawned
+		if (getPlugin().getHorsesConfig().bypassSpawnProtection)
+			getPlugin().getHorseSpawnListener().setSpawning();
+		
 		// TODO Use method from CraftBukkit when they fix it
 		// horse = (Horse) loc.getWorld().spawnEntity(loc, EntityType.HORSE);
 		CraftWorld world = (CraftWorld) loc.getWorld();

@@ -45,44 +45,64 @@ import com.forgenz.forgecore.v1_0.bukkit.ForgeListener;
 import com.forgenz.horses.Horses;
 import com.forgenz.horses.util.ClassUtil;
 
-public class HorseFixer extends ForgeListener
+public class HorseSpawnListener extends ForgeListener
 {
-	public HorseFixer(Horses plugin)
+	private boolean spawning;
+	
+	public HorseSpawnListener(Horses plugin)
 	{
 		super(plugin);
 		
 		register();
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void setSpawning()
+	{
+		spawning = true;
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onHorseSpawn(CreatureSpawnEvent event)
 	{
-		// Only entities which are UNKNOWN could be broken horses
-		if (event.getEntityType() != EntityType.UNKNOWN)
+		if (event.getEntityType() != EntityType.HORSE)
 			return;
 		
-		CraftEntity entity = (CraftEntity) event.getEntity();
-		
-		if (entity.getHandle() instanceof EntityHorse)
+		if (spawning)
 		{
-			try
+			event.setCancelled(false);
+			spawning = false;
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onHorseSpawnFixer(CreatureSpawnEvent event)
+	{
+		// Only entities which are UNKNOWN could be broken horses
+		if (event.getEntityType() == EntityType.UNKNOWN)
+		{
+			CraftEntity entity = (CraftEntity) event.getEntity();
+			
+			if (entity.getHandle() instanceof EntityHorse)
 			{
-				Field f = ClassUtil.getField(entity.getHandle().getClass(), "bukkitEntity");
-				
-				f.setAccessible(true);
-				f.set(entity.getHandle(), new CraftHorse((CraftServer) entity.getServer(), (EntityAnimal) entity.getHandle()));
-			}
-			catch (NoSuchFieldException e)
-			{
-				e.printStackTrace();
-			}
-			catch (IllegalArgumentException e)
-			{
-				e.printStackTrace();
-			}
-			catch (IllegalAccessException e)
-			{
-				e.printStackTrace();
+				try
+				{
+					Field f = ClassUtil.getField(entity.getHandle().getClass(), "bukkitEntity");
+					
+					f.setAccessible(true);
+					f.set(entity.getHandle(), new CraftHorse((CraftServer) entity.getServer(), (EntityAnimal) entity.getHandle()));
+				}
+				catch (NoSuchFieldException e)
+				{
+					e.printStackTrace();
+				}
+				catch (IllegalArgumentException e)
+				{
+					e.printStackTrace();
+				}
+				catch (IllegalAccessException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}

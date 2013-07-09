@@ -54,7 +54,7 @@ import com.forgenz.horses.database.HorseDatabase;
 import com.forgenz.horses.database.YamlDatabase;
 import com.forgenz.horses.listeners.DamageListener;
 import com.forgenz.horses.listeners.HorseDeathListener;
-import com.forgenz.horses.listeners.HorseFixer;
+import com.forgenz.horses.listeners.HorseSpawnListener;
 import com.forgenz.horses.listeners.InteractListener;
 import com.forgenz.horses.listeners.PlayerListener;
 import com.forgenz.horses.listeners.TeleportListener;
@@ -71,6 +71,8 @@ public class Horses extends ForgePlugin
 	private ForgeCommandHandler commandHandler;
 	
 	private HorseDismissTask horseDismissTask;
+	
+	private HorseSpawnListener spawnListener;
 	
 	public static Horses getInstance()
 	{
@@ -155,9 +157,7 @@ public class Horses extends ForgePlugin
 		new PlayerListener(this);
 		new TeleportListener(this);
 		
-		// Spigot already fixed horses, so we don't need to fix it ourself
-		if (!getServer().getName().equalsIgnoreCase("Spigot"))
-			new HorseFixer(this);
+		spawnListener = new HorseSpawnListener(this);
 		
 		horseDismissTask = new HorseDismissTask(this);
 		horseDismissTask.runTaskTimer(this, 20L, 10L);
@@ -199,5 +199,10 @@ public class Horses extends ForgePlugin
 	public HorseDatabase getHorseDatabase()
 	{
 		return database;
+	}
+	
+	public HorseSpawnListener getHorseSpawnListener()
+	{
+		return spawnListener;
 	}
 }
