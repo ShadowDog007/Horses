@@ -31,15 +31,15 @@ package com.forgenz.horses;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
 
-import net.minecraft.server.v1_6_R1.EntityHorse;
-import net.minecraft.server.v1_6_R1.NBTTagCompound;
+import net.minecraft.server.v1_6_R2.EntityHorse;
+import net.minecraft.server.v1_6_R2.NBTTagCompound;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_6_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_6_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftHorse;
+import org.bukkit.craftbukkit.v1_6_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftHorse;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
@@ -253,10 +253,7 @@ public class PlayerHorse implements ForgeCore
 		if (horse != null)
 		{
 			EntityHorse h = (EntityHorse) ((CraftHorse) horse).getHandle();
-			NBTTagCompound nbt = new NBTTagCompound();
-			h.b(nbt);
-			
-			this.hasChest = nbt.getBoolean("ChestedHorse");
+			hasChest = h.hasChest();
 		}
 		
 		return hasChest;

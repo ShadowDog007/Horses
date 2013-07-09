@@ -30,12 +30,12 @@ package com.forgenz.horses.listeners;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.server.v1_6_R1.EntityHorse;
-import net.minecraft.server.v1_6_R1.EntityAnimal;
+import net.minecraft.server.v1_6_R2.EntityHorse;
+import net.minecraft.server.v1_6_R2.EntityAnimal;
 
-import org.bukkit.craftbukkit.v1_6_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftHorse;
+import org.bukkit.craftbukkit.v1_6_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftHorse;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

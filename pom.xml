@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>Horses</groupId>
   <artifactId>Horses</artifactId>
-  <version>0.4.5</version>
+  <version>0.5.0</version>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -50,7 +50,7 @@
   	<dependency>
   		<groupId>org.bukkit</groupId>
   		<artifactId>bukkit</artifactId>
-  		<version>1.6.1-R0.1-SNAPSHOT</version>
+  		<version>1.6.2-R0.1-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>net.milkbowl.vault</groupId>
@@ -60,7 +60,7 @@
   	<dependency>
   		<groupId>org.bukkit</groupId>
   		<artifactId>craftbukkit</artifactId>
-  		<version>1.6.1-R0.1-SNAPSHOT</version>
+  		<version>1.6.2-R0.1-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>worldguard</groupId>

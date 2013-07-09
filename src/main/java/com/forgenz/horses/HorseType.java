@@ -28,9 +28,9 @@
 
 package com.forgenz.horses;
 
-import net.minecraft.server.v1_6_R1.EntityHorse;
+import net.minecraft.server.v1_6_R2.EntityHorse;
 
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftHorse;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftHorse;
 import org.bukkit.entity.Horse;
 
 
@@ -153,11 +153,11 @@ public enum HorseType
 		CraftHorse chorse = (CraftHorse) horse;
 		EntityHorse mhorse = (EntityHorse) chorse.getHandle();
 		
-		switch (mhorse.bP())
+		switch (mhorse.getType())
 		{
 			case 0:
 				HorseType[] a = values();
-				int var = mhorse.bQ();
+				int var = mhorse.getVariant();
 				for (int i = 0; i < a.length; ++i)
 					if (a[i].getVariant() == var)
 						return a[i];
