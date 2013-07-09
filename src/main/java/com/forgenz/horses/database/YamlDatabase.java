@@ -126,12 +126,23 @@ public class YamlDatabase extends HorseDatabase
 			
 			stable.addHorse(horseData);
 		}
+		
+		if (cfg.isString("lastactive"))
+		{
+			PlayerHorse horse = stable.findHorse(cfg.getString("lastactive"), true);
+			stable.setLastActiveHorse(horse);
+		}
 	}
 
 	@Override
 	public void saveStable(Stable stable)
 	{
 		YamlConfiguration cfg = new YamlConfiguration();
+		
+		if (stable.getLastActiveHorse() != null)
+			cfg.set("lastactive", stable.getLastActiveHorse().getName());
+		else
+			cfg.set("lastactive", null);
 		
 		ConfigurationSection sect = BukkitConfigUtil.getAndSetConfigurationSection(cfg, "Horses");
 		

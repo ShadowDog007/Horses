@@ -46,6 +46,7 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 	private List<PlayerHorse> horses = Collections.synchronizedList(new LinkedList<PlayerHorse>());
 	
 	private PlayerHorse activeHorse;
+	private PlayerHorse lastActiveHorse;
 	
 	public Stable(Horses plugin, String player)
 	{
@@ -80,9 +81,23 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 		{
 			horseData.removeHorse();
 			horseData.saveChanges();
+			lastActiveHorse = horseData;
 		}
 		
 		activeHorse = horseData;
+	}
+	
+	public PlayerHorse getLastActiveHorse()
+	{
+		return lastActiveHorse;
+	}
+	
+	public void setLastActiveHorse(PlayerHorse horse)
+	{
+		if (!horses.contains(horse))
+			return;
+		
+		lastActiveHorse = horse;
 	}
 	
 	/**

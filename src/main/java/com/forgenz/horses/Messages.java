@@ -88,6 +88,7 @@ public enum Messages implements ForgeLocaleEnum
 	Command_Rename_Description("Lets you rename one of your horses"),
 	
 	// Command Summon messages
+	Command_Summon_Error_NoLastActiveHorse("&cYou don't have an avaliable last active horse."),
 	Command_Summon_Error_OnDeathCooldown("&b%1$s &cdied too recently, wait &b%2$d seconds"),
 	Command_Summon_Error_WorldGuard_CantUseSummonHere("&cYou can't summon horses in this area"),
 	Command_Summon_Error_AlreadySummoning("&cYou are already summoning a horse"),

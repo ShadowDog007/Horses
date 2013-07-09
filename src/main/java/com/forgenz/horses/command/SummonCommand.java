@@ -60,7 +60,7 @@ public class SummonCommand extends ForgeCommand
 		registerAlias("s", true);
 		registerPermission("horses.command.summon");
 		
-		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,16}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_InvalidName.toString()));
+		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,16}$", Pattern.CASE_INSENSITIVE, true, Misc_Command_Error_InvalidName.toString()));
 		
 		setAllowOp(true);
 		setAllowConsole(false);
@@ -82,13 +82,28 @@ public class SummonCommand extends ForgeCommand
 		}
 		
 		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
+		final PlayerHorse horse;
 		
-		final PlayerHorse horse = stable.findHorse(args.getArg(0), false);
-		
-		if (horse == null)
+		// Check if we are summoning the last active horse
+		if (args.getNumArgs() == 0)
 		{
-			Misc_Command_Error_NoHorseNamed.sendMessage(player, args.getArg(0));
-			return;
+			horse = stable.getLastActiveHorse();
+			
+			if (horse == null)
+			{
+				Command_Summon_Error_NoLastActiveHorse.sendMessage(player);
+				return;
+			}
+		}
+		else
+		{
+			horse = stable.findHorse(args.getArg(0), false);
+			
+			if (horse == null)
+			{
+				Misc_Command_Error_NoHorseNamed.sendMessage(player, args.getArg(0));
+				return;
+			}
 		}
 		
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
