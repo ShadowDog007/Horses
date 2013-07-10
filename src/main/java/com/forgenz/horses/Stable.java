@@ -191,6 +191,9 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 	
 	public void deleteHorse(PlayerHorse playerHorse)
 	{
+		if (lastActiveHorse == playerHorse)
+			lastActiveHorse = null;
+		
 		horses.remove(playerHorse);
 		getPlugin().getHorseDatabase().deleteHorse(playerHorse);
 	}
