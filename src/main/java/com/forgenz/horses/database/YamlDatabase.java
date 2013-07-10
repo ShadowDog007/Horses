@@ -137,6 +137,17 @@ public class YamlDatabase extends HorseDatabase
 	@Override
 	public void saveStable(Stable stable)
 	{
+		// Fetch the file to save data to
+		File playerDataFile = getPlayersConfigFile(stable.getOwner());
+		
+		// Delete the players config file if the player has no horses
+		if (stable.getHorseCount() == 0)
+		{
+			if (playerDataFile.exists())
+				playerDataFile.delete();
+			return;
+		}
+		
 		YamlConfiguration cfg = new YamlConfiguration();
 		
 		if (stable.getLastActiveHorse() != null)
@@ -165,7 +176,7 @@ public class YamlDatabase extends HorseDatabase
 		
 		try
 		{
-			cfg.save(getPlayersConfigFile(stable.getOwner()));
+			cfg.save(playerDataFile);
 		}
 		catch (IOException e)
 		{
