@@ -115,6 +115,7 @@ public enum Messages implements ForgeLocaleEnum
 	Event_MovedTooFarAway("&b%1$s &ewandered off and was dismissed"),
 	
 	// Misc Command messages
+	Misc_Command_Error_HorseNameEmpty("&cYou can't have horses with only a colour code in their name"),
 	Misc_Command_Error_HorseNameTooLong("&cHorses names can't be more than &b%1$d &ccharacters long"),
 	Misc_Command_Error_CantUseColor("&cYou don't have permission to use coloured horse names"),
 	Misc_Command_Error_CantUseFormattingCodes("&cYou don't have permission to use formatting codes in your horses name"),

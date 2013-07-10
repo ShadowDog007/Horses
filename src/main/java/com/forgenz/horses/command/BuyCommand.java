@@ -122,6 +122,13 @@ public class BuyCommand extends ForgeCommand
 			name = ChatColor.stripColor(name);
 		}
 		
+		// Make sure the name is more than one character
+		if (name.length() == 0)
+		{
+			Misc_Command_Error_HorseNameEmpty.sendMessage(player);
+			return;
+		}
+		
 		// Check if the player is in the correct region to use this command
 		if (cfg.worldGuardCfg != null && !cfg.worldGuardCfg.allowCommand(cfg.worldGuardCfg.commandBuyAllowedRegions, player.getLocation(cacheLoc)))
 		{

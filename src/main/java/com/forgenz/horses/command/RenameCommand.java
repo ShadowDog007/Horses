@@ -32,6 +32,7 @@ import static com.forgenz.horses.Messages.*;
 
 import java.util.regex.Pattern;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -72,6 +73,8 @@ public class RenameCommand extends ForgeCommand
 		
 		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
 		
+		String name = args.getArg(1);
+		
 		// Find the horse!
 		PlayerHorse horse = stable.findHorse(args.getArg(0), false);
 		
@@ -83,25 +86,35 @@ public class RenameCommand extends ForgeCommand
 		}
 		
 		// Check if the player is allowed to use coloured names
-		if (args.getArg(1).contains("&"))
+		if (name.contains("&"))
 		{
 			if (!player.hasPermission("horses.colour"))
 			{
 				Misc_Command_Error_CantUseColor.sendMessage(player);
 				return;
 			}
-			else if (!player.hasPermission("horses.formattingcodes") && PlayerHorse.FORMATTING_CODES_PATTERN.matcher(args.getArg(1)).find())
+			else if (!player.hasPermission("horses.formattingcodes") && PlayerHorse.FORMATTING_CODES_PATTERN.matcher(name).find())
 			{
 				Misc_Command_Error_CantUseFormattingCodes.sendMessage(player);
 				return;
 			}
+			
+			name = ChatColor.translateAlternateColorCodes('&', name);
+			name = ChatColor.stripColor(name);
+		}
+		
+		// Make sure the name is more than one character
+		if (name.length() == 0)
+		{
+			Misc_Command_Error_HorseNameEmpty.sendMessage(player);
+			return;
 		}
 			
 		
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		
 		// Check the horses name is valid
-		if (cfg.rejectedHorseNamePattern.matcher(args.getArg(1)).find())
+		if (cfg.rejectedHorseNamePattern.matcher(name).find())
 		{
 			Misc_Command_Error_IllegalHorseNamePattern.sendMessage(player);
 			return;
