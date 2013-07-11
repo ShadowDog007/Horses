@@ -50,6 +50,7 @@ public class HorsesConfig implements ForgeCore
 	
 	public boolean showAuthor;
 	
+	public final boolean keepEquipmentOnDeath;
 	public final boolean onlyHurtHorseIfOwnerCanBeHurt;
 	public final boolean bypassSpawnProtection;
 	public final long deathCooldown;
@@ -80,6 +81,7 @@ public class HorsesConfig implements ForgeCore
 		
 		showAuthor = BukkitConfigUtil.getAndSet(cfg, "ShowAuthorInCommand", Boolean.class, true);
 		
+		keepEquipmentOnDeath = BukkitConfigUtil.getAndSet(cfg, "KeepEquipmentOnDeath", Boolean.class, false);
 		deathCooldown = Math.abs(BukkitConfigUtil.getAndSet(cfg, "HorseDeathSummonCooldown", Number.class, 0).longValue()) * 1000;
 		
 		summonTickDelay = BukkitConfigUtil.getAndSet(cfg, "SummonTickDelay", Number.class, 200).intValue();

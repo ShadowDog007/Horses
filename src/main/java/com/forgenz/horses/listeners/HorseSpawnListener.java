@@ -28,14 +28,6 @@
 
 package com.forgenz.horses.listeners;
 
-import java.lang.reflect.Field;
-
-import net.minecraft.server.v1_6_R2.EntityHorse;
-import net.minecraft.server.v1_6_R2.EntityAnimal;
-
-import org.bukkit.craftbukkit.v1_6_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftHorse;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -43,7 +35,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgeListener;
 import com.forgenz.horses.Horses;
-import com.forgenz.horses.util.ClassUtil;
 
 public class HorseSpawnListener extends ForgeListener
 {
@@ -71,39 +62,6 @@ public class HorseSpawnListener extends ForgeListener
 		{
 			event.setCancelled(false);
 			spawning = false;
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onHorseSpawnFixer(CreatureSpawnEvent event)
-	{
-		// Only entities which are UNKNOWN could be broken horses
-		if (event.getEntityType() == EntityType.UNKNOWN)
-		{
-			CraftEntity entity = (CraftEntity) event.getEntity();
-			
-			if (entity.getHandle() instanceof EntityHorse)
-			{
-				try
-				{
-					Field f = ClassUtil.getField(entity.getHandle().getClass(), "bukkitEntity");
-					
-					f.setAccessible(true);
-					f.set(entity.getHandle(), new CraftHorse((CraftServer) entity.getServer(), (EntityAnimal) entity.getHandle()));
-				}
-				catch (NoSuchFieldException e)
-				{
-					e.printStackTrace();
-				}
-				catch (IllegalArgumentException e)
-				{
-					e.printStackTrace();
-				}
-				catch (IllegalAccessException e)
-				{
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 }

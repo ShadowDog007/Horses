@@ -33,7 +33,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Horse;
+import org.bukkit.inventory.ItemStack;
 
 import com.forgenz.forgecore.v1_0.ForgeCore;
 import com.forgenz.horses.config.HorseTypeConfig;
@@ -154,7 +156,7 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 		
 		if (getPlugin().getHorsesConfig().startWithSaddle)
 		{
-			horseData.setHasSaddle(true);
+			horseData.setItem(0, new ItemStack(Material.SADDLE));
 		}
 		
 		getPlugin().getHorseDatabase().saveHorse(horseData);

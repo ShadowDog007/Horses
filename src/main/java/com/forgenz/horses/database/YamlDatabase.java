@@ -31,12 +31,16 @@ package com.forgenz.horses.database;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import com.forgenz.forgecore.v1_0.util.BukkitConfigUtil;
 import com.forgenz.horses.HorseType;
@@ -111,16 +115,59 @@ public class YamlDatabase extends HorseDatabase
 			HorseType type = HorseType.exactValueOf(horseSect.getString("type", HorseType.White.toString()));
 			long lastDeath = horseSect.getLong("lastdeath") * 1000;
 			double maxHealth = horseSect.getDouble("maxhealth");
-			double health = horseSect.getDouble("health");
-			boolean saddle = horseSect.getBoolean("saddle", getPlugin().getHorsesConfig().startWithSaddle);
+			double health = horseSect.getDouble("health");			
 			boolean hasChest = type == HorseType.Mule || type == HorseType.Donkey ? horseSect.getBoolean("chest", false) : false;
 			
-			Material armour = Material.getMaterial(horseSect.getString("armour", "null"));
+			// Tempory Hack to fix old storage
+			boolean saddle = false;
+			if (horseSect.isBoolean("saddle"))
+				saddle = horseSect.getBoolean("saddle", false);
+			
+			// Tempory hack for old storage
+			Material armour = null;
+			if (horseSect.isString("armour"))
+				armour = Material.getMaterial(horseSect.getString("armour", "null"));
+			
+			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+			
+			for (Map<?, ?> itemMap : horseSect.getMapList("inventory"))
+			{
+				int slot = -1;
+				
+				try
+				{
+					slot = (Integer) itemMap.get("slot");
+					
+				}
+				catch (NullPointerException e)
+				{
+					getPlugin().log(Level.SEVERE, "Player '%s' data file is corrupt: Inventory slot number was missing", e, stable.getOwner());
+					continue;
+				}
+				catch (ClassCastException e)
+				{
+					getPlugin().log(Level.SEVERE, "Player '%s' data file is corrupt: Inventory slot number was not a number", e, stable.getOwner());
+					continue;
+				}
+				
+				@SuppressWarnings("unchecked")
+				ItemStack item = ItemStack.deserialize((Map<String, Object>) itemMap);
+				
+				// Fill in the gaps with nothing
+				while (items.size() <= slot)
+					items.add(null);
+				
+				items.set(slot, item);
+			}
 			
 			PlayerHorse horseData = new PlayerHorse(getPlugin(), stable, horse, type, maxHealth, health, null);
 			horseData.setLastDeath(lastDeath);
-			horseData.setHasSaddle(saddle);
-			horseData.setArmour(armour);
+			
+			horseData.setItems(items.toArray(new ItemStack[items.size()]));
+			if (saddle)
+				horseData.setSaddle(Material.SADDLE);
+			if (armour != null)
+				horseData.setArmour(armour);
 			horseData.setHasChest(hasChest);
 			
 			
@@ -166,12 +213,35 @@ public class YamlDatabase extends HorseDatabase
 			horseSect.set("lastdeath", horse.getLastDeath() / 1000);
 			horseSect.set("maxhealth", horse.getMaxHealth());
 			horseSect.set("health", horse.getHealth());
-			horseSect.set("saddle", horse.hasSaddle());
-			horseSect.set("armour", horse.hasArmour() ? horse.getArmour().toString() : "none");
 			if (horse.getType() == HorseType.Mule || horse.getType() == HorseType.Donkey)
 			{
 				horseSect.set("chest", horse.hasChest());
 			}
+			else
+			{
+				horseSect.set("chest", null);
+			}
+			
+			// Remove old config nodes
+			horseSect.set("saddle", null);
+			horseSect.set("armour", null);
+			
+			// Save the inventory contents
+			ArrayList<Map<String, Object>> itemList = new ArrayList<Map<String, Object>>();
+			
+			ItemStack[] items = horse.getItems();
+			for (int i = 0; i < items.length; ++i)
+			{
+				if (items[i] == null)
+					continue;
+				
+				Map<String, Object> item = items[i].serialize();
+				
+				item.put("slot", i);
+				
+				itemList.add(item);
+			}
+			horseSect.set("inventory", itemList);
 		}
 		
 		try

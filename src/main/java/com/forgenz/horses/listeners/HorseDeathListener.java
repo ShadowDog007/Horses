@@ -35,6 +35,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgeListener;
 import com.forgenz.horses.Horses;
@@ -100,11 +101,13 @@ public class HorseDeathListener extends ForgeListener
 			}
 		}
 		
+		event.setDroppedExp(0);
+		
 		// Fetch the type config
 		HorseTypeConfig typeCfg = cfg.getHorseTypeConfig(horseData.getType());
 		
 		// Remove the horse and update values
-		horseData.removeHorse();
+		horseData.removeHorse();			
 		
 		// Fetch vip status
 		boolean vip = Bukkit.getPlayerExact(horseData.getStable().getOwner()).hasPermission("horses.vip");

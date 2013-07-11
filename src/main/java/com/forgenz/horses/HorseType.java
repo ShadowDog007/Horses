@@ -28,98 +28,123 @@
 
 package com.forgenz.horses;
 
-import net.minecraft.server.v1_6_R2.EntityHorse;
-
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftHorse;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Horse.Color;
+import org.bukkit.entity.Horse.Style;
+import org.bukkit.entity.Horse.Variant;
 
 
 public enum HorseType
 {
 	// Plain horses
-	White(0),
-	Creamy(1),
-	Chestnut(2),
-	Brown(3),
-	Black(4),
-	Gray(5),
-	DarkBrown(6),
+	White(Color.WHITE),
+	Creamy(Color.CREAMY),
+	Chestnut(Color.CHESTNUT),
+	Brown(Color.BROWN),
+	Black(Color.BLACK),
+	Gray(Color.GRAY),
+	DarkBrown(Color.DARK_BROWN),
 	
 	// White Socks/Blaze
-	BlazeWhite(256),
-	BlazeCreamy(257),
-	BlazeChestnut(258),
-	BlazeBrown(259),
-	BlazeBlack(260),
-	BlazeGray(261),
-	BlazeDarkBrown(262),
+	BlazeWhite(Color.WHITE, Style.WHITE),
+	BlazeCreamy(Color.CREAMY, Style.WHITE),
+	BlazeChestnut(Color.CHESTNUT, Style.WHITE),
+	BlazeBrown(Color.BROWN, Style.WHITE),
+	BlazeBlack(Color.BLACK, Style.WHITE),
+	BlazeGray(Color.GRAY, Style.WHITE),
+	BlazeDarkBrown(Color.DARK_BROWN, Style.WHITE),
 	
 	// White field ?
-	PaintWhite(512),
-	PaintCreamy(513),
-	PaintChestnut(514),
-	PaintBrown(515),
-	PaintBlack(516),
-	PaintGray(517),
-	PaintDarkBrown(518),
+	PaintWhite(Color.WHITE, Style.WHITEFIELD),
+	PaintCREAMY(Color.CREAMY, Style.WHITEFIELD),
+	PaintChestnut(Color.CHESTNUT, Style.WHITEFIELD),
+	PaintBrown(Color.BROWN, Style.WHITEFIELD),
+	PaintBlack(Color.BLACK, Style.WHITEFIELD),
+	PaintGray(Color.GRAY, Style.WHITEFIELD),
+	PaintDarkBrown(Color.DARK_BROWN, Style.WHITEFIELD),
 	
 	// White dots
-	LeopardWhite(768),
-	LeopardCreamy(769),
-	LeopardChestnut(770),
-	LeopardBrown(771),
-	LeopardBlack(772),
-	LeopardGray(773),
-	LeopardDarkBrown(774),
+	LeopardWhite(Color.WHITE, Style.WHITE_DOTS),
+	LeopardCreamy(Color.CREAMY, Style.WHITE_DOTS),
+	LeopardChestnut(Color.CHESTNUT, Style.WHITE_DOTS),
+	LeopardBrown(Color.BROWN, Style.WHITE_DOTS),
+	LeopardBlack(Color.BLACK, Style.WHITE_DOTS),
+	LeopardGray(Color.GRAY, Style.WHITE_DOTS),
+	LeopardDarkBrown(Color.DARK_BROWN, Style.WHITE_DOTS),
 	
 	// Black dots
-	SootyWhite(1024),
-	SootyCreamy(1025),
-	SootyChestnut(1026),
-	SootyBrown(1027),
-	SootyBlack(1028),
-	SootyGray(1029),
-	SootyDarkBrown(1030),
+	SootyWhite(Color.WHITE, Style.BLACK_DOTS),
+	SootyCreamy(Color.CREAMY, Style.BLACK_DOTS),
+	SootyChestnut(Color.CHESTNUT, Style.BLACK_DOTS),
+	SootyBrown(Color.BROWN, Style.BLACK_DOTS),
+	SootyBlack(Color.BLACK, Style.BLACK_DOTS),
+	SootyGray(Color.GRAY, Style.BLACK_DOTS),
+	SootyDarkBrown(Color.DARK_BROWN, Style.BLACK_DOTS),
 	
 	// Special
-	Donkey(1, true),
-	Mule(2, true),
-	Undead(3, true),
-	Skeleton(4, true);
+	Donkey(Variant.DONKEY),
+	Mule(Variant.MULE),
+	Undead(Variant.UNDEAD_HORSE),
+	Skeleton(Variant.SKELETON_HORSE);
 	
 	private final String permission;
-	private final int type;
-	private final int variant;
+	private final Variant variant;
+	private final Color colour;
+	private final Style style;
 	
-	private HorseType(int variant)
+	private HorseType(Variant variant)
 	{
-		this.type = 0;
+		this(variant, null, null);
+	}
+	
+	private HorseType(Color colour)
+	{
+		this(Variant.HORSE, colour, Style.NONE);
+	}
+	
+	private HorseType(Color colour, Style style)
+	{
+		this(Variant.HORSE, colour, style);
+	}
+	
+	private HorseType(Variant variant, Color colour, Style style)
+	{
 		this.variant = variant;
+		this.colour = colour;
+		this.style = style;
 		
-		this.permission = "horses.type." + toString().toLowerCase();
+		this.permission = "horses.types." + toString().toLowerCase();
 	}
 	
-	private HorseType(int type, boolean dummy)
-	{
-		this.type = type;
-		this.variant = 0;
-		
-		this.permission = "horses.type." + toString().toLowerCase();
-	}
-	
-	public int getType()
-	{
-		return type; 
-	}
-	
-	public int getVariant()
+	public Variant getVariant()
 	{
 		return variant;
+	}
+	
+	public Color getColour()
+	{
+		return colour; 
+	}
+	
+	public Style getStyle()
+	{
+		return style;
 	}
 	
 	public String getPermission()
 	{
 		return permission;
+	}
+	
+	public void setHorseType(Horse horse)
+	{
+		horse.setVariant(getVariant());
+		
+		if (getVariant() == Variant.HORSE)
+		{
+			horse.setColor(getColour());
+			horse.setStyle(getStyle());
+		}
 	}
 	
 	public static HorseType closeValueOf(String like)
@@ -149,25 +174,22 @@ public enum HorseType
 	}
 	
 	public static HorseType valueOf(Horse horse)
-	{
-		CraftHorse chorse = (CraftHorse) horse;
-		EntityHorse mhorse = (EntityHorse) chorse.getHandle();
-		
-		switch (mhorse.getType())
+	{		
+		switch (horse.getVariant())
 		{
-			case 0:
+			case HORSE:
 				HorseType[] a = values();
-				int var = mhorse.getVariant();
-				for (int i = 0; i < a.length; ++i)
-					if (a[i].getVariant() == var)
+				org.bukkit.entity.Horse.Color colour = horse.getColor();
+				for (int i = horse.getStyle().ordinal() * Color.values().length; i < a.length; ++i)
+					if (a[i].getColour() == colour)
 						return a[i];
-			case 1:
+			case DONKEY:
 				return Donkey;
-			case 2:
+			case MULE:
 				return Mule;
-			case 3:
+			case UNDEAD_HORSE:
 				return Undead;
-			case 4:
+			case SKELETON_HORSE:
 				return Skeleton;
 			default:	
 				return null;

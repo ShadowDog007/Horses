@@ -28,26 +28,21 @@
  
 package com.forgenz.horses;
 
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
-
-import net.minecraft.server.v1_6_R2.EntityHorse;
-import net.minecraft.server.v1_6_R2.NBTTagCompound;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_6_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftHorse;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.inventory.HorseInventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import com.forgenz.forgecore.v1_0.ForgeCore;
-import com.forgenz.horses.util.ClassUtil;
 
 public class PlayerHorse implements ForgeCore
 {
@@ -69,10 +64,10 @@ public class PlayerHorse implements ForgeCore
 	private HorseType type;
 	private double maxHealth;
 	private double health;
-	
-	private boolean hasSaddle = false;
-	private Material armour;
+
 	private boolean hasChest = false;
+	
+	private final ArrayList<ItemStack> inventory = new ArrayList<ItemStack>();
 	
 	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, Horse horse)
 	{
@@ -92,9 +87,8 @@ public class PlayerHorse implements ForgeCore
 		{
 			getMaxHealth();
 			getHealth();
-			hasSaddle();
 			hasChest();
-			getArmour();
+			getItems();
 			this.horse = null;
 			horse.remove();
 		}
@@ -217,26 +211,13 @@ public class PlayerHorse implements ForgeCore
 			horse.setHealth(health);
 		}
 	}
-	
-	public void setHasSaddle(boolean hasSaddle)
+
+	@Deprecated
+	public void setSaddle(Material saddle)
 	{
-		this.hasSaddle = hasSaddle;
+		setItem(0, new ItemStack(saddle));
 	}
-	
-	public boolean hasSaddle()
-	{
-		if (horse != null)
-		{
-			EntityHorse h = (EntityHorse) ((CraftHorse) horse).getHandle();
-			NBTTagCompound nbt = new NBTTagCompound();
-			h.b(nbt);
-			
-			this.hasSaddle = nbt.hasKey("SaddleItem");
-		}
 		
-		return hasSaddle;
-	}
-	
 	public void setHasChest(boolean hasChest)
 	{
 		if (type != HorseType.Mule && type != HorseType.Donkey)
@@ -252,43 +233,72 @@ public class PlayerHorse implements ForgeCore
 		
 		if (horse != null)
 		{
-			EntityHorse h = (EntityHorse) ((CraftHorse) horse).getHandle();
-			hasChest = h.hasChest();
+			hasChest = horse.isCarryingChest();
 		}
 		
 		return hasChest;
 	}
 	
-	public boolean hasArmour()
-	{
-		return getArmour() != null;
-	}
-	
+	@Deprecated
 	public void setArmour(Material material)
 	{
-		armour = material;
+		setItem(1, new ItemStack(material));
 	}
 	
-	public Material getArmour()
+	public ItemStack getItem(int i)
+	{
+		if (inventory.size() <= i && i < 0)
+			return null;
+		
+		if (horse != null)
+		{
+			ItemStack item = horse.getInventory().getItem(i);
+			if (item != null && item.getType() == Material.AIR)
+				item = null;
+			
+			inventory.set(i, item);
+		}
+		
+		return inventory.get(i);
+	}
+	
+	public void setItem(int i, ItemStack item)
+	{
+		if (i < 0)
+			return;
+		
+		if (inventory.size() <= i)
+		{
+			for (int index = inventory.size(); index < i; ++index)
+				inventory.add(null);
+		}
+		
+		inventory.add(item);
+	}
+	
+	public void setItems(ItemStack[] items)
+	{
+		inventory.clear();
+		inventory.ensureCapacity(items.length);
+		
+		for (ItemStack item : items)
+			inventory.add(item);
+	}
+	
+	public ItemStack[] getItems()
 	{
 		if (horse != null)
 		{
-			EntityHorse h = (EntityHorse) ((CraftHorse) horse).getHandle();
-			NBTTagCompound nbt = new NBTTagCompound();
-			h.b(nbt);
+			ItemStack[] items = horse.getInventory().getContents();
 			
-			if (nbt.hasKey("ArmorItem"))
-			{
-				nbt = nbt.getCompound("ArmorItem");
-				armour = Material.getMaterial(nbt.getShort("id"));
-			}
-			else
-			{
-				armour = null;
-			}
+			inventory.clear();
+			for (ItemStack item : items)
+				inventory.add(item);
+			
+			return items;
 		}
 		
-		return armour;
+		return inventory.toArray(new ItemStack[inventory.size()]);
 	}
 	
 	public void removeHorse()
@@ -297,17 +307,33 @@ public class PlayerHorse implements ForgeCore
 		{
 			if (!horse.isDead())
 			{
-				maxHealth = (float) horse.getMaxHealth();
-				health = (float) horse.getHealth();
+				maxHealth = horse.getMaxHealth();
+				health = horse.getHealth();
 			}
-			
-			hasSaddle();
-			hasArmour();
+
+			getItems();
 			hasChest();
+			
+			// Handle the horses death
+			if (horse.isDead())
+			{
+				if (getPlugin().getHorsesConfig().keepEquipmentOnDeath)
+				{
+					horse.getInventory().clear();
+					horse.setCarryingChest(false);
+				}
+				else
+				{
+					inventory.clear();
+					hasChest = false;
+				}
+			}
 			
 			horse.remove();
 			
 			stable.removeActiveHorse(this);
+			
+			horse = null;
 		}
 		
 		saveChanges();
@@ -338,68 +364,38 @@ public class PlayerHorse implements ForgeCore
 		if (getPlugin().getHorsesConfig().bypassSpawnProtection)
 			getPlugin().getHorseSpawnListener().setSpawning();
 		
-		// TODO Use method from CraftBukkit when they fix it
-		// horse = (Horse) loc.getWorld().spawnEntity(loc, EntityType.HORSE);
-		CraftWorld world = (CraftWorld) loc.getWorld();
-		EntityHorse ehorse = new EntityHorse(world.getHandle());
-		
-		ehorse.setLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw());
-		world.getHandle().addEntity(ehorse, SpawnReason.CUSTOM);
-		
-		// We have to setup the horses bukkit entity properly
-		try
-		{
-			Field bukkitEntity = ClassUtil.getField(ehorse.getClass(), "bukkitEntity");
-			bukkitEntity.setAccessible(true);
-			bukkitEntity.set(ehorse, new CraftHorse((CraftServer) getPlugin().getServer(), ehorse));
-		}
-		catch (NoSuchFieldException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IllegalArgumentException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
-		}
-
-		NBTTagCompound nbt = new NBTTagCompound();
-		ehorse.b(nbt);
-		nbt.setBoolean("Tame", true);
-		nbt.setInt("Type", type.getType());
-		nbt.setInt("Variant", type.getVariant());
-		
-		// Create the saddle
-		if (hasSaddle())
-		{
-			NBTTagCompound saddle = new NBTTagCompound();
-			saddle.setShort("id", (short) Material.SADDLE.getId());
-			saddle.setByte("count", (byte) 1);
-			nbt.setCompound("SaddleItem", saddle);
-		}
-		
-		if (hasChest())
-		{
-			nbt.setBoolean("ChestedHorse", true);
-		}
-		
-		if (hasArmour())
-		{
-			NBTTagCompound armour = new NBTTagCompound();
-			armour.setShort("id", (short) this.armour.getId());
-			armour.setByte("count", (byte) 1);
-			nbt.setCompound("ArmorItem", armour);
-		}
-		
-		ehorse.a(nbt);
-		
-		horse = (Horse) ehorse.getBukkitEntity();
+		Horse horse = (Horse) loc.getWorld().spawnEntity(loc, EntityType.HORSE);
 		
 		if (horse != null)
 		{
+			// Setup the horses type
+			getType().setHorseType(horse);
+			
+			horse.setTamed(true);
+			
+			// Check if it has a chest?
+			if (hasChest())
+				horse.setCarryingChest(true);
+			
+			// Setup the horses inventory
+			HorseInventory inv = horse.getInventory();
+			
+			ItemStack[] items = inv.getContents();
+			for (int i = 2; i < items.length; ++i)
+			{
+				if (i >= inventory.size())
+					items[i] = null;
+				else
+					items[i] = inventory.get(i);
+			}
+			inv.setContents(items);
+			
+			// Temp fix for saddles/armour
+			if (inventory.size() > 0)
+				inv.setSaddle(inventory.get(0));
+			if (inventory.size() > 1)
+				inv.setArmor(inventory.get(1));
+			
 			// Set the horses name
 			horse.setCustomName(displayName);
 			horse.setCustomNameVisible(true);
@@ -416,9 +412,12 @@ public class PlayerHorse implements ForgeCore
 			
 			getStable().setActiveHorse(this);
 			
+			this.horse = horse;
+			
 			return true;
 		}
 		
+		// Boo hoo, something went wrong :(
 		return false;
 	}
 	
@@ -438,19 +437,6 @@ public class PlayerHorse implements ForgeCore
 		stable.deleteHorse(this);
 	}
 	
-	public static PlayerHorse getFromEntity(Horse horse)
-	{
-		for (MetadataValue meta : horse.getMetadata(OWNERSHIP_METADATA_KEY))
-		{
-			if (meta.getOwningPlugin() == Horses.getInstance() && meta.value().getClass() == PlayerHorse.class)
-			{
-				return (PlayerHorse) meta.value();
-			}
-		}
-		
-		return null;
-	}
-
 	public void rename(String name)
 	{
 		this.displayName = ChatColor.translateAlternateColorCodes('&', name).replaceAll("&", "");
@@ -462,5 +448,18 @@ public class PlayerHorse implements ForgeCore
 		}
 		
 		saveChanges();
+	}
+	
+	public static PlayerHorse getFromEntity(Horse horse)
+	{
+		for (MetadataValue meta : horse.getMetadata(OWNERSHIP_METADATA_KEY))
+		{
+			if (meta.getOwningPlugin() == Horses.getInstance() && meta.value().getClass() == PlayerHorse.class)
+			{
+				return (PlayerHorse) meta.value();
+			}
+		}
+		
+		return null;
 	}
 }
