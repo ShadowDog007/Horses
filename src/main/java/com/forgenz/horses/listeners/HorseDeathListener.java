@@ -33,9 +33,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgeListener;
 import com.forgenz.horses.Horses;
@@ -53,7 +53,7 @@ public class HorseDeathListener extends ForgeListener
 		register();
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onHorseDie(EntityDeathEvent event)
 	{
 		// We are only interested in horses which die
@@ -102,6 +102,7 @@ public class HorseDeathListener extends ForgeListener
 		}
 		
 		event.setDroppedExp(0);
+		event.getDrops().clear();
 		
 		// Fetch the type config
 		HorseTypeConfig typeCfg = cfg.getHorseTypeConfig(horseData.getType());
