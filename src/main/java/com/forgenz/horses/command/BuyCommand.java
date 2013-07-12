@@ -93,7 +93,7 @@ public class BuyCommand extends ForgeCommand
 		// Check if the player has permission to use this horse type
 		if (!player.hasPermission(type.getPermission()))
 		{
-			Command_Buy_Error_NoPermissionForThisType.sendMessage(player);
+			Command_Buy_Error_NoPermissionForThisType.sendMessage(player, cfg.getHorseTypeConfig(type).displayName);
 			return;
 		}
 		

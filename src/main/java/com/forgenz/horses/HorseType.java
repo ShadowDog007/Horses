@@ -113,7 +113,7 @@ public enum HorseType
 		this.colour = colour;
 		this.style = style;
 		
-		this.permission = "horses.types." + toString().toLowerCase();
+		this.permission = "horses.type." + toString().toLowerCase();
 	}
 	
 	public Variant getVariant()
