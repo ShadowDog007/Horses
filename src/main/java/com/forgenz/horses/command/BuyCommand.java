@@ -143,7 +143,7 @@ public class BuyCommand extends ForgeCommand
 		// Check if the player has too many horses
 		if (stable.getHorseCount() >= maxHorses)
 		{
-			Command_Buy_Error_TooManyHorses.sendMessage(player, cfg.maxHorses);
+			Command_Buy_Error_TooManyHorses.sendMessage(player, maxHorses);
 			return;
 		}
 		
