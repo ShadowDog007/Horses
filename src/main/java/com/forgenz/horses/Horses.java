@@ -87,94 +87,103 @@ public class Horses extends ForgePlugin
 	@Override
 	public void onEnable()
 	{
-		plugin = this;
-		
-		// Try setup Economy
-		setupEconomy();
-		
-		File configurationFile = new File(getDataFolder(), "config.yml");
 		try
 		{
-			YamlConfiguration cfg = new YamlConfiguration();
+			plugin = this;
 			
-			cfg.load(configurationFile);
-		}
-		catch (InvalidConfigurationException e)
-		{
-			configurationFile.renameTo(new File(getDataFolder(), "config.yml.broken"));
-		}
-		catch (FileNotFoundException e) {}
-		catch (IOException e) {}
-		
-		reloadConfig();
-		
-		// Setup messages
-		locale = new ForgeLocale(this);
-		locale.registerEnumMessages(Messages.class);
-		locale.updateMessages();
-		
-		// Setup commands
-		commandHandler = new ForgeCommandHandler(this);
-		getCommand("horses").setExecutor(commandHandler);
-		commandHandler.setNumCommandsPerHelpPage(5);
-		
-		// Register each command
-		commandHandler.registerCommand(new BuyCommand(this));
-		commandHandler.registerCommand(new DeleteCommand(this));
-		commandHandler.registerCommand(new DismissCommand(this));
-		commandHandler.registerCommand(new HealCommand(this));
-		commandHandler.registerCommand(new ListCommand(this));
-		commandHandler.registerCommand(new RenameCommand(this));
-		commandHandler.registerCommand(new SummonCommand(this));
-		commandHandler.registerCommand(new TypeCommand(this));
-		
-		// Admin commands
-		commandHandler.registerCommand(new ReloadCommand(this));
-		
-		// Setup the config
-		config = new HorsesConfig(this);
-		
-		if (config.showAuthor)
-		{
-			commandHandler.setHeaderFormat(String.format("%1$s%3$s %2$sv%1$s%4$s %2$sby %1$s%5$s", ChatColor.DARK_GREEN, ChatColor.YELLOW, "Horses", ForgeCommandHandler.HEADER_REPLACE_VERSION, "ShadowDog007"));
-		}
-		else
-		{
-			commandHandler.setHeaderFormat(String.format("%1$s%3$s %2$sv%1$s%4$s", ChatColor.DARK_GREEN, ChatColor.YELLOW, "Horses", ForgeCommandHandler.HEADER_REPLACE_VERSION));
-		}
-		
-		// Try setup WorldGuard
-		setupWorldGuard(config.worldGuardCfg != null);
-		
-		// Setup the database
-		database = new YamlDatabase(this);
-		
-		// Register the Listeners
-		if (config.isProtecting())
-			new DamageListener(this);
-		new HorseDeathListener(this);
-		new InteractListener(this);
-		new PlayerListener(this);
-		new TeleportListener(this);
-		
-		spawnListener = new HorseSpawnListener(this);
-		
-		horseDismissTask = new HorseDismissTask(this);
-		horseDismissTask.runTaskTimer(this, 20L, 10L);
-		
-		// Start metrics
-		try
-		{
-			Metrics metrics = new Metrics(this);
+			// Try setup Economy
+			setupEconomy();
 			
-			metrics.start();
+			File configurationFile = new File(getDataFolder(), "config.yml");
+			try
+			{
+				YamlConfiguration cfg = new YamlConfiguration();
+				
+				cfg.load(configurationFile);
+			}
+			catch (InvalidConfigurationException e)
+			{
+				configurationFile.renameTo(new File(getDataFolder(), "config.yml.broken"));
+			}
+			catch (FileNotFoundException e) {}
+			catch (IOException e) {}
+			
+			reloadConfig();
+			
+			// Setup messages
+			locale = new ForgeLocale(this);
+			locale.registerEnumMessages(Messages.class);
+			locale.updateMessages();
+			
+			// Setup the config
+			config = new HorsesConfig(this);
+			
+			if (config.showAuthor)
+			{
+				commandHandler.setHeaderFormat(String.format("%1$s%3$s %2$sv%1$s%4$s %2$sby %1$s%5$s", ChatColor.DARK_GREEN, ChatColor.YELLOW, "Horses", ForgeCommandHandler.HEADER_REPLACE_VERSION, "ShadowDog007"));
+			}
+			else
+			{
+				commandHandler.setHeaderFormat(String.format("%1$s%3$s %2$sv%1$s%4$s", ChatColor.DARK_GREEN, ChatColor.YELLOW, "Horses", ForgeCommandHandler.HEADER_REPLACE_VERSION));
+			}
+			
+			// Try setup WorldGuard
+			setupWorldGuard(config.worldGuardCfg != null);
+			
+			// Setup the database
+			database = new YamlDatabase(this);
+			
+			// Register the Listeners
+			if (config.isProtecting())
+				new DamageListener(this);
+			new HorseDeathListener(this);
+			new InteractListener(this);
+			new PlayerListener(this);
+			new TeleportListener(this);
+			
+			spawnListener = new HorseSpawnListener(this);
+			
+			horseDismissTask = new HorseDismissTask(this);
+			horseDismissTask.runTaskTimer(this, 20L, 10L);
+			
+			// Setup commands
+			commandHandler = new ForgeCommandHandler(this);
+			getCommand("horses").setExecutor(commandHandler);
+			commandHandler.setNumCommandsPerHelpPage(5);
+					
+			// Register each command
+			commandHandler.registerCommand(new BuyCommand(this));
+			commandHandler.registerCommand(new DeleteCommand(this));
+			commandHandler.registerCommand(new DismissCommand(this));
+			commandHandler.registerCommand(new HealCommand(this));
+			commandHandler.registerCommand(new ListCommand(this));
+			commandHandler.registerCommand(new RenameCommand(this));
+			commandHandler.registerCommand(new SummonCommand(this));
+			commandHandler.registerCommand(new TypeCommand(this));
+			
+			// Admin commands
+			commandHandler.registerCommand(new ReloadCommand(this));
+			
+			// Start metrics
+			try
+			{
+				Metrics metrics = new Metrics(this);
+				
+				metrics.start();
+			}
+			catch (IOException e)
+			{
+				log(Level.WARNING, "Oh noes, Metrics failed to start :(", e);
+			}
+			
+			saveConfig();
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
-			log(Level.WARNING, "Oh noes, Metrics failed to start :(", e);
+			severe("Error when attempting to enable %s v%s", e, getName(), getDescription().getVersion());
+			severe("Try updating to the latest build of CraftBukkit or Horses");
+			getServer().getPluginManager().disablePlugin(this);
 		}
-		
-		saveConfig();
 	}
 
 	@Override
@@ -182,8 +191,10 @@ public class Horses extends ForgePlugin
 	{
 		unregisterListeners();
 		
-		database.saveAll();
-		horseDismissTask.cancel();
+		if (database != null)
+			database.saveAll();
+		if (horseDismissTask != null)
+			horseDismissTask.cancel();
 		commandHandler = null;
 		database = null;
 		config = null;
