@@ -113,8 +113,8 @@ public class HorseDeathListener extends ForgeListener
 		horseData.removeHorse();			
 		
 		// Set hp and max hp
-		horseData.setMaxHealth(typeCfg.defaultHorseMaxHp);
-		horseData.setHealth(typeCfg.defaultHorseHp);
+		horseData.setMaxHealth(typeCfg.horseMaxHp);
+		horseData.setHealth(typeCfg.horseHp);
 		
 		// Update last death timestamp
 		horseData.setLastDeath(System.currentTimeMillis());

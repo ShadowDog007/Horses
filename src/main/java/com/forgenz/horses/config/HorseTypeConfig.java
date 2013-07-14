@@ -42,8 +42,10 @@ public class HorseTypeConfig implements ForgeCore
 	public final HorseType type;
 	public final String displayName;
 	
-	// Health related stuff
-	public final double defaultHorseHp, defaultHorseMaxHp, horseMaximumHpUpgrade;
+	public final double horseHp;
+	public final double horseMaxHp;
+	public final double horseMaximumHpUpgrade;
+	public final double jumpStrength;
 	
 	// Economy related stuff
 	public final double buyCost, healCost, hpUpgradeCost, renameCost;
@@ -55,8 +57,9 @@ public class HorseTypeConfig implements ForgeCore
 		
 		displayName = BukkitConfigUtil.getAndSet(cfg, "DisplayName", String.class, type.toString());
 		
-		defaultHorseHp = BukkitConfigUtil.getAndSet(cfg, "DefaultHealth", Number.class, 12.0).doubleValue();
-		defaultHorseMaxHp = BukkitConfigUtil.getAndSet(cfg, "DefaultMaxHealth", Number.class, 12.0).doubleValue();
+		horseHp = BukkitConfigUtil.getAndSet(cfg, "DefaultHealth", Number.class, 12.0).doubleValue();
+		horseMaxHp = BukkitConfigUtil.getAndSet(cfg, "DefaultMaxHealth", Number.class, 12.0).doubleValue();
+		jumpStrength = BukkitConfigUtil.getAndSet(cfg, "JumpStrength", Number.class, 0.7).doubleValue();
 		
 		horseMaximumHpUpgrade = BukkitConfigUtil.getAndSet(cfg, "MaxHpUpgrade", Number.class, 30.0).doubleValue();
 		

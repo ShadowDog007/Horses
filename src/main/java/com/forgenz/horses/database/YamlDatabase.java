@@ -115,7 +115,8 @@ public class YamlDatabase extends HorseDatabase
 			HorseType type = HorseType.exactValueOf(horseSect.getString("type", HorseType.White.toString()));
 			long lastDeath = horseSect.getLong("lastdeath") * 1000;
 			double maxHealth = horseSect.getDouble("maxhealth");
-			double health = horseSect.getDouble("health");			
+			double health = horseSect.getDouble("health");
+			double jumpStrength = horseSect.getDouble("jumpstrength");
 			boolean hasChest = type == HorseType.Mule || type == HorseType.Donkey ? horseSect.getBoolean("chest", false) : false;
 			
 			// Tempory Hack to fix old storage
@@ -160,7 +161,7 @@ public class YamlDatabase extends HorseDatabase
 				items.set(slot, item);
 			}
 			
-			PlayerHorse horseData = new PlayerHorse(getPlugin(), stable, horse, type, maxHealth, health, null);
+			PlayerHorse horseData = new PlayerHorse(getPlugin(), stable, horse, type, maxHealth, health, jumpStrength, null);
 			horseData.setLastDeath(lastDeath);
 			
 			horseData.setItems(items.toArray(new ItemStack[items.size()]));
@@ -213,6 +214,7 @@ public class YamlDatabase extends HorseDatabase
 			horseSect.set("lastdeath", horse.getLastDeath() / 1000);
 			horseSect.set("maxhealth", horse.getMaxHealth());
 			horseSect.set("health", horse.getHealth());
+			horseSect.set("jumpstrength", horse.getJumpStrength());
 			if (horse.getType() == HorseType.Mule || horse.getType() == HorseType.Donkey)
 			{
 				horseSect.set("chest", horse.hasChest());

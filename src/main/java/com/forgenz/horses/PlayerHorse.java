@@ -64,12 +64,14 @@ public class PlayerHorse implements ForgeCore
 	private HorseType type;
 	private double maxHealth;
 	private double health;
+	
+	private double jumpStrength;
 
 	private boolean hasChest = false;
 	
 	private final ArrayList<ItemStack> inventory = new ArrayList<ItemStack>();
 	
-	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, Horse horse)
+	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, double jumpStrength, Horse horse)
 	{
 		this.plugin = plugin;
 		this.stable = stable;
@@ -81,6 +83,8 @@ public class PlayerHorse implements ForgeCore
 		this.maxHealth = maxHealth;
 		this.health = health;
 		
+		this.jumpStrength = jumpStrength;
+		
 		this.horse = horse;
 		
 		if (this.horse != null)
@@ -89,6 +93,7 @@ public class PlayerHorse implements ForgeCore
 			getHealth();
 			hasChest();
 			getItems();
+			getJumpStrength();
 			this.horse = null;
 			horse.remove();
 		}
@@ -211,6 +216,16 @@ public class PlayerHorse implements ForgeCore
 			horse.setHealth(health);
 		}
 	}
+	
+	public double getJumpStrength()
+	{
+		if (horse != null && horse.isValid())
+		{
+			jumpStrength = horse.getJumpStrength();
+		}
+		
+		return jumpStrength;
+	}
 
 	public void setSaddle(Material saddle)
 	{
@@ -311,6 +326,7 @@ public class PlayerHorse implements ForgeCore
 
 			getItems();
 			hasChest();
+			getJumpStrength();
 			
 			// Handle the horses death
 			if (horse.isDead())
@@ -401,6 +417,8 @@ public class PlayerHorse implements ForgeCore
 			// Set the horses HP
 			horse.setMaxHealth(maxHealth);
 			horse.setHealth(health);
+			
+			horse.setJumpStrength(getJumpStrength());
 			
 			// Make the horse follow the player
 			horse.setTarget(player);
