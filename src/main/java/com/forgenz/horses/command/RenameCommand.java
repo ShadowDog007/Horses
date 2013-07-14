@@ -46,6 +46,7 @@ import com.forgenz.horses.Horses;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
 import com.forgenz.horses.config.HorsesConfig;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class RenameCommand extends ForgeCommand
 {
@@ -120,7 +121,9 @@ public class RenameCommand extends ForgeCommand
 			return;
 		}
 		
-		if (cfg.requireNameTagForRenaming)
+		HorsesPermissionConfig pcfg = cfg.getPermConfig(player);
+		
+		if (pcfg.requireNameTagForRenaming)
 		{
 			if (player.getItemInHand().getType() != Material.NAME_TAG)
 			{

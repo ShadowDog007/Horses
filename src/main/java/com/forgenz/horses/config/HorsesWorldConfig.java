@@ -28,92 +28,74 @@
 
 package com.forgenz.horses.config;
 
+import java.io.File;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
+import java.util.Map.Entry;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import com.forgenz.forgecore.v1_0.ForgeCore;
 import com.forgenz.horses.HorseType;
 import com.forgenz.horses.Horses;
 
-public class HorsesConfig extends AbstractConfig implements ForgeCore
-{	
-	public final WorldGuardConfig worldGuardCfg;
+public class HorsesWorldConfig extends AbstractConfig
+{
+	private static final String WORLDS_FOLDER = "worlds" + File.separator;
 	
-	private final HorsesWorldConfig globalCfg;
-	private final Map<String, HorsesWorldConfig> worldConfigs;
+	protected final HorsesPermissionConfig worldCfg;
+	private final Map<String, HorsesPermissionConfig> permissionConfigs;
 	
-	public boolean showAuthor;
-	
-	public final Pattern rejectedHorseNamePattern;
-	
-	public HorsesConfig(Horses plugin)
+	public HorsesWorldConfig(Horses plugin, YamlConfiguration cfg)
 	{
-		super(plugin, (YamlConfiguration) plugin.getConfig(), null, null, null, false);
+		this(plugin, cfg, null, false);
+	}
+	
+	public HorsesWorldConfig(Horses plugin, String world)
+	{
+		this(plugin, null, world, true);
+	}
+	
+	private HorsesWorldConfig(Horses plugin, YamlConfiguration cfg, String world, final boolean standalone)
+	{
+		super(plugin, cfg, null,  WORLDS_FOLDER + world, "config", standalone);
 		
-		YamlConfiguration cfg = this.loadConfiguration();
+
+		cfg = this.loadConfiguration();
 		
-		this.addResourseToHeader("header_main.txt");
+		this.addResourseToHeader("header_world.txt");
 		
-		Map<String, HorsesWorldConfig> worldConfigs = new HashMap<String, HorsesWorldConfig>();
-		this.worldConfigs = Collections.unmodifiableMap(worldConfigs);
+		LinkedHashMap<String, HorsesPermissionConfig> permissionConfigs = new LinkedHashMap<String, HorsesPermissionConfig>();
+		this.permissionConfigs = Collections.unmodifiableMap(permissionConfigs);
 		
-		List<String> worlds = cfg.getStringList("WorldConfigs");
-		for (String world : worlds)
+		List<String> permissions = cfg.getStringList("PermissionConfigs");
+		for (String permission : cfg.getStringList("PermissionConfigs"))
 		{
-			worldConfigs.put(world, new HorsesWorldConfig(plugin, world.toLowerCase()));
+			permissionConfigs.put(permission, new HorsesPermissionConfig(plugin, this, permission));
 		}
-		cfg.set("WorldConfigs", null);
-		cfg.set("WorldConfigs", worlds);
+		set(cfg, "PermissionConfigs", permissions);
 		
+		worldCfg = new HorsesPermissionConfig(plugin, cfg);
 		
-		if (getAndSet("EnableWorldGuardIntegration", false, Boolean.class))
-			worldGuardCfg = new WorldGuardConfig(plugin);
-		else
-			worldGuardCfg = null;
-		
-		showAuthor = getAndSet("ShowAuthorInCommand", true, Boolean.class);
-		
-		String defPattern = "f.?u.?c.?k|d.?[1i].?(c.?k?|c|k)|c.?u.?n.?t";
-		String pattern = getAndSet("RejectedHorseNamePattern", defPattern, String.class);
-		
-		Pattern testPattern = null;
-		try
-		{
-			testPattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-		}
-		catch (IllegalArgumentException e)
-		{
-			getPlugin().log(Level.WARNING, "Invalid pattern for name rejection", e);
-			testPattern = Pattern.compile(defPattern);
-		}
-		finally
-		{
-			rejectedHorseNamePattern = testPattern;
-		}
-		
-		// Finally setup the global config
-		globalCfg = new HorsesWorldConfig(plugin, cfg);
-		
-		
-		// Delete the reference to the config
 		this.saveConfiguration();
 	}
 	
-	public HorsesPermissionConfig getPermConfig(Player player)
+	protected HorsesPermissionConfig getPermConfig(Player player)
 	{
-		HorsesWorldConfig cfg = player != null ? worldConfigs.get(player.getWorld().getName().toLowerCase()) : null;
+		if (player != null)
+		{
+			for (Entry<String, HorsesPermissionConfig> e : permissionConfigs.entrySet())
+			{
+				if (player.hasPermission(e.getKey()))
+				{
+					return e.getValue();
+				}
+			}
+		}
 		
-		if (cfg == null)
-			cfg = globalCfg;
-		
-		return cfg.getPermConfig(player);
+		return worldCfg;
 	}
 	
 	public HorseTypeConfig getHorseTypeConfig(Player player, HorseType type)
@@ -127,18 +109,18 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 	}
 	
 	public HorseTypeConfig getHorseTypeConfig(Player player, String typeStr)
-	{
+	{		
 		return getPermConfig(player).getHorseTypeConfig(typeStr);
 	}
 	
 	public boolean isProtecting()
 	{
-		for (HorsesWorldConfig worldCfg : worldConfigs.values())
+		for (HorsesPermissionConfig permCfg : permissionConfigs.values())
 		{
-			if (worldCfg.isProtecting())
+			if (permCfg.isProtecting())
 				return true;
 		}
 		
-		return globalCfg.isProtecting();
+		return worldCfg.isProtecting();
 	}
 }

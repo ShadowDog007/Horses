@@ -43,6 +43,7 @@ import com.forgenz.horses.Messages;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.config.HorseTypeConfig;
 import com.forgenz.horses.config.HorsesConfig;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class HorseDeathListener extends ForgeListener
 {
@@ -74,12 +75,13 @@ public class HorseDeathListener extends ForgeListener
 		
 		// Fetch the config
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
+		HorsesPermissionConfig pcfg = cfg.getPermConfig(horseData.getStable().getPlayerOwner());
 		
 		// Check if we should delete the horse
-		if (cfg.deleteHorseOnDeath || cfg.deleteHorseOnDeathByPlayer)
+		if (pcfg.deleteHorseOnDeath || pcfg.deleteHorseOnDeathByPlayer)
 		{
-			boolean delete = cfg.deleteHorseOnDeath;
-			if (!delete && cfg.deleteHorseOnDeathByPlayer)
+			boolean delete = pcfg.deleteHorseOnDeath;
+			if (!delete && pcfg.deleteHorseOnDeathByPlayer)
 			{
 				 if (event.getEntity().getLastDamageCause().getClass() == EntityDamageByEntityEvent.class)
 				 {
@@ -105,21 +107,14 @@ public class HorseDeathListener extends ForgeListener
 		event.getDrops().clear();
 		
 		// Fetch the type config
-		HorseTypeConfig typeCfg = cfg.getHorseTypeConfig(horseData.getType());
+		HorseTypeConfig typeCfg = pcfg.getHorseTypeConfig(horseData.getType());
 		
 		// Remove the horse and update values
 		horseData.removeHorse();			
 		
-		// Fetch vip status
-		boolean vip = Bukkit.getPlayerExact(horseData.getStable().getOwner()).hasPermission("horses.vip");
-		
-		// Fetch hp & maxHp
-		double maxHealth = vip ? typeCfg.vipHorseMaxHp : typeCfg.defaultHorseMaxHp;
-		double health = vip ? typeCfg.vipHorseHp : typeCfg.defaultHorseHp;
-		
 		// Set hp and max hp
-		horseData.setMaxHealth(maxHealth);
-		horseData.setHealth(health);
+		horseData.setMaxHealth(typeCfg.defaultHorseMaxHp);
+		horseData.setHealth(typeCfg.defaultHorseHp);
 		
 		// Update last death timestamp
 		horseData.setLastDeath(System.currentTimeMillis());

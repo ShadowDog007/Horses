@@ -46,6 +46,7 @@ import com.forgenz.horses.Horses;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
 import com.forgenz.horses.config.HorsesConfig;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class SummonCommand extends ForgeCommand
 {
@@ -60,7 +61,7 @@ public class SummonCommand extends ForgeCommand
 		registerAlias("s", true);
 		registerPermission("horses.command.summon");
 		
-		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,16}$", Pattern.CASE_INSENSITIVE, true, Misc_Command_Error_InvalidName.toString()));
+		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,30}$", Pattern.CASE_INSENSITIVE, true, Misc_Command_Error_InvalidName.toString()));
 		
 		setAllowOp(true);
 		setAllowConsole(false);
@@ -75,10 +76,13 @@ public class SummonCommand extends ForgeCommand
 		
 		final String playerName = player.getName();
 		
+		HorsesConfig cfg = getPlugin().getHorsesConfig();
+		HorsesPermissionConfig pcfg = cfg.getPermConfig(player);
+		
 		Long lastSummon = summonTasks.get(playerName);
 		if (lastSummon != null)
 		{
-			if (System.nanoTime() - lastSummon > getPlugin().getHorsesConfig().summonTickDelay * 50)
+			if (System.nanoTime() - lastSummon > pcfg.summonDelay * 1000)
 			{
 				summonTasks.remove(playerName);
 			}
@@ -114,13 +118,11 @@ public class SummonCommand extends ForgeCommand
 			}
 		}
 		
-		HorsesConfig cfg = getPlugin().getHorsesConfig();
-		
 		// Check if the horse is on a death cooldown
 		long timeDiff = System.currentTimeMillis() - horse.getLastDeath();
-		if (cfg.deathCooldown > timeDiff)
+		if (pcfg.deathCooldown > timeDiff)
 		{
-			Command_Summon_Error_OnDeathCooldown.sendMessage(player, horse.getDisplayName(), (cfg.deathCooldown - timeDiff) / 1000);
+			Command_Summon_Error_OnDeathCooldown.sendMessage(player, horse.getDisplayName(), (pcfg.deathCooldown - timeDiff) / 1000);
 			return;
 		}
 		
@@ -131,7 +133,7 @@ public class SummonCommand extends ForgeCommand
 			return;
 		}
 		
-		int tickDelay = getPlugin().getHorsesConfig().summonTickDelay;
+		int tickDelay = pcfg.summonDelay * 20;
 		if (tickDelay <= 0)
 		{
 			horse.spawnHorse(player);
@@ -156,7 +158,7 @@ public class SummonCommand extends ForgeCommand
 
 			task.runTaskLater(getPlugin(), tickDelay);
 			summonTasks.put(playerName, System.currentTimeMillis());
-			Command_Summon_Success_SummoningHorse.sendMessage(player, horse.getDisplayName(), tickDelay / 20);
+			Command_Summon_Success_SummoningHorse.sendMessage(player, horse.getDisplayName(), pcfg.summonDelay);
 		}
 	}
 

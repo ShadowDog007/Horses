@@ -49,6 +49,7 @@ import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
 import com.forgenz.horses.config.HorseTypeConfig;
 import com.forgenz.horses.config.HorsesConfig;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class BuyCommand extends ForgeCommand
 {
@@ -77,29 +78,32 @@ public class BuyCommand extends ForgeCommand
 		Player player = (Player) sender;
 		
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
+		HorsesPermissionConfig pcfg = cfg.getPermConfig(player);
 		
 		String name = args.getArg(0);
 		
 		// Fetch the horse type
-		HorseType type = cfg.getHorseTypeLike(args.getArg(1));
+		HorseTypeConfig typecfg = pcfg.getHorseTypeConfigLike(args.getArg(1));
 		
 		// Check if it is a valid horse type
-		if (type == null)
+		if (typecfg == null)
 		{
 			Command_Buy_Error_InvalidHorseType.sendMessage(player, args.getArg(1));
 			return;
 		}
 		
+		HorseType type = typecfg.type;
+		
 		// Check if the player has permission to use this horse type
 		if (!player.hasPermission(type.getPermission()))
 		{
-			Command_Buy_Error_NoPermissionForThisType.sendMessage(player, cfg.getHorseTypeConfig(type).displayName);
+			Command_Buy_Error_NoPermissionForThisType.sendMessage(player, typecfg.displayName);
 			return;
 		}
 		
-		if (args.getArg(0).length() > cfg.maxHorseNameLength)
+		if (args.getArg(0).length() > pcfg.maxHorseNameLength)
 		{
-			Misc_Command_Error_HorseNameTooLong.sendMessage(player, cfg.maxHorseNameLength);
+			Misc_Command_Error_HorseNameTooLong.sendMessage(player, pcfg.maxHorseNameLength);
 			return;
 		}
 		
@@ -138,12 +142,10 @@ public class BuyCommand extends ForgeCommand
 		
 		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
 		
-		// Calculate how many horses the player can have
-		int maxHorses = player.hasPermission("horses.vip") ? cfg.vipMaxHorses : cfg.maxHorses;
 		// Check if the player has too many horses
-		if (stable.getHorseCount() >= maxHorses)
+		if (stable.getHorseCount() >= pcfg.maxHorses)
 		{
-			Command_Buy_Error_TooManyHorses.sendMessage(player, maxHorses);
+			Command_Buy_Error_TooManyHorses.sendMessage(player, pcfg.maxHorses);
 			return;
 		}
 		
@@ -161,24 +163,22 @@ public class BuyCommand extends ForgeCommand
 			return;
 		}
 		
-		HorseTypeConfig typeCfg = cfg.getHorseTypeConfig(type);
-		
 		// Check if the player can afford to buy the horse
 		if (getPlugin().getEconomy() != null)
 		{
-			EconomyResponse responce = getPlugin().getEconomy().withdrawPlayer(player.getName(), typeCfg.buyCost);
+			EconomyResponse responce = getPlugin().getEconomy().withdrawPlayer(player.getName(), typecfg.buyCost);
 			
 			if (!responce.transactionSuccess())
 			{
-				Command_Buy_Error_CantAffordHorse.sendMessage(player, typeCfg.buyCost);
+				Command_Buy_Error_CantAffordHorse.sendMessage(player, typecfg.buyCost);
 				return;
 			}
 			
-			Command_Buy_Success_BoughtHorse.sendMessage(player, typeCfg.buyCost);
+			Command_Buy_Success_BoughtHorse.sendMessage(player, typecfg.buyCost);
 		}
 		
 		// Create the horse for the player
-		PlayerHorse horse = stable.createHorse(args.getArg(0), type, player.hasPermission("horses.vip"));
+		PlayerHorse horse = stable.createHorse(args.getArg(0), typecfg, pcfg.startWithSaddle);
 		
 		Command_Buy_Success_Completion.sendMessage(player, args.getCommandUsed(), horse.getName());
 	}

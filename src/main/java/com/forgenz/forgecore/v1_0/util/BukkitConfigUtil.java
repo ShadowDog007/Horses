@@ -65,9 +65,10 @@ public class BukkitConfigUtil
 		
 		if (obj == null || !clazz.isAssignableFrom(obj.getClass()))
 		{
-			return null;
+			obj = def;
 		}
 		
+		cfg.set(path, null);
 		cfg.set(path, obj);
 		
 		return (T) obj;
@@ -77,14 +78,13 @@ public class BukkitConfigUtil
 	{
 		ConfigurationSection sect = cfg.getConfigurationSection(path);
 		
-		if (sect != null)
-		{
-			cfg.set(path, sect);
-		}
-		else
+		if (sect == null)
 		{
 			sect = cfg.createSection(path);
 		}
+		
+		cfg.set(path, null);
+		cfg.set(path, sect);
 		
 		return sect;
 	}

@@ -28,6 +28,8 @@
 
 package com.forgenz.forgecore.v1_0.bukkit;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 
 import net.milkbowl.vault.economy.Economy;
@@ -109,6 +111,77 @@ public abstract class ForgePlugin extends JavaPlugin implements ForgeCoreEntity
 	public Economy getEconomy()
 	{
 		return econ;
+	}
+	
+	public void getResourseString(String resourse, StringBuilder resourseStr)
+	{
+		if (resourse == null)
+		{
+			getPlugin().severe("Resourse file name was not given", new NullPointerException());
+			return;
+		}
+		
+		InputStream resourseStream = getPlugin().getResource(resourse);
+		
+		if (resourseStream == null)
+		{
+			getPlugin().severe("The resourse '%s' was not found inside the %s's jar", resourse, getPlugin().getName());
+			return;
+		}
+		
+		try
+		{
+			copyStream(resourseStream, resourseStr);
+		}
+		catch (IOException e)
+		{
+			getPlugin().severe("Error when trying to read resourse '%s'", e, resourse);
+		}
+	}
+	
+	public String getResourseString(String resourse)
+	{
+		if (resourse == null)
+		{
+			getPlugin().severe("Resourse file name was not given", new NullPointerException());
+			return "";
+		}
+		
+		InputStream headerStream = getPlugin().getResource(resourse);
+		
+		if (headerStream == null)
+		{
+			getPlugin().severe("The resourse '%s' was not found inside the %s's jar", resourse, getPlugin().getName());
+			return "";
+		}
+		
+		StringBuilder resourseStr = new StringBuilder();
+		try
+		{
+			copyStream(headerStream, resourseStr);
+		}
+		catch (IOException e)
+		{
+			getPlugin().severe("Error when trying to read resourse '%s'", e, resourse);
+		}
+		
+		return resourseStr.toString();
+	}
+	
+	public void copyStream(InputStream stream, StringBuilder copyTo) throws IOException
+	{
+		byte[] bytes = new byte[64];
+		int size = 0;
+		
+		while ((size = stream.read(bytes)) != -1)
+		{
+			copyTo.ensureCapacity(copyTo.length() + size);
+				
+				for (int i = 0; i < size; ++i)
+				{
+					copyTo.append((char) bytes[i]);
+				}
+		}
 	}
 	
 	@Override
@@ -195,5 +268,10 @@ public abstract class ForgePlugin extends JavaPlugin implements ForgeCoreEntity
 	public void severe(String message, Object ...args)
 	{
 		log(Level.SEVERE, message, args);
+	}
+	
+	public void severe(String message, Throwable e, Object ...args)
+	{
+		log(Level.SEVERE, message, e, args);
 	}
 }

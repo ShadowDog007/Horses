@@ -33,8 +33,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.forgenz.forgecore.v1_0.ForgeCore;
@@ -65,6 +67,11 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 	public String getOwner()
 	{
 		return player;
+	}
+	
+	public Player getPlayerOwner()
+	{
+		return Bukkit.getPlayerExact(getOwner());
 	}
 	
 	public int getHorseCount()
@@ -138,23 +145,23 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 		return bestMatch;
 	}
 	
-	public PlayerHorse createHorse(String name, HorseType type, boolean vip)
+	public PlayerHorse createHorse(String name, HorseTypeConfig typecfg, boolean saddle)
 	{
-		return createHorse(name, type, vip, null);
+		return createHorse(name, typecfg, null, saddle);
 	}
 	
-	public PlayerHorse createHorse(String name, HorseType type, boolean vip, Horse horse)
+	public PlayerHorse createHorse(String name, HorseTypeConfig typecfg, Horse horse)
+	{		
+		return createHorse(name, typecfg, horse, false);
+	}
+	
+	private PlayerHorse createHorse(String name, HorseTypeConfig typecfg, Horse horse, boolean saddle)
 	{
-		HorseTypeConfig cfg = getPlugin().getHorsesConfig().getHorseTypeConfig(type);
-		
-		float hp = vip ? cfg.vipHorseHp : cfg.defaultHorseHp;
-		float maxHp = vip ? cfg.vipHorseMaxHp : cfg.defaultHorseMaxHp;
-		
-		PlayerHorse horseData = new PlayerHorse(plugin, this, name, type, hp, maxHp, horse);
+		PlayerHorse horseData = new PlayerHorse(plugin, this, name, typecfg.type, typecfg.defaultHorseHp, typecfg.defaultHorseMaxHp, horse);
 		
 		horses.add(horseData);
 		
-		if (getPlugin().getHorsesConfig().startWithSaddle)
+		if (horse != null && saddle)
 		{
 			horseData.setItem(0, new ItemStack(Material.SADDLE));
 		}

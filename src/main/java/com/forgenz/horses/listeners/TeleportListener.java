@@ -37,6 +37,7 @@ import com.forgenz.horses.Horses;
 import com.forgenz.horses.Messages;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class TeleportListener extends ForgeListener
 {
@@ -57,7 +58,9 @@ public class TeleportListener extends ForgeListener
 		PlayerHorse horse = stable.getActiveHorse();
 		if (horse != null && horse.getHorse() != null && horse.getHorse().isValid())
 		{
-			if (getPlugin().getHorsesConfig().dismissHorseOnTeleport)
+			HorsesPermissionConfig cfg = getPlugin().getHorsesConfig().getPermConfig(event.getPlayer());
+			
+			if (cfg.dismissHorseOnTeleport)
 			{
 				// Check if the player moved too far away
 				if (event.getFrom().getWorld() != event.getTo().getWorld() || event.getFrom().distanceSquared(event.getTo()) > 1024)

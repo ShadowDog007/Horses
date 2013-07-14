@@ -212,7 +212,6 @@ public class PlayerHorse implements ForgeCore
 		}
 	}
 
-	@Deprecated
 	public void setSaddle(Material saddle)
 	{
 		setItem(0, new ItemStack(saddle));
@@ -239,7 +238,6 @@ public class PlayerHorse implements ForgeCore
 		return hasChest;
 	}
 	
-	@Deprecated
 	public void setArmour(Material material)
 	{
 		setItem(1, new ItemStack(material));
@@ -317,7 +315,7 @@ public class PlayerHorse implements ForgeCore
 			// Handle the horses death
 			if (horse.isDead())
 			{
-				if (getPlugin().getHorsesConfig().keepEquipmentOnDeath)
+				if (getPlugin().getHorsesConfig().getPermConfig(getStable().getPlayerOwner()).keepEquipmentOnDeath)
 				{
 					horse.getInventory().clear();
 					horse.setCarryingChest(false);
@@ -361,7 +359,7 @@ public class PlayerHorse implements ForgeCore
 		Location loc = player.getLocation(cacheLoc);
 		
 		// Prevent the horse from not being spawned
-		if (getPlugin().getHorsesConfig().bypassSpawnProtection)
+		if (getPlugin().getHorsesConfig().getPermConfig(getStable().getPlayerOwner()).bypassSpawnProtection)
 			getPlugin().getHorseSpawnListener().setSpawning();
 		
 		Horse horse = (Horse) loc.getWorld().spawnEntity(loc, EntityType.HORSE);

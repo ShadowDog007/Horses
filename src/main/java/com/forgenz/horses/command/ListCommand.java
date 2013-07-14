@@ -103,7 +103,7 @@ public class ListCommand extends ForgeCommand
 			// Horses name
 			horses.append(Command_List_Success_HorseNamePrefix).append(horse.getDisplayName());
 			// Horses type
-			HorseTypeConfig cfg = getPlugin().getHorsesConfig().horseTypeConfigs.get(horse.getType().toString());
+			HorseTypeConfig cfg = getPlugin().getHorsesConfig().getHorseTypeConfig(player, horse.getType().toString());
 			horses.append(":").append(Command_List_Success_HorseTypePrefix).append(cfg.displayName);
 		}
 		

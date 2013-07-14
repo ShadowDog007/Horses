@@ -48,7 +48,7 @@ import com.forgenz.horses.Horses;
 import com.forgenz.horses.Messages;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
-import com.forgenz.horses.config.HorsesConfig;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class InteractListener extends ForgeListener
 {
@@ -99,11 +99,13 @@ public class InteractListener extends ForgeListener
 			return;
 		}
 		
+		HorsesPermissionConfig cfg = getPlugin().getHorsesConfig().getPermConfig(event.getPlayer());
+		
 		// Can the player rename their horse??
 		if (event.getPlayer().getItemInHand().getType() == Material.NAME_TAG)
 		{
 			// Check if they are allowed to rename their horse
-			if (getPlugin().getHorsesConfig().allowRenameFromNameTag)
+			if (cfg.allowRenameFromNameTag)
 			{
 				ItemMeta meta = event.getPlayer().getItemInHand().getItemMeta();
 				String name = meta.getDisplayName();
@@ -136,11 +138,11 @@ public class InteractListener extends ForgeListener
 	
 	private void handleUnownedHorse(PlayerInteractEntityEvent event, Horse horse, Player player)
 	{
-		HorsesConfig cfg = getPlugin().getHorsesConfig();
+		HorsesPermissionConfig cfg = getPlugin().getHorsesConfig().getPermConfig(event.getPlayer());
 		
 		if (event.getPlayer().getItemInHand().getType() == Material.NAME_TAG)
 		{
-			if (cfg.allowClaimingWithTag)
+			if (cfg.allowClaimingWithNameTag)
 			{
 				ItemMeta meta = event.getPlayer().getItemInHand().getItemMeta();
 				String name , displayName;
@@ -161,14 +163,11 @@ public class InteractListener extends ForgeListener
 					}
 					
 					Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
-					boolean vip = player.hasPermission("horses.vip");
 					
-					// Calculate how many horses the player can have
-					int maxHorses = vip ? cfg.vipMaxHorses : cfg.maxHorses;
 					// Check if the player has too many horses
-					if (stable.getHorseCount() >= maxHorses)
+					if (stable.getHorseCount() >= cfg.maxHorses)
 					{
-						Command_Buy_Error_TooManyHorses.sendMessage(player, maxHorses);
+						Command_Buy_Error_TooManyHorses.sendMessage(player, cfg.maxHorses);
 						return;
 					}
 					
@@ -207,12 +206,12 @@ public class InteractListener extends ForgeListener
 					
 					HorseType type = HorseType.valueOf(horse);
 					
-					PlayerHorse horseData = stable.createHorse(displayName, type, player.hasPermission("horses.vip"), horse);
+					PlayerHorse horseData = stable.createHorse(displayName, cfg.getHorseTypeConfig(type), horse);
 					
 					Messages.Command_Buy_Success_Completion.sendMessage(player, "horses", horseData.getDisplayName());
 				}
 			}
-			else if (cfg.blockRenamingOnNaturalHorses)
+			else if (cfg.blockRenamingOnWildHorses)
 			{
 				Messages.Event_Interact_Error_RenamingNaturalHorsesBlocked.sendMessage(player);
 				event.setCancelled(true);

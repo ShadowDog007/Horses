@@ -28,7 +28,6 @@
 
 package com.forgenz.horses.config;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 import com.forgenz.forgecore.v1_0.ForgeCore;
@@ -40,9 +39,11 @@ public class HorseTypeConfig implements ForgeCore
 {
 	private ForgePlugin plugin;
 	
-	// Health related stuff
+	public final HorseType type;
 	public final String displayName;
-	public final float defaultHorseHp, defaultHorseMaxHp, vipHorseHp, vipHorseMaxHp, horseMaximumHpUpgrade;
+	
+	// Health related stuff
+	public final double defaultHorseHp, defaultHorseMaxHp, horseMaximumHpUpgrade;
 	
 	// Economy related stuff
 	public final double buyCost, healCost, hpUpgradeCost, renameCost;
@@ -50,15 +51,14 @@ public class HorseTypeConfig implements ForgeCore
 	public HorseTypeConfig(ForgePlugin plugin, ConfigurationSection cfg, HorseType type)
 	{
 		this.plugin = plugin;
+		this.type = type;
 		
-		displayName = ChatColor.translateAlternateColorCodes('&', BukkitConfigUtil.getAndSet(cfg, "DisplayName", String.class, type.toString()));
+		displayName = BukkitConfigUtil.getAndSet(cfg, "DisplayName", String.class, type.toString());
 		
-		defaultHorseHp = BukkitConfigUtil.getAndSet(cfg, "DefaultHealth", Number.class, 12.0).floatValue();
-		defaultHorseMaxHp = BukkitConfigUtil.getAndSet(cfg, "DefaultMaxHealth", Number.class, 12.0).floatValue();
-		vipHorseHp = BukkitConfigUtil.getAndSet(cfg, "VIPHealth", Number.class, 20.0).floatValue();
-		vipHorseMaxHp = BukkitConfigUtil.getAndSet(cfg, "VIPMaxHealth", Number.class, 20.0).floatValue();
+		defaultHorseHp = BukkitConfigUtil.getAndSet(cfg, "DefaultHealth", Number.class, 12.0).doubleValue();
+		defaultHorseMaxHp = BukkitConfigUtil.getAndSet(cfg, "DefaultMaxHealth", Number.class, 12.0).doubleValue();
 		
-		horseMaximumHpUpgrade = BukkitConfigUtil.getAndSet(cfg, "MaxHpUpgrade", Number.class, 30.0).floatValue();
+		horseMaximumHpUpgrade = BukkitConfigUtil.getAndSet(cfg, "MaxHpUpgrade", Number.class, 30.0).doubleValue();
 		
 		
 		// Only setup economy settings if economy is enabled
@@ -67,7 +67,7 @@ public class HorseTypeConfig implements ForgeCore
 			buyCost = BukkitConfigUtil.getAndSet(cfg, "BuyCost", Number.class, 10.0).doubleValue();
 			healCost = BukkitConfigUtil.getAndSet(cfg, "HealCost", Number.class, 10.0).doubleValue();
 			hpUpgradeCost = BukkitConfigUtil.getAndSet(cfg, "HpUpgradeCost", Number.class, 10.0).doubleValue();
-			renameCost = BukkitConfigUtil.getAndSet(cfg, "RenameCost", Number.class, 0.0).doubleValue();
+			renameCost = BukkitConfigUtil.getAndSet(cfg, "RenameCost", Number.class, 5.0).doubleValue();
 		}
 		else
 		{

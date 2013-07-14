@@ -83,7 +83,7 @@ public class HealCommand extends ForgeCommand
 		
 		if (getPlugin().getEconomy() != null)
 		{
-			HorseTypeConfig cfg = getPlugin().getHorsesConfig().getHorseTypeConfig(horse.getType());
+			HorseTypeConfig cfg = getPlugin().getHorsesConfig().getHorseTypeConfig(player, horse.getType());
 			
 			double cost = cfg.healCost * actualHealAmount;
 			

@@ -1,0 +1,32 @@
+#######################################################################
+PermissionConfigs
+#######################################################################
+A list of permissions to use to decide which configuration to use
+    for a given player.
+
+The order of the list is important. If you wish to have a certain
+    permission override another it should be above the other permission
+
+For each permission a new configuration is created.
+
+The permission configs should be generated in the same folder
+    as this one.
+
+If no permission is found for a player, this configuration is used
+
+e.g.
+PermissionConfigs:
+- forge.admin
+- forge.vip
+
+Two new files would be created. One named 'forge.admin.yml'
+    another named 'forge.vip.yml'
+    
+    Using this you could set prices for horses to 0.0 for admins for
+    testing.
+    
+    Have VIP's have a lesser price to make them happy
+    
+    And then the default config would be used for anyone who does not
+    have either of those permissions.
+

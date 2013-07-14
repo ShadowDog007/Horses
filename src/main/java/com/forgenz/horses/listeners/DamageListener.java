@@ -45,6 +45,7 @@ import com.forgenz.horses.Horses;
 import com.forgenz.horses.Messages;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.config.HorsesConfig;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 /**
  * Protects owned horses from being killed by players
@@ -82,36 +83,32 @@ public class DamageListener extends ForgeListener
 		}
 		
 		// Fetch the config
+		Player player = horseData.getStable().getPlayerOwner();
+		
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
+		HorsesPermissionConfig pcfg = cfg.getPermConfig(player);
 		
 		// Invincible!!
-		if (cfg.invincibleHorses)
+		if (pcfg.invincibleHorses)
 		{
 			event.setCancelled(true);
 			return;
 		}
 		
-		if (cfg.protectFromBurning)
+		if (pcfg.protectedDamageCauses.contains(event.getCause()))
 		{
-			switch (event.getCause())
-			{
-				case FIRE:
-				case FIRE_TICK:
-					event.setCancelled(true);
-					return;
-				default:
-			}
+			event.setCancelled(true);
+			return;
 		}
 		
 		if (event.getClass() == EntityDamageByEntityEvent.class)
 		{
-			onEntityDamageByEntity((EntityDamageByEntityEvent) event, horse, horseData);
+			onEntityDamageByEntity((EntityDamageByEntityEvent) event, horse, horseData, pcfg);
 		}
 		
-		if (!event.isCancelled() && cfg.onlyHurtHorseIfOwnerCanBeHurt)
+		if (!event.isCancelled() && pcfg.onlyHurtHorseIfOwnerCanBeHurt)
 		{
-			Player owner = Bukkit.getPlayerExact(horseData.getStable().getOwner());
-			if (owner == null)
+			if (player == null)
 			{
 				return;
 			}
@@ -120,11 +117,11 @@ public class DamageListener extends ForgeListener
 			
 			// Create a copy of the Damage event (But with 0 damage)
 			if (event.getClass() == EntityDamageEvent.class)
-				e = new EntityDamageEvent(owner, event.getCause(), 0.0);
+				e = new EntityDamageEvent(player, event.getCause(), 0.0);
 			else if (event.getClass() == EntityDamageByEntityEvent.class)
-				e = new EntityDamageByEntityEvent(((EntityDamageByEntityEvent) event).getDamager(), owner, event.getCause(), 0.0);
+				e = new EntityDamageByEntityEvent(((EntityDamageByEntityEvent) event).getDamager(), player, event.getCause(), 0.0);
 			else if (event.getClass() == EntityDamageByBlockEvent.class)
-				e = new EntityDamageByBlockEvent(((EntityDamageByBlockEvent) event).getDamager(), owner, event.getCause(), 0.0);
+				e = new EntityDamageByBlockEvent(((EntityDamageByBlockEvent) event).getDamager(), player, event.getCause(), 0.0);
 			
 			Bukkit.getPluginManager().callEvent(e);
 			
@@ -132,11 +129,8 @@ public class DamageListener extends ForgeListener
 		}
 	}
 	
-	public void onEntityDamageByEntity(EntityDamageByEntityEvent event, Horse horse, PlayerHorse horseData)
-	{		
-		// Fetch the config
-		HorsesConfig cfg = getPlugin().getHorsesConfig();
-		
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event, Horse horse, PlayerHorse horseData, HorsesPermissionConfig cfg)
+	{
 		// Find a player which tried to hurt the horse
 		Player player = getPlayerDamager(event.getDamager());
 				

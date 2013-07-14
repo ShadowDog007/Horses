@@ -1,0 +1,165 @@
+#######################################################################
+BypassSpawnProtection
+#######################################################################
+If true, Horses will attempt to force the spawning of summoned horses
+
+#######################################################################
+DismissHorseOnTeleport
+#######################################################################
+If true a players horse will be auto-dismissed upon teleporting away
+    from their horse.
+
+Note: This setting is currently forced to true until issues with
+    teleporting Horses are fixed.
+
+#######################################################################
+StartWithSaddle
+#######################################################################
+If true newly bought horses will be given a saddle
+
+#######################################################################
+MaxHorses
+#######################################################################
+The number of horses the player is allowed in their stable
+
+Note: Its best that this setting is not 'too' high. If it is too high
+    your server could get lag when saving players stable data to disk
+
+#######################################################################
+SummonDelay
+#######################################################################
+The delay in seconds to wait after a player using /horses summon
+    before their horse is actually summoned.
+
+
+#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#
+Renaming
+#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#
+The following settings are related to renaming horses in the wild
+    and also horses the player has in their stable
+
+#######################################################################
+BlockRenamingOnWildHorses
+#######################################################################
+If true players will be unable to rename wild horses with NameTags
+    as you normally can in Minecraft
+
+#######################################################################
+AllowClaimingWithNameTag
+#######################################################################
+If true players will be able to add wild horses to their stables.
+
+A player is required to set a name on a name tag then right click the
+    horse they wish to add to their stable.
+
+Normal requirements in stable size and horse name apply.
+
+Claiming wild horses bypasses the horses.type.<typename> permissions
+
+#######################################################################
+AllowRenamingFromNameTag
+#######################################################################
+If true players are allowed to rename their currently summoned horses
+    with a name tag (Works just like vanilla renaming)
+
+Normal restrictions on horse names are applied
+
+#######################################################################
+RequireNameTagForRenaming
+#######################################################################
+If true players will be required to be holding a NameTag in their hand
+    in order to use the '/horses rename' command
+
+#######################################################################
+MaxHorseNameLength
+#######################################################################
+The maximum length a horses name can be.
+
+This value is capped at 30. And includes formatting codes like '&3'
+
+#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#
+Damage
+#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#
+The following settings are related to damage of players
+    owned and active horses.
+
+Includes handling of death of horses.
+
+#######################################################################
+ProtectedDamageCauses
+#######################################################################
+A list of damage causes which will be made to have no effect on
+    a players active horse.
+
+For valid damage causes see here:
+    http://jd.bukkit.org/dev/apidocs/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
+
+#######################################################################
+InvincibleHorses
+#######################################################################
+If true players horses will take no damage whatsoever.
+
+#######################################################################
+ProtectFromOwner
+#######################################################################
+If true the owner of a horse will be unable to directly hurt
+    their horse.
+
+#######################################################################
+ProtectFromPlayers
+#######################################################################
+If true no players (including the owner) will be able to hurt any
+    active horses.
+
+#######################################################################
+ProtectFromMobs
+#######################################################################
+If true no mobs will be able to hurt an active horse
+
+#######################################################################
+OnlyHurtIfOwnerCanBeHurt
+#######################################################################
+If true, when a players horse takes damage an event will be fired
+    saying that the horses owner got damaged.
+    
+    If the event is cancelled, the damage applied to the horse will
+    also be cancelled.
+
+This could be useful in PVP protected areas, also when using plugins
+    which put players in 'teams'
+    
+    E.G. Factions mod, a players horses will not be able
+    to be hurt by their allies.
+
+#######################################################################
+DeleteHorseOnDeath
+#######################################################################
+If this is true a players horse will be deleted from their stable
+    and no long be able to be summoned after the horse dies.
+
+Note: This overrides the value of 'DeleteHorseOnDeathByPlayer'
+
+#######################################################################
+DeleteHorseOnDeathByPlayer
+#######################################################################
+If this is true a players horse will be deleted from their stable
+    and no long be able to be summoned after the horse dies by another
+    players hands.
+
+#######################################################################
+KeepEquipmentOnDeath
+#######################################################################
+If true when a players active horse dies no items will be dropped.
+    When the player summons their horse again all their items will
+    still be present.
+
+If false when a players active horse dies, all the items from it will
+    be dropped to the ground and will not be on the horse when
+    the player summons their horse again.
+
+#######################################################################
+DeathCooldown
+#######################################################################
+The time in seconds before a player is allowed to summon their horse
+    after it has died.
+

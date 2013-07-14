@@ -83,7 +83,7 @@ public class TypeCommand extends ForgeCommand
 				bldr.append(Command_Type_TypeSeparator);
 			}
 			
-			HorseTypeConfig cfg = getPlugin().getHorsesConfig().horseTypeConfigs.get(type.toString());
+			HorseTypeConfig cfg = getPlugin().getHorsesConfig().getHorseTypeConfig(player ? (Player) sender : null, type);
 			
 			bldr.append(Command_Type_HorseTypePrefix).append(cfg.displayName);
 			

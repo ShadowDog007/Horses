@@ -1,0 +1,50 @@
+#######################################################################
+locale
+#######################################################################
+Defines the locale to use.
+
+Locale files are found in Horses/locale/<locale>.yml
+
+Currently only en.yml is implemented in Horses
+
+#######################################################################
+WorldConfigs
+#######################################################################
+A list of worlds to create custom configs for.
+
+Any worlds listed here will have a similar copy of this config
+    generated inside of the 'worlds' folder.
+
+You can find the world configuration in:
+    plugins/Horses/worlds/<worldname>/config.yml
+    
+These configurations will apply to the player when they are in the
+    given world.
+
+#######################################################################
+EnableWorldGuardIntegration
+#######################################################################
+If true the world guard configuration settings will be generated
+
+If false Horses will not interact with WorldGuard directly.
+
+Current WorldGuard integration allows you to specify in which regions
+    players are allowed to use certain commands.
+
+#######################################################################
+ShowAuthorInCommand
+#######################################################################
+If true the /horses and /horses help commands shows the following
+    Horses v<version number> by ShadowDog007
+If false 'by ShadowDog007' is omitted
+
+#######################################################################
+RejectedHorseNamePattern
+#######################################################################
+Regex pattern which defines which horse names will not be allowed.
+
+To learn regex go here:
+    http://www.regular-expressions.info/quickstart.html
+For reference:
+    http://www.regular-expressions.info/reference.html
+
