@@ -47,6 +47,8 @@ public class HorseTypeConfig implements ForgeCore
 	public final double horseMaximumHpUpgrade;
 	public final double jumpStrength;
 	
+	public final boolean protectFromDeletionOnDeath;
+	
 	// Economy related stuff
 	public final double buyCost, healCost, hpUpgradeCost, renameCost;
 	
@@ -63,6 +65,7 @@ public class HorseTypeConfig implements ForgeCore
 		
 		horseMaximumHpUpgrade = BukkitConfigUtil.getAndSet(cfg, "MaxHpUpgrade", Number.class, 30.0).doubleValue();
 		
+		protectFromDeletionOnDeath = BukkitConfigUtil.getAndSet(cfg, "ProtectFromDeletionOnDeath", Boolean.class, false);
 		
 		// Only setup economy settings if economy is enabled
 		if (getPlugin().getEconomy() != null)

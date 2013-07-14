@@ -73,12 +73,13 @@ public class HorseDeathListener extends ForgeListener
 		if (horseData == null)
 			return;
 		
-		// Fetch the config
+		// Fetch the configs
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		HorsesPermissionConfig pcfg = cfg.getPermConfig(horseData.getStable().getPlayerOwner());
+		HorseTypeConfig typeCfg = pcfg.getHorseTypeConfig(horseData.getType());
 		
 		// Check if we should delete the horse
-		if (pcfg.deleteHorseOnDeath || pcfg.deleteHorseOnDeathByPlayer)
+		if (!typeCfg.protectFromDeletionOnDeath && (pcfg.deleteHorseOnDeath || pcfg.deleteHorseOnDeathByPlayer))
 		{
 			boolean delete = pcfg.deleteHorseOnDeath;
 			if (!delete && pcfg.deleteHorseOnDeathByPlayer)
@@ -105,9 +106,6 @@ public class HorseDeathListener extends ForgeListener
 		
 		event.setDroppedExp(0);
 		event.getDrops().clear();
-		
-		// Fetch the type config
-		HorseTypeConfig typeCfg = pcfg.getHorseTypeConfig(horseData.getType());
 		
 		// Remove the horse and update values
 		horseData.removeHorse();			
