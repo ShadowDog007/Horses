@@ -118,15 +118,6 @@ public class Horses extends ForgePlugin
 			// Setup the config
 			config = new HorsesConfig(this);
 			
-			if (config.showAuthor)
-			{
-				commandHandler.setHeaderFormat(String.format("%1$s%3$s %2$sv%1$s%4$s %2$sby %1$s%5$s", ChatColor.DARK_GREEN, ChatColor.YELLOW, "Horses", ForgeCommandHandler.HEADER_REPLACE_VERSION, "ShadowDog007"));
-			}
-			else
-			{
-				commandHandler.setHeaderFormat(String.format("%1$s%3$s %2$sv%1$s%4$s", ChatColor.DARK_GREEN, ChatColor.YELLOW, "Horses", ForgeCommandHandler.HEADER_REPLACE_VERSION));
-			}
-			
 			// Try setup WorldGuard
 			setupWorldGuard(config.worldGuardCfg != null);
 			
@@ -150,8 +141,17 @@ public class Horses extends ForgePlugin
 			commandHandler = new ForgeCommandHandler(this);
 			getCommand("horses").setExecutor(commandHandler);
 			commandHandler.setNumCommandsPerHelpPage(5);
+			
+			if (config.showAuthor)
+			{
+				commandHandler.setHeaderFormat(String.format("%1$s%3$s %2$sv%1$s%4$s %2$sby %1$s%5$s", ChatColor.DARK_GREEN, ChatColor.YELLOW, "Horses", ForgeCommandHandler.HEADER_REPLACE_VERSION, "ShadowDog007"));
+			}
+			else
+			{
+				commandHandler.setHeaderFormat(String.format("%1$s%3$s %2$sv%1$s%4$s", ChatColor.DARK_GREEN, ChatColor.YELLOW, "Horses", ForgeCommandHandler.HEADER_REPLACE_VERSION));
+			}
 					
-			// Register each command
+			// Register each sub-command
 			commandHandler.registerCommand(new BuyCommand(this));
 			commandHandler.registerCommand(new DeleteCommand(this));
 			commandHandler.registerCommand(new DismissCommand(this));
