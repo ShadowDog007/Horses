@@ -97,11 +97,13 @@ public enum Messages implements ForgeLocaleEnum
 	Command_Summon_Description("Summons the given horse to your side"),
 	
 	// Command Type messages
+	Command_Type_Error_NoHorsePerms("&cYou don't have permissions to use any horse types"),
+	Command_Type_Error_NoPermForHorse("&cYou don't have permissions to use any horse types"),
 	Command_Type_BeginWith("&eHorseTypes: "),
 	Command_Type_HorseTypePrefix("&b"),
-	Command_Type_HorseCostPrefix("&e$"),
-	Command_Type_TypeCostSeparator(" &e: "),
 	Command_Type_TypeSeparator("&e, "),
+	Command_Type_SingleTypeFormat("&eType: &b%1$s &eHP: &b%2$.0f &eMaxHP: &b%3$.0f &eJumpStrength: &b%4$.2f"),
+	Command_Type_SingleTypeFormatEco("&eType: &b%1$s &eHP: &b%2$.0f &eMaxHP: &b%3$.0f &eJumpStrength: &b%4$.2f &eBuyCost: &b%5$.2f"),
 	Command_Type_Description("Lists all the types of horses you can buy"),
 	
 	// EventListener messages
@@ -168,6 +170,9 @@ public enum Messages implements ForgeLocaleEnum
 		sender.sendMessage(String.format(message.getMessage(), args));
 	}
 	
+	/**
+	 * Returns the message belonging to this enumeration
+	 */
 	@Override
 	public String toString()
 	{

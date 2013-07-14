@@ -28,19 +28,16 @@
 
 package com.forgenz.horses.command;
 
-import static com.forgenz.horses.Messages.Command_Type_BeginWith;
-import static com.forgenz.horses.Messages.Command_Type_Description;
-import static com.forgenz.horses.Messages.Command_Type_HorseCostPrefix;
-import static com.forgenz.horses.Messages.Command_Type_HorseTypePrefix;
-import static com.forgenz.horses.Messages.Command_Type_TypeCostSeparator;
-import static com.forgenz.horses.Messages.Command_Type_TypeSeparator;
+import static com.forgenz.horses.Messages.*;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgePlugin;
 import com.forgenz.forgecore.v1_0.command.ForgeArgs;
 import com.forgenz.forgecore.v1_0.command.ForgeCommand;
+import com.forgenz.forgecore.v1_0.command.ForgeCommandArgument;
 import com.forgenz.horses.HorseType;
 import com.forgenz.horses.Horses;
 import com.forgenz.horses.config.HorseTypeConfig;
@@ -56,7 +53,10 @@ public class TypeCommand extends ForgeCommand
 		registerAlias("t", false);
 		registerPermission("horses.command.types");
 		
+		registerArgument(new ForgeCommandArgument("^.+$", 0, true, ChatColor.RED + "[Horses] This should never be seen"));
+		
 		setAllowOp(true);
+		setArgumentString(String.format("[%s%s]", Misc_Words_Horse, Misc_Words_Type));
 		setDescription(Command_Type_Description.toString());
 	}
 
@@ -65,7 +65,28 @@ public class TypeCommand extends ForgeCommand
 	{
 		boolean player = sender instanceof Player;
 		
+		if (args.getNumArgs() > 0)
+		{
+			HorseType type = HorseType.closeValueOf(args.getArg(0));
+			
+			if (type == null)
+			{
+				Command_Buy_Error_InvalidHorseType.sendMessage(sender, args.getArg(0));
+			}
+			else if (player && !sender.hasPermission(type.getPermission()))
+			{
+				Command_Type_Error_NoPermForHorse.sendMessage(sender);
+			}
+			else
+			{
+				HorseTypeConfig cfg = getPlugin().getHorsesConfig().getHorseTypeConfig((Player) (player ? sender : null), type);
+				sender.sendMessage(String.format((getPlugin().getEconomy() != null ? Command_Type_SingleTypeFormatEco : Command_Type_SingleTypeFormat).toString(), cfg.displayName, cfg.horseHp, cfg.horseMaxHp, cfg.jumpStrength, cfg.buyCost));
+			}
+			return;
+		}
+		
 		StringBuilder bldr = new StringBuilder();
+		int size = bldr.append(Command_Type_BeginWith).length();
 		
 		for (HorseType type : HorseType.values())
 		{
@@ -74,11 +95,7 @@ public class TypeCommand extends ForgeCommand
 				continue;
 			}
 				
-			if (bldr.length() == 0)
-			{
-				bldr.append(Command_Type_BeginWith);
-			}
-			else
+			if (bldr.length() != 0)
 			{
 				bldr.append(Command_Type_TypeSeparator);
 			}
@@ -86,14 +103,12 @@ public class TypeCommand extends ForgeCommand
 			HorseTypeConfig cfg = getPlugin().getHorsesConfig().getHorseTypeConfig(player ? (Player) sender : null, type);
 			
 			bldr.append(Command_Type_HorseTypePrefix).append(cfg.displayName);
-			
-			if (getPlugin().getEconomy() != null)
-			{
-				bldr.append(Command_Type_TypeCostSeparator).append(Command_Type_HorseCostPrefix).append(cfg.buyCost);
-			}
 		}
 		
-		sender.sendMessage(bldr.toString());
+		if (size == bldr.length())
+			Command_Type_Error_NoHorsePerms.sendMessage(sender);
+		else
+			sender.sendMessage(bldr.toString());
 	}
 
 	@Override
