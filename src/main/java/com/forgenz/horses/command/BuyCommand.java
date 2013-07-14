@@ -164,7 +164,7 @@ public class BuyCommand extends ForgeCommand
 		}
 		
 		// Check if the player can afford to buy the horse
-		if (getPlugin().getEconomy() != null)
+		if (getPlugin().getEconomy() != null && typecfg.buyCost > 0.0)
 		{
 			EconomyResponse responce = getPlugin().getEconomy().withdrawPlayer(player.getName(), typecfg.buyCost);
 			

@@ -28,10 +28,13 @@
 
 package com.forgenz.horses.listeners;
 
+import static com.forgenz.horses.Messages.Command_Buy_Error_CantAffordHorse;
 import static com.forgenz.horses.Messages.Command_Buy_Error_TooManyHorses;
+import static com.forgenz.horses.Messages.Command_Buy_Success_BoughtHorse;
 import static com.forgenz.horses.Messages.Misc_Command_Error_CantUseColor;
 import static com.forgenz.horses.Messages.Misc_Command_Error_CantUseFormattingCodes;
 import static com.forgenz.horses.Messages.Misc_Command_Error_HorseNameTooLong;
+import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -48,6 +51,7 @@ import com.forgenz.horses.Horses;
 import com.forgenz.horses.Messages;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
+import com.forgenz.horses.config.HorseTypeConfig;
 import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class InteractListener extends ForgeListener
@@ -205,8 +209,23 @@ public class InteractListener extends ForgeListener
 					}
 					
 					HorseType type = HorseType.valueOf(horse);
+					HorseTypeConfig typecfg = cfg.getHorseTypeConfig(type);
 					
-					PlayerHorse horseData = stable.createHorse(displayName, cfg.getHorseTypeConfig(type), horse);
+					// Check if the player can afford to buy the horse
+					if (getPlugin().getEconomy() != null && typecfg.wildClaimCost > 0.0)
+					{
+						EconomyResponse responce = getPlugin().getEconomy().withdrawPlayer(player.getName(), typecfg.buyCost);
+						
+						if (!responce.transactionSuccess())
+						{
+							Command_Buy_Error_CantAffordHorse.sendMessage(player, typecfg.buyCost);
+							return;
+						}
+						
+						Command_Buy_Success_BoughtHorse.sendMessage(player, typecfg.buyCost);
+					}
+					
+					PlayerHorse horseData = stable.createHorse(displayName, typecfg, horse);
 					
 					Messages.Command_Buy_Success_Completion.sendMessage(player, "horses", horseData.getDisplayName());
 				}

@@ -50,7 +50,7 @@ public class HorseTypeConfig implements ForgeCore
 	public final boolean protectFromDeletionOnDeath;
 	
 	// Economy related stuff
-	public final double buyCost, healCost, hpUpgradeCost, renameCost;
+	public final double buyCost, wildClaimCost, healCost, hpUpgradeCost, renameCost;
 	
 	public HorseTypeConfig(ForgePlugin plugin, ConfigurationSection cfg, HorseType type)
 	{
@@ -71,13 +71,14 @@ public class HorseTypeConfig implements ForgeCore
 		if (getPlugin().getEconomy() != null)
 		{
 			buyCost = BukkitConfigUtil.getAndSet(cfg, "BuyCost", Number.class, 10.0).doubleValue();
+			wildClaimCost = BukkitConfigUtil.getAndSet(cfg, "WildClaimCost", Number.class, 0.0).doubleValue();
 			healCost = BukkitConfigUtil.getAndSet(cfg, "HealCost", Number.class, 10.0).doubleValue();
 			hpUpgradeCost = BukkitConfigUtil.getAndSet(cfg, "HpUpgradeCost", Number.class, 10.0).doubleValue();
 			renameCost = BukkitConfigUtil.getAndSet(cfg, "RenameCost", Number.class, 5.0).doubleValue();
 		}
 		else
 		{
-			buyCost = healCost = hpUpgradeCost = renameCost = 0.0;
+			buyCost = wildClaimCost = healCost = hpUpgradeCost = renameCost = 0.0;
 		}
 	}
 
