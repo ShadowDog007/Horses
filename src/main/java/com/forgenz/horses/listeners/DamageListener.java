@@ -122,6 +122,8 @@ public class DamageListener extends ForgeListener
 				e = new EntityDamageByEntityEvent(((EntityDamageByEntityEvent) event).getDamager(), player, event.getCause(), 0.0);
 			else if (event.getClass() == EntityDamageByBlockEvent.class)
 				e = new EntityDamageByBlockEvent(((EntityDamageByBlockEvent) event).getDamager(), player, event.getCause(), 0.0);
+			else
+				return;
 			
 			Bukkit.getPluginManager().callEvent(e);
 			
