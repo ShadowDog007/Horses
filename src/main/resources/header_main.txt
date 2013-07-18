@@ -63,7 +63,7 @@ If false 'by ShadowDog007' is omitted
 ForceEnglishCharacters
 #######################################################################
 If true all commands which accept horse names will only allow
-    the characters a to z, 0 to 9 and underscore.
+    the characters a to z, 0 to 9, & and underscores.
 
 If false all characters will be allowed except for space.
 
