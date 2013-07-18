@@ -45,6 +45,11 @@
       <id>sk89q-repo</id>
       <url>http://maven.sk89q.com/repo/</url>
     </repository>
+    <!-- MavenRepository.com -->
+    <repository>
+      <id>mvnRepo.com</id>
+      <url>http://repo1.maven.orge/maven2</url>
+    </repository>
   </repositories>
   <dependencies>
   	<dependency>
@@ -70,6 +75,12 @@
   		<version>5.5.7</version>
   		<scope>system</scope>
   		<systemPath>${project.basedir}/lib/integration/worldedit-5.5.7.jar</systemPath>
+  	</dependency>
+  	<dependency>
+  	    <!-- Updates: http://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+  		<groupId>mysql</groupId>
+  		<artifactId>mysql-connector-java</artifactId>
+  		<version>5.1.25</version>
   	</dependency>
   </dependencies>
   <name>Horses</name>

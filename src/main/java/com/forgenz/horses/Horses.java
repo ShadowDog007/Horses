@@ -51,7 +51,6 @@ import com.forgenz.horses.command.SummonCommand;
 import com.forgenz.horses.command.TypeCommand;
 import com.forgenz.horses.config.HorsesConfig;
 import com.forgenz.horses.database.HorseDatabase;
-import com.forgenz.horses.database.YamlDatabase;
 import com.forgenz.horses.listeners.DamageListener;
 import com.forgenz.horses.listeners.HorseDeathListener;
 import com.forgenz.horses.listeners.HorseSpawnListener;
@@ -121,9 +120,6 @@ public class Horses extends ForgePlugin
 			// Try setup WorldGuard
 			setupWorldGuard(config.worldGuardCfg != null);
 			
-			// Setup the database
-			database = new YamlDatabase(this);
-			
 			// Register the Listeners
 			if (config.isProtecting())
 				new DamageListener(this);
@@ -136,6 +132,9 @@ public class Horses extends ForgePlugin
 			
 			horseDismissTask = new HorseDismissTask(this);
 			horseDismissTask.runTaskTimer(this, 20L, 10L);
+			
+			// Setup the database
+			database = config.databaseType.create(this);
 			
 			// Setup commands
 			commandHandler = new ForgeCommandHandler(this);

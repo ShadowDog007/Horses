@@ -25,76 +25,76 @@
  * authors and contributors and should not be interpreted as representing official policies,
  * either expressed or implied, of anybody else.
  */
-
+ 
 package com.forgenz.horses.database;
 
-import java.util.HashMap;
-import java.util.regex.Pattern;
+import java.lang.reflect.InvocationTargetException;
 
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
-import com.forgenz.forgecore.v1_0.ForgeCore;
 import com.forgenz.horses.Horses;
-import com.forgenz.horses.PlayerHorse;
-import com.forgenz.horses.Stable;
 
-public abstract class HorseDatabase implements ForgeCore
+public enum HorseDatabaseStorageType
 {
-	protected static final Pattern COLOUR_CHAR_REPLACE = Pattern.compile(Character.toString(ChatColor.COLOR_CHAR));
+	/**
+	 * Does not store any data</br>
+	 * 
+	 * Used for testing purposes and also as a fallback for incorrectly setup databases
+	 */
+	DUMMY(DummyDatabase.class),
 	
-	private final Horses plugin;
+	/**
+	 * Uses YAML Files to store horse/stable data for each player
+	 */
+	YAML(YamlDatabase.class),
 	
-	private final HashMap<String, Stable> playerStables = new HashMap<String, Stable>();
+	/**
+	 * Uses a MySQL database to store Horse/Stable data for each player
+	 */
+	MYSQL(MysqlDatabase.class);
 	
-	public HorseDatabase(Horses plugin)
+	private final Class<? extends HorseDatabase> clazz;
+	
+	private HorseDatabaseStorageType(Class<? extends HorseDatabase> clazz)
 	{
-		this.plugin = plugin;
+		this.clazz = clazz;
 	}
 	
-	protected abstract Stable loadStable(String player);
-	
-	protected abstract void loadHorses(Stable stable);
-	
-	protected abstract void saveStable(Stable stable);
-	
-	public abstract void saveHorse(PlayerHorse horse);
-	
-	public abstract boolean deleteHorse(PlayerHorse horse);
-	
-	public Stable getPlayersStable(Player player)
+	public HorseDatabase create(Horses plugin)
 	{
-		Stable stable = playerStables.get(player.getName());
-		
-		if (stable == null)
+		try
 		{
-			stable = loadStable(player.getName());
-			playerStables.put(player.getName(), stable);
-		}
-		
-		return stable;
-	}
-	
-	public void saveAll()
-	{
-		for (Stable stable : playerStables.values())
-		{
-			if (stable.getActiveHorse() != null)
+			try
 			{
-				stable.getActiveHorse().removeHorse();
+				return clazz.getConstructor(Horses.class).newInstance(plugin);
+			}
+			catch (NoSuchMethodException e)
+			{
+				plugin.severe("Failed to find constructor for this database type", e);
+				throw e;
+			}
+			catch (InvocationTargetException e)
+			{
+				plugin.severe("Error occured when attempting to create the database of type %s", e.getTargetException(), toString());
+				throw e;
 			}
 		}
+		catch (Throwable e)
+		{
+			plugin.severe("#################################");
+			plugin.severe("Falling back to a dummy database");
+			plugin.severe("WARNING: No data will be saved");
+			plugin.severe("#################################");
+			return DUMMY.create(plugin);
+		}
 	}
 	
-	@Override
-	public Horses getPlugin()
+	public static HorseDatabaseStorageType getFromString(String str)
 	{
-		return plugin;
-	}
-
-	public void unload(Stable stable)
-	{
-		saveStable(stable);
-		playerStables.remove(stable.getOwner());
+		for (HorseDatabaseStorageType type : values())
+		{
+			if (type.toString().equals(str))
+				return type;
+		}
+		
+		return null;
 	}
 }

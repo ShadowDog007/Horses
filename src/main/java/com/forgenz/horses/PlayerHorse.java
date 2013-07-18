@@ -53,6 +53,7 @@ public class PlayerHorse implements ForgeCore
 	
 	private final Horses plugin;
 	private final Stable stable;
+	private int id;
 	
 	private Horse horse;
 	
@@ -73,8 +74,14 @@ public class PlayerHorse implements ForgeCore
 	
 	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, double jumpStrength, Horse horse)
 	{
+		this(plugin, stable, name, type, maxHealth, health, jumpStrength, horse, -1);
+	}
+	
+	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, double jumpStrength, Horse horse, int id)
+	{
 		this.plugin = plugin;
 		this.stable = stable;
+		this.id = id;
 		
 		this.displayName = ChatColor.translateAlternateColorCodes('&', name).replaceAll("&", "");
 		this.name = ChatColor.stripColor(this.displayName);
@@ -138,6 +145,16 @@ public class PlayerHorse implements ForgeCore
 	public void setLastDeath(long time)
 	{
 		lastDeath = time;
+	}
+	
+	public int getId()
+	{
+		return id;
+	}
+	
+	public void setId(int id)
+	{
+		this.id = id;
 	}
 	
 	public double getMaxHealth()
@@ -442,7 +459,7 @@ public class PlayerHorse implements ForgeCore
 		getPlugin().getHorseDatabase().saveHorse(this);
 	}
 	
-	public void deleteHorse()
+	public boolean deleteHorse()
 	{
 		if (horse != null)
 		{
@@ -450,7 +467,7 @@ public class PlayerHorse implements ForgeCore
 			getStable().removeActiveHorse(this);
 		}
 		
-		stable.deleteHorse(this);
+		return stable.deleteHorse(this);
 	}
 	
 	public void rename(String name)

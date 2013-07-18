@@ -28,73 +28,59 @@
 
 package com.forgenz.horses.database;
 
-import java.util.HashMap;
-import java.util.regex.Pattern;
-
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
-import com.forgenz.forgecore.v1_0.ForgeCore;
 import com.forgenz.horses.Horses;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
 
-public abstract class HorseDatabase implements ForgeCore
+public class DummyDatabase extends HorseDatabase implements Listener
 {
-	protected static final Pattern COLOUR_CHAR_REPLACE = Pattern.compile(Character.toString(ChatColor.COLOR_CHAR));
-	
-	private final Horses plugin;
-	
-	private final HashMap<String, Stable> playerStables = new HashMap<String, Stable>();
-	
-	public HorseDatabase(Horses plugin)
+	public DummyDatabase(Horses plugin)
 	{
-		this.plugin = plugin;
-	}
-	
-	protected abstract Stable loadStable(String player);
-	
-	protected abstract void loadHorses(Stable stable);
-	
-	protected abstract void saveStable(Stable stable);
-	
-	public abstract void saveHorse(PlayerHorse horse);
-	
-	public abstract boolean deleteHorse(PlayerHorse horse);
-	
-	public Stable getPlayersStable(Player player)
-	{
-		Stable stable = playerStables.get(player.getName());
+		super(plugin);
 		
-		if (stable == null)
-		{
-			stable = loadStable(player.getName());
-			playerStables.put(player.getName(), stable);
-		}
-		
-		return stable;
+		// Make sure server operators know that no data is being stored
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
-	public void saveAll()
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerJoin(PlayerJoinEvent event)
 	{
-		for (Stable stable : playerStables.values())
+		if (event.getPlayer().isOp())
 		{
-			if (stable.getActiveHorse() != null)
-			{
-				stable.getActiveHorse().removeHorse();
-			}
+			event.getPlayer().sendMessage(ChatColor.RED + "Horses is running in DUMMY mode. Horses data will be lost upon disconnecting");
 		}
-	}
-	
-	@Override
-	public Horses getPlugin()
-	{
-		return plugin;
 	}
 
-	public void unload(Stable stable)
+	@Override
+	protected Stable loadStable(String player)
 	{
-		saveStable(stable);
-		playerStables.remove(stable.getOwner());
+		return new Stable(getPlugin(), player);
+	}
+
+	@Override
+	protected void loadHorses(Stable stable)
+	{
+	}
+
+	@Override
+	protected void saveStable(Stable stable)
+	{
+	}
+
+	@Override
+	public void saveHorse(PlayerHorse horse)
+	{
+	}
+
+	@Override
+	public boolean deleteHorse(PlayerHorse horse)
+	{
+		return true;
 	}
 }

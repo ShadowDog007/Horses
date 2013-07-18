@@ -46,6 +46,7 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 {
 	private final Horses plugin;
 	private final String player;
+	private int id;
 	
 	private List<PlayerHorse> horses = Collections.synchronizedList(new LinkedList<PlayerHorse>());
 	
@@ -54,8 +55,14 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 	
 	public Stable(Horses plugin, String player)
 	{
+		this(plugin, player, -1);
+	}
+	
+	public Stable(Horses plugin, String player, int id)
+	{
 		this.plugin = plugin;
 		this.player = player;
+		this.id = id;
 	}
 
 	@Override
@@ -72,6 +79,21 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 	public Player getPlayerOwner()
 	{
 		return Bukkit.getPlayerExact(getOwner());
+	}
+	
+	/**
+	 * Fetches the ID of this stable for the given database<br />
+	 * 
+	 * @return The stables ID, -1 If the active database does not use ID's or has not been saved yet 
+	 */
+	public int getId()
+	{
+		return id;
+	}
+	
+	public void setId(int id)
+	{
+		this.id = id;
 	}
 	
 	public int getHorseCount()
@@ -198,12 +220,17 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 		}
 	}
 	
-	public void deleteHorse(PlayerHorse playerHorse)
+	public boolean deleteHorse(PlayerHorse playerHorse)
 	{
 		if (lastActiveHorse == playerHorse)
 			lastActiveHorse = null;
 		
-		horses.remove(playerHorse);
-		getPlugin().getHorseDatabase().deleteHorse(playerHorse);
+		if (getPlugin().getHorseDatabase().deleteHorse(playerHorse))
+		{
+			horses.remove(playerHorse);
+			return true;
+		}
+		
+		return false;
 	}
 }

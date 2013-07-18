@@ -41,6 +41,7 @@ import org.bukkit.entity.Player;
 import com.forgenz.forgecore.v1_0.ForgeCore;
 import com.forgenz.horses.HorseType;
 import com.forgenz.horses.Horses;
+import com.forgenz.horses.database.HorseDatabaseStorageType;
 
 public class HorsesConfig extends AbstractConfig implements ForgeCore
 {	
@@ -49,7 +50,9 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 	private final HorsesWorldConfig globalCfg;
 	private final Map<String, HorsesWorldConfig> worldConfigs;
 	
-	public boolean showAuthor;
+	public final HorseDatabaseStorageType databaseType;
+	
+	public final boolean showAuthor;
 	
 	public final Pattern rejectedHorseNamePattern;
 	
@@ -72,6 +75,18 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 		cfg.set("WorldConfigs", null);
 		cfg.set("WorldConfigs", worlds);
 		
+		String dbString = getAndSet("DatabaseType", HorseDatabaseStorageType.YAML.toString(), String.class).toUpperCase();
+		HorseDatabaseStorageType databaseType = HorseDatabaseStorageType.getFromString(dbString);
+		if (databaseType == null)
+		{
+			getPlugin().severe("Invalid database type %s", dbString);
+			plugin.severe("#################################");
+			plugin.severe("Falling back to a dummy database");
+			plugin.severe("WARNING: No data will be saved");
+			plugin.severe("#################################");
+			databaseType = HorseDatabaseStorageType.DUMMY;
+		}
+		this.databaseType = databaseType;
 		
 		if (getAndSet("EnableWorldGuardIntegration", false, Boolean.class))
 			worldGuardCfg = new WorldGuardConfig(plugin);

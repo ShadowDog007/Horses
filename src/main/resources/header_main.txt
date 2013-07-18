@@ -22,6 +22,27 @@ These configurations will apply to the player when they are in the
     given world.
 
 #######################################################################
+DatabaseType
+#######################################################################
+Specifies the database to use to store player data.
+
+Valid DatabaseTypes are YAML, MYSQL and DUMMY
+
+If a database fails to initialize the DUMMY database will be used.
+
+Types:
+- YAML: Stores a single yaml file per player in playerdata/<user>.yml
+    YAML is the default database
+- MYSQL: Stores data in a MySQL database. If this option is selected
+    a config file named 'mysql.yml' will appear which you need to
+    use to setup MySQL.
+    If MySQL fails to connect on startup the Dummy Database will be
+    used.
+    This database type can be used to share horses between servers.
+- DUMMY: Does not store any data. Horses are lost upon quiting.
+    To be used for testing purposes.
+
+#######################################################################
 EnableWorldGuardIntegration
 #######################################################################
 If true the world guard configuration settings will be generated

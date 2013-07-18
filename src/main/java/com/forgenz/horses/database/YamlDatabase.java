@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -207,7 +206,7 @@ public class YamlDatabase extends HorseDatabase
 		
 		for (PlayerHorse horse : stable)
 		{
-			String colourCodedDisplayName = horse.getDisplayName().replaceAll(Character.toString(ChatColor.COLOR_CHAR), "&");
+			String colourCodedDisplayName = COLOUR_CHAR_REPLACE.matcher(horse.getDisplayName()).replaceAll("&");
 			ConfigurationSection horseSect = BukkitConfigUtil.getAndSetConfigurationSection(sect, colourCodedDisplayName);
 			
 			horseSect.set("type", horse.getType().toString());
@@ -263,8 +262,9 @@ public class YamlDatabase extends HorseDatabase
 	}
 
 	@Override
-	public void deleteHorse(PlayerHorse horse)
+	public boolean deleteHorse(PlayerHorse horse)
 	{
 		saveStable(horse.getStable());
+		return true;
 	}
 }
