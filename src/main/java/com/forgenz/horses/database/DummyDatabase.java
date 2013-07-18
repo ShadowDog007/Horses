@@ -42,7 +42,7 @@ public class DummyDatabase extends HorseDatabase implements Listener
 {
 	public DummyDatabase(Horses plugin)
 	{
-		super(plugin);
+		super(plugin, HorseDatabaseStorageType.DUMMY);
 		
 		// Make sure server operators know that no data is being stored
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);

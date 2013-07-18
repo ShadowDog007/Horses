@@ -169,6 +169,21 @@ public class Horses extends ForgePlugin
 				Metrics metrics = new Metrics(this);
 				
 				metrics.start();
+				
+				// Database Type
+				Metrics.Graph graph = metrics.createGraph("DatabaseType");
+				String pn = database.getType().toString();
+				pn = pn.charAt(0) + pn.substring(1, pn.length()).toLowerCase();
+				
+				graph.addPlotter(new Metrics.Plotter(pn)
+				{
+					@Override
+					public int getValue()
+					{
+						return 1;
+					}
+				});
+				
 			}
 			catch (IOException e)
 			{

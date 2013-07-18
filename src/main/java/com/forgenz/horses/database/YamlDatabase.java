@@ -53,7 +53,7 @@ public class YamlDatabase extends HorseDatabase
 	
 	public YamlDatabase(Horses plugin)
 	{
-		super(plugin);
+		super(plugin, HorseDatabaseStorageType.YAML);
 	}
 	
 	private File getPlayersConfigFile(String player)

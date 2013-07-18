@@ -60,7 +60,7 @@ public class MysqlDatabase  extends HorseDatabase
 	
 	public MysqlDatabase(Horses plugin) throws DatabaseConnectException, SQLException
 	{
-		super(plugin);
+		super(plugin, HorseDatabaseStorageType.MYSQL);
 		
 		settings = new MysqlSettings(plugin);
 		

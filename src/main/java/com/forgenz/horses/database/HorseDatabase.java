@@ -44,12 +44,14 @@ public abstract class HorseDatabase implements ForgeCore
 	protected static final Pattern COLOUR_CHAR_REPLACE = Pattern.compile(Character.toString(ChatColor.COLOR_CHAR));
 	
 	private final Horses plugin;
+	private final HorseDatabaseStorageType dbType;
 	
 	private final HashMap<String, Stable> playerStables = new HashMap<String, Stable>();
 	
-	public HorseDatabase(Horses plugin)
+	public HorseDatabase(Horses plugin, HorseDatabaseStorageType dbType)
 	{
 		this.plugin = plugin;
+		this.dbType = dbType;
 	}
 	
 	protected abstract Stable loadStable(String player);
@@ -90,6 +92,11 @@ public abstract class HorseDatabase implements ForgeCore
 	public Horses getPlugin()
 	{
 		return plugin;
+	}
+	
+	public HorseDatabaseStorageType getType()
+	{
+		return dbType;
 	}
 
 	public void unload(Stable stable)
