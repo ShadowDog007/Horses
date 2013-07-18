@@ -83,7 +83,7 @@ public class PlayerHorse implements ForgeCore
 		this.stable = stable;
 		this.id = id;
 		
-		this.displayName = ChatColor.translateAlternateColorCodes('&', name).replaceAll("&", "");
+		this.displayName = ChatColor.translateAlternateColorCodes('&', name).replaceAll("&", "").replaceAll(" ", "_");
 		this.name = ChatColor.stripColor(this.displayName);
 		
 		this.type = type;
@@ -472,7 +472,7 @@ public class PlayerHorse implements ForgeCore
 	
 	public void rename(String name)
 	{
-		this.displayName = ChatColor.translateAlternateColorCodes('&', name).replaceAll("&", "");
+		this.displayName = ChatColor.translateAlternateColorCodes('&', name).replaceAll("&", "").replaceAll(" ", "_");
 		this.name = ChatColor.stripColor(this.displayName);
 		
 		if (horse != null && horse.isValid())
