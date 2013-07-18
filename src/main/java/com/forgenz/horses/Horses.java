@@ -131,7 +131,7 @@ public class Horses extends ForgePlugin
 			spawnListener = new HorseSpawnListener(this);
 			
 			horseDismissTask = new HorseDismissTask(this);
-			horseDismissTask.runTaskTimer(this, 20L, 10L);
+			horseDismissTask.runTaskTimer(this, 100L, 100L);
 			
 			// Setup the database
 			database = config.databaseType.create(this);
