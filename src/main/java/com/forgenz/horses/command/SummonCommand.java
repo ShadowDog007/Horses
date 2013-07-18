@@ -82,7 +82,7 @@ public class SummonCommand extends ForgeCommand
 		Long lastSummon = summonTasks.get(playerName);
 		if (lastSummon != null)
 		{
-			if (System.nanoTime() - lastSummon > pcfg.summonDelay * 1000)
+			if (System.currentTimeMillis() - lastSummon > pcfg.summonDelay * 1000)
 			{
 				summonTasks.remove(playerName);
 			}
