@@ -53,6 +53,7 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 	public final HorseDatabaseStorageType databaseType;
 	
 	public final boolean showAuthor;
+	public final boolean forceEnglishCharacters;
 	
 	public final Pattern rejectedHorseNamePattern;
 	
@@ -94,6 +95,7 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 			worldGuardCfg = null;
 		
 		showAuthor = getAndSet("ShowAuthorInCommand", true, Boolean.class);
+		forceEnglishCharacters = getAndSet("ForceEnglishCharacters", true, Boolean.class);
 		
 		String defPattern = "f.?u.?c.?k|d.?[1i].?(c.?k?|c|k)|c.?u.?n.?t";
 		String pattern = getAndSet("RejectedHorseNamePattern", defPattern, String.class);

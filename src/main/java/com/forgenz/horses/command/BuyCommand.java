@@ -63,8 +63,8 @@ public class BuyCommand extends ForgeCommand
 		registerAlias("b", false);
 		registerPermission("horses.command.buy");
 		
-		registerArgument(new ForgeCommandArgument("^[a-z0-9_&]+$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_NameValidCharacters.toString()));
-		registerArgument(new ForgeCommandArgument("^[a-z]{0,21}$", Pattern.CASE_INSENSITIVE, false, Command_Buy_Error_Type.toString()));
+		registerArgument(new ForgeCommandArgument(getPlugin().getHorsesConfig().forceEnglishCharacters ? "^[a-z0-9_&]+$" : "^[^ ]+$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_NameValidCharacters.toString()));
+		registerArgument(new ForgeCommandArgument(getPlugin().getHorsesConfig().forceEnglishCharacters ? "^[a-z0-9_&]+$" : "^[^ ]+$", Pattern.CASE_INSENSITIVE, false, Command_Buy_Error_Type.toString()));
 		
 		setAllowOp(true);
 		setAllowConsole(false);

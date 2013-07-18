@@ -60,6 +60,17 @@ If true the /horses and /horses help commands shows the following
 If false 'by ShadowDog007' is omitted
 
 #######################################################################
+ForceEnglishCharacters
+#######################################################################
+If true all commands which accept horse names will only allow
+    the characters a to z, 0 to 9 and underscore.
+
+If false all characters will be allowed except for space.
+
+Note: You may face corruption issues if this is set to false.
+    It has been untested.
+
+#######################################################################
 RejectedHorseNamePattern
 #######################################################################
 Regex pattern which defines which horse names will not be allowed.

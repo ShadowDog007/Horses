@@ -58,8 +58,8 @@ public class RenameCommand extends ForgeCommand
 		registerAlias("rename", true);
 		registerPermission("horses.command.rename");
 		
-		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,16}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_InvalidName.toString()));
-		registerArgument(new ForgeCommandArgument("^[a-z0-9_&]{0,16}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_NameValidCharacters.toString()));
+		registerArgument(new ForgeCommandArgument(getPlugin().getHorsesConfig().forceEnglishCharacters ? "^[a-z0-9_&]+$" : "^[^ ]+$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_InvalidName.toString()));
+		registerArgument(new ForgeCommandArgument(getPlugin().getHorsesConfig().forceEnglishCharacters ? "^[a-z0-9_&]+$" : "^[^ ]+$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_NameValidCharacters.toString()));
 		
 		setAllowOp(true);
 		setAllowConsole(false);

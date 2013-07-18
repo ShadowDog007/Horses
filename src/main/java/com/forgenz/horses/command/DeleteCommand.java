@@ -29,7 +29,7 @@ public class DeleteCommand extends ForgeCommand
 		registerAlias("del", true);
 		registerPermission("horses.command.delete");
 		
-		registerArgument(new ForgeCommandArgument("^[a-z0-9_]{0,20}$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_InvalidName.toString()));
+		registerArgument(new ForgeCommandArgument(getPlugin().getHorsesConfig().forceEnglishCharacters ? "^[a-z0-9_&]+$" : "^[^ ]+$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_InvalidName.toString()));
 		
 		setAllowOp(true);
 		setAllowConsole(false);
