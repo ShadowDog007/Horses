@@ -126,6 +126,16 @@ public abstract class AbstractConfig implements ForgeCore
 		options.copyHeader(true);
 	}
 	
+	protected void initializeHeader()
+	{
+		// Clear the current header
+		cfg.options().header(null);
+		
+		// Add the Top part of the header to the file
+		PluginDescriptionFile pdf = getPlugin().getDescription();
+		addStringToHeader(String.format("%s v%s by %s\n%s\n\n", getPlugin().getName(), pdf.getVersion(), getPlugin().getAuthors(), pdf.getWebsite()));
+	}
+	
 	protected YamlConfiguration loadConfiguration()
 	{
 		if (cfg == null)
@@ -152,12 +162,7 @@ public abstract class AbstractConfig implements ForgeCore
 				}
 			}
 			
-			// Clear the current header
-			cfg.options().header(null);
-			
-			// Add the Top part of the header to the file
-			PluginDescriptionFile pdf = getPlugin().getDescription();
-			addStringToHeader(String.format("%s v%s by %s\n%s\n\n", getPlugin().getName(), pdf.getVersion(), getPlugin().getAuthors(), pdf.getWebsite()));
+			initializeHeader();
 		}		
 		
 		return cfg;

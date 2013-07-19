@@ -63,6 +63,7 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 		
 		YamlConfiguration cfg = this.loadConfiguration();
 		
+		this.initializeHeader();
 		this.addResourseToHeader("header_main.txt");
 		
 		Map<String, HorsesWorldConfig> worldConfigs = new HashMap<String, HorsesWorldConfig>();
