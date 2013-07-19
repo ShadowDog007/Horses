@@ -66,9 +66,14 @@ public abstract class HorseDatabase implements ForgeCore
 	
 	public Stable getPlayersStable(Player player)
 	{
+		return getPlayersStable(player, true);
+	}
+	
+	public Stable getPlayersStable(Player player, boolean load)
+	{
 		Stable stable = playerStables.get(player.getName());
 		
-		if (stable == null)
+		if (stable == null && load)
 		{
 			stable = loadStable(player.getName());
 			playerStables.put(player.getName(), stable);

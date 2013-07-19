@@ -77,7 +77,10 @@ public class HorseDismissTask extends BukkitRunnable implements ForgeCore
 			if (!player.isValid())
 				continue;
 			
-			Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
+			Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player, false);
+			
+			if (stable == null)
+				continue;
 			
 			PlayerHorse horseData = stable.getActiveHorse();
 			
