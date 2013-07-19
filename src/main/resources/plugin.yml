@@ -28,6 +28,51 @@ permissions:
       horses.command.buy: true
       horses.command.delete: true
       horses.colour: true
+      
+      horses.type.white: true
+      horses.type.creamy: true
+      horses.type.chestnut: true
+      horses.type.brown: true
+      horses.type.black: true
+      horses.type.gray: true
+      horses.type.darkbrown: true
+  
+      horses.type.blazewhite: true
+      horses.type.blazecreamy: true
+      horses.type.blazechestnut: true
+      horses.type.blazebrown: true
+      horses.type.blazeblack: true
+      horses.type.blazegray: true
+      horses.type.blazedarkbrown: true
+  
+      horses.type.paintwhite: true
+      horses.type.paintcreamy: true
+      horses.type.paintchestnut: true
+      horses.type.paintbrown: true
+      horses.type.paintblack: true
+      horses.type.paintgray: true
+      horses.type.paintdarkbrown: true
+  
+      horses.type.leopardwhite: true
+      horses.type.leopardcreamy: true
+      horses.type.leopardchestnut: true
+      horses.type.leopardbrown: true
+      horses.type.leopardblack: true
+      horses.type.leopardgray: true
+      horses.type.leoparddarkbrown: true
+  
+      horses.type.sootywhite: true
+      horses.type.sootycreamy: true
+      horses.type.sootychestnut: true
+      horses.type.sootybrown: true
+      horses.type.sootyblack: true
+      horses.type.sootygray: true
+      horses.type.sootydarkbrown: true
+  
+      horses.type.donkey: true
+      horses.type.mule: true
+      horses.type.undead: true
+      horses.type.skeleton: true
 
   horses.command.list:
     description: Gives access to the /horses list command
@@ -49,50 +94,50 @@ permissions:
   horses.command.reload:
     description: Gives access to the /horses reload command
 
-  horses.colour: {default: true , description: 'Lets players use colour in their horses names'}
+  horses.colour: {description: 'Lets players use colour in their horses names'}
   horses.formattingcodes: {default: false , description: 'Lets players use formatting codes in their horses names'}
   
-  horses.type.white: {default: true}
-  horses.type.creamy: {default: true}
-  horses.type.chestnut: {default: true}
-  horses.type.brown: {default: true}
-  horses.type.black: {default: true}
-  horses.type.gray: {default: true}
-  horses.type.darkbrown: {default: true}
+  horses.type.white: {}
+  horses.type.creamy: {}
+  horses.type.chestnut: {}
+  horses.type.brown: {}
+  horses.type.black: {}
+  horses.type.gray: {}
+  horses.type.darkbrown: {}
   
-  horses.type.blazewhite: {default: true}
-  horses.type.blazecreamy: {default: true}
-  horses.type.blazechestnut: {default: true}
-  horses.type.blazebrown: {default: true}
-  horses.type.blazeblack: {default: true}
-  horses.type.blazegray: {default: true}
-  horses.type.blazedarkbrown: {default: true}
+  horses.type.blazewhite: {}
+  horses.type.blazecreamy: {}
+  horses.type.blazechestnut: {}
+  horses.type.blazebrown: {}
+  horses.type.blazeblack: {}
+  horses.type.blazegray: {}
+  horses.type.blazedarkbrown: {}
   
-  horses.type.paintwhite: {default: true}
-  horses.type.paintcreamy: {default: true}
-  horses.type.paintchestnut: {default: true}
-  horses.type.paintbrown: {default: true}
-  horses.type.paintblack: {default: true}
-  horses.type.paintgray: {default: true}
-  horses.type.paintdarkbrown: {default: true}
+  horses.type.paintwhite: {}
+  horses.type.paintcreamy: {}
+  horses.type.paintchestnut: {}
+  horses.type.paintbrown: {}
+  horses.type.paintblack: {}
+  horses.type.paintgray: {}
+  horses.type.paintdarkbrown: {}
   
-  horses.type.leopardwhite: {default: true}
-  horses.type.leopardcreamy: {default: true}
-  horses.type.leopardchestnut: {default: true}
-  horses.type.leopardbrown: {default: true}
-  horses.type.leopardblack: {default: true}
-  horses.type.leopardgray: {default: true}
-  horses.type.leoparddarkbrown: {default: true}
+  horses.type.leopardwhite: {}
+  horses.type.leopardcreamy: {}
+  horses.type.leopardchestnut: {}
+  horses.type.leopardbrown: {}
+  horses.type.leopardblack: {}
+  horses.type.leopardgray: {}
+  horses.type.leoparddarkbrown: {}
   
-  horses.type.sootywhite: {default: true}
-  horses.type.sootycreamy: {default: true}
-  horses.type.sootychestnut: {default: true}
-  horses.type.sootybrown: {default: true}
-  horses.type.sootyblack: {default: true}
-  horses.type.sootygray: {default: true}
-  horses.type.sootydarkbrown: {default: true}
+  horses.type.sootywhite: {}
+  horses.type.sootycreamy: {}
+  horses.type.sootychestnut: {}
+  horses.type.sootybrown: {}
+  horses.type.sootyblack: {}
+  horses.type.sootygray: {}
+  horses.type.sootydarkbrown: {}
   
-  horses.type.donkey: {default: true}
-  horses.type.mule: {default: true}
-  horses.type.undead: {default: true}
-  horses.type.skeleton: {default: true}
+  horses.type.donkey: {}
+  horses.type.mule: {}
+  horses.type.undead: {}
+  horses.type.skeleton: {}
