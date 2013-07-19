@@ -183,9 +183,9 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 		
 		horses.add(horseData);
 		
-		if (horse != null && saddle)
+		if (horse == null && saddle)
 		{
-			horseData.setItem(0, new ItemStack(Material.SADDLE));
+			horseData.setSaddle(Material.SADDLE);
 		}
 		
 		getPlugin().getHorseDatabase().saveHorse(horseData);
