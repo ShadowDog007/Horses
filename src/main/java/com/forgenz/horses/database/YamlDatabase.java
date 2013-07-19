@@ -115,7 +115,7 @@ public class YamlDatabase extends HorseDatabase
 			long lastDeath = horseSect.getLong("lastdeath") * 1000;
 			double maxHealth = horseSect.getDouble("maxhealth");
 			double health = horseSect.getDouble("health");
-			double jumpStrength = horseSect.getDouble("jumpstrength");
+			double jumpStrength = horseSect.getDouble("jumpstrength", 0.7);
 			boolean hasChest = type == HorseType.Mule || type == HorseType.Donkey ? horseSect.getBoolean("chest", false) : false;
 			
 			// Tempory Hack to fix old storage
