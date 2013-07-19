@@ -99,6 +99,9 @@ public class HorsesPermissionConfig extends AbstractConfig
 	/** If true horses will be protected if in the players current position they would be protected */
 	public final boolean onlyHurtHorseIfOwnerCanBeHurt;
 	
+	/** Transfers damage to a players horse to the player riding it */
+	public final boolean transferDamageToRider;
+	
 	/** If true horses will be deleted from the players stable upon death */
 	public final boolean deleteHorseOnDeath;
 	
@@ -182,6 +185,7 @@ public class HorsesPermissionConfig extends AbstractConfig
 			protectFromPlayers = getAndSet(sect, "ProtectFromPlayers", true, Boolean.class);
 			protectFromMobs = getAndSet(sect, "ProtectFromMobs", true, Boolean.class);
 			onlyHurtHorseIfOwnerCanBeHurt = getAndSet(sect, "OnlyHurtHorseIfOwnerCanBeHurt", true, Boolean.class);
+			transferDamageToRider = getAndSet(sect, "TransferDamageToRider", true, Boolean.class);
 			
 			deleteHorseOnDeath = getAndSet(sect, "DeleteHorseOnDeath", false, Boolean.class);
 			deleteHorseOnDeathByPlayer = getAndSet(sect, "DeleteHorseOnDeathByPlayer", false, Boolean.class);

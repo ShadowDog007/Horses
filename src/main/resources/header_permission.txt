@@ -132,6 +132,20 @@ This could be useful in PVP protected areas, also when using plugins
     to be hurt by their allies.
 
 #######################################################################
+TransferDamageToRider
+#######################################################################
+If true damage taken by a player owned horse will be transfered to
+    the rider.
+
+The amount of damage depends on the max health both the horse and
+    the player.
+
+The percent of health the horse would have lost will be done on the
+    rider.
+
+i.e. RiderDamge = Damage / HorseMaxHP * PlayerMaxHP
+
+#######################################################################
 DeleteHorseOnDeath
 #######################################################################
 If this is true a players horse will be deleted from their stable

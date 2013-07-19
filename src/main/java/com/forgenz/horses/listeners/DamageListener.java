@@ -106,7 +106,7 @@ public class DamageListener extends ForgeListener
 			onEntityDamageByEntity((EntityDamageByEntityEvent) event, horse, horseData, pcfg);
 		}
 		
-		if (!event.isCancelled() && pcfg.onlyHurtHorseIfOwnerCanBeHurt)
+		if (!event.isCancelled() && (pcfg.onlyHurtHorseIfOwnerCanBeHurt || pcfg.transferDamageToRider))
 		{
 			if (player == null)
 			{
@@ -114,20 +114,29 @@ public class DamageListener extends ForgeListener
 			}
 			
 			EntityDamageEvent e = null;
+			double damage = pcfg.transferDamageToRider ? event.getDamage() / horse.getMaxHealth() * player.getMaxHealth() : 0.0;
 			
 			// Create a copy of the Damage event (But with 0 damage)
 			if (event.getClass() == EntityDamageEvent.class)
-				e = new EntityDamageEvent(player, event.getCause(), 0.0);
+				e = new EntityDamageEvent(player, event.getCause(), damage);
 			else if (event.getClass() == EntityDamageByEntityEvent.class)
-				e = new EntityDamageByEntityEvent(((EntityDamageByEntityEvent) event).getDamager(), player, event.getCause(), 0.0);
+				e = new EntityDamageByEntityEvent(((EntityDamageByEntityEvent) event).getDamager(), player, event.getCause(), damage);
 			else if (event.getClass() == EntityDamageByBlockEvent.class)
-				e = new EntityDamageByBlockEvent(((EntityDamageByBlockEvent) event).getDamager(), player, event.getCause(), 0.0);
+				e = new EntityDamageByBlockEvent(((EntityDamageByBlockEvent) event).getDamager(), player, event.getCause(), damage);
 			else
 				return;
 			
 			Bukkit.getPluginManager().callEvent(e);
 			
-			event.setCancelled(e.isCancelled());
+			if (!e.isCancelled() && pcfg.transferDamageToRider && horse.getPassenger() == player)
+			{
+				event.setCancelled(true);
+				player.damage(e.getDamage());
+			}
+			else
+			{
+				event.setCancelled(e.isCancelled());
+			}
 		}
 	}
 	
