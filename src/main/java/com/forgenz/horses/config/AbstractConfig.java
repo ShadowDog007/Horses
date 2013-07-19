@@ -151,14 +151,14 @@ public abstract class AbstractConfig implements ForgeCore
 					cfgFile.renameTo(new File(getPlugin().getDataFolder(), path + ".broken"));
 				}
 			}
-		}
-		
-		// Clear the current header
-		cfg.options().header(null);
-		
-		// Add the Top part of the header to the file
-		PluginDescriptionFile pdf = getPlugin().getDescription();
-		addStringToHeader(String.format("%s v%s by %s\n%s\n\n", getPlugin().getName(), pdf.getVersion(), getPlugin().getAuthors(), pdf.getWebsite()));
+			
+			// Clear the current header
+			cfg.options().header(null);
+			
+			// Add the Top part of the header to the file
+			PluginDescriptionFile pdf = getPlugin().getDescription();
+			addStringToHeader(String.format("%s v%s by %s\n%s\n\n", getPlugin().getName(), pdf.getVersion(), getPlugin().getAuthors(), pdf.getWebsite()));
+		}		
 		
 		return cfg;
 	}
