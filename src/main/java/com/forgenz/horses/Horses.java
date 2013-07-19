@@ -36,6 +36,7 @@ import java.util.logging.Level;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgePlugin;
 import com.forgenz.forgecore.v1_0.command.ForgeCommandHandler;
@@ -70,6 +71,8 @@ public class Horses extends ForgePlugin
 	private ForgeCommandHandler commandHandler;
 	
 	private HorseDismissTask horseDismissTask;
+	
+	private Plugin noCheatPlus;
 	
 	private HorseSpawnListener spawnListener;
 	
@@ -119,6 +122,7 @@ public class Horses extends ForgePlugin
 			
 			// Try setup WorldGuard
 			setupWorldGuard(config.worldGuardCfg != null);
+			setupNoCheatPlus();
 			
 			// Register the Listeners
 			if (config.isProtecting())
@@ -216,6 +220,11 @@ public class Horses extends ForgePlugin
 		plugin = null;
 	}
 	
+	private void setupNoCheatPlus()
+	{
+		noCheatPlus = getServer().getPluginManager().getPlugin("NoCheatPlus");
+	}
+	
 	public HorsesConfig getHorsesConfig()
 	{
 		return config;
@@ -229,5 +238,10 @@ public class Horses extends ForgePlugin
 	public HorseSpawnListener getHorseSpawnListener()
 	{
 		return spawnListener;
+	}
+	
+	public boolean isNoCheatPlusEnabled()
+	{
+		return noCheatPlus != null && noCheatPlus.isEnabled();
 	}
 }

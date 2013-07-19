@@ -131,6 +131,10 @@ This could be useful in PVP protected areas, also when using plugins
     E.G. Factions mod, a players horses will not be able
     to be hurt by their allies.
 
+Note that this currently will not work with Anti-Cheat plugins other
+    than NoCheatPlus. If you want it support for other Anti-Cheat
+    plugins make a ticket on the BukkitDev page for Horses.
+
 #######################################################################
 TransferDamageToRider
 #######################################################################

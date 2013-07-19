@@ -82,6 +82,13 @@
   		<artifactId>mysql-connector-java</artifactId>
   		<version>5.1.25</version>
   	</dependency>
+  	<dependency>
+  		<groupId>fr.neatmonster</groupId>
+  		<artifactId>NoCheatPlus</artifactId>
+  		<version>B569</version>
+  		<scope>system</scope>
+  		<systemPath>${project.basedir}/lib/integration/NoCheatPlus.jar</systemPath>
+  	</dependency>
   </dependencies>
   <name>Horses</name>
   <url>http://dev.bukkit.org/bukkit-plugins/horse-stables/</url>

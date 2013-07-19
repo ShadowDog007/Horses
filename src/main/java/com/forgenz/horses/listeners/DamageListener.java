@@ -47,6 +47,9 @@ import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.config.HorsesConfig;
 import com.forgenz.horses.config.HorsesPermissionConfig;
 
+import fr.neatmonster.nocheatplus.checks.CheckType;
+import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
+
 /**
  * Protects owned horses from being killed by players
  * Including their owners.
@@ -116,17 +119,43 @@ public class DamageListener extends ForgeListener
 			EntityDamageEvent e = null;
 			double damage = pcfg.transferDamageToRider ? event.getDamage() / horse.getMaxHealth() * player.getMaxHealth() : 0.0;
 			
+			Player exemptedPlayer = null;
+			
 			// Create a copy of the Damage event (But with 0 damage)
 			if (event.getClass() == EntityDamageEvent.class)
 				e = new EntityDamageEvent(player, event.getCause(), damage);
 			else if (event.getClass() == EntityDamageByEntityEvent.class)
-				e = new EntityDamageByEntityEvent(((EntityDamageByEntityEvent) event).getDamager(), player, event.getCause(), damage);
+			{
+				Entity damager = ((EntityDamageByEntityEvent) event).getDamager();
+				e = new EntityDamageByEntityEvent(damager, player, event.getCause(), damage);
+				
+				// Make sure NoCheatPlus does not cancel this event
+				if (damager.getType() == EntityType.PLAYER && getPlugin().isNoCheatPlusEnabled())
+				{
+					exemptedPlayer = (Player) damager;
+					if (!NCPExemptionManager.isExempted(player, CheckType.ALL))
+					{
+						NCPExemptionManager.exemptPermanently(exemptedPlayer, CheckType.ALL);
+					}
+					// If the player is already exempt we don't want to unExempt them.
+					else
+					{
+						exemptedPlayer = null;
+					}
+				}
+			}
 			else if (event.getClass() == EntityDamageByBlockEvent.class)
 				e = new EntityDamageByBlockEvent(((EntityDamageByBlockEvent) event).getDamager(), player, event.getCause(), damage);
 			else
 				return;
 			
 			Bukkit.getPluginManager().callEvent(e);
+			
+			// If we exmepted a player from ncp checks we much unexempt them
+			if (getPlugin().isNoCheatPlusEnabled() && exemptedPlayer != null)
+			{
+				NCPExemptionManager.unexempt(player, CheckType.ALL);
+			}
 			
 			if (!e.isCancelled() && pcfg.transferDamageToRider && horse.getPassenger() == player)
 			{

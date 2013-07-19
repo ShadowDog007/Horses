@@ -3,7 +3,7 @@ name: Horses
 version: 1.0.3
 author: ShadowDog007
 website: 'http://dev.bukkit.org/bukkit-plugins/horse-stables/'
-softdepend: [Vault]
+softdepend: [Vault, NoCheatPlus]
 
 commands:
   horses:
