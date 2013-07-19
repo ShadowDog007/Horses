@@ -168,8 +168,6 @@ public class Horses extends ForgePlugin
 			{
 				Metrics metrics = new Metrics(this);
 				
-				metrics.start();
-				
 				// Database Type
 				Metrics.Graph graph = metrics.createGraph("DatabaseType");
 				String pn = database.getType().toString();
@@ -183,6 +181,8 @@ public class Horses extends ForgePlugin
 						return 1;
 					}
 				});
+				
+				metrics.start();
 				
 			}
 			catch (IOException e)
