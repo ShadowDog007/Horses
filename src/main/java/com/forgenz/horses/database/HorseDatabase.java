@@ -84,12 +84,9 @@ public abstract class HorseDatabase implements ForgeCore
 	
 	public void saveAll()
 	{
-		for (Stable stable : playerStables.values())
+		for (Stable stable : playerStables.values().toArray(new Stable[playerStables.size()]))
 		{
-			if (stable.getActiveHorse() != null)
-			{
-				stable.getActiveHorse().removeHorse();
-			}
+			unload(stable);
 		}
 	}
 	
