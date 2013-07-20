@@ -404,6 +404,7 @@ public class PlayerHorse implements ForgeCore
 			getType().setHorseType(horse);
 			
 			horse.setTamed(true);
+			horse.setOwner(getStable().getPlayerOwner());
 			
 			// Check if it has a chest?
 			if (hasChest())
