@@ -364,6 +364,7 @@ public class PlayerHorse implements ForgeCore
 			
 			stable.removeActiveHorse(this);
 			
+			horse.removeMetadata(OWNERSHIP_METADATA_KEY, getPlugin());
 			horse = null;
 		}
 		
