@@ -44,6 +44,7 @@ import com.forgenz.horses.Horses;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
 import com.forgenz.horses.config.HorseTypeConfig;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class ListCommand extends ForgeCommand
 {
@@ -65,6 +66,19 @@ public class ListCommand extends ForgeCommand
 	@Override
 	protected void onCommand(CommandSender sender, ForgeArgs args)
 	{
+		boolean senderIsPlayer = sender instanceof Player;
+		
+		if (senderIsPlayer)
+		{
+			HorsesPermissionConfig pcfg = getPlugin().getHorsesConfig().getPermConfig((Player) sender);
+			
+			if (!pcfg.allowListCommand)
+			{
+				Misc_Command_Error_ConfigDenyPerm.sendMessage(sender, getMainCommand());
+				return;
+			}
+		}
+		
 		Player player = null;
 		if (args.getNumArgs() >= 1)
 		{

@@ -12,6 +12,7 @@ import com.forgenz.horses.Horses;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
 import com.forgenz.horses.config.HorsesConfig;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class DismissCommand extends ForgeCommand
 {
@@ -34,6 +35,15 @@ public class DismissCommand extends ForgeCommand
 	{
 		Player player = (Player) sender;
 		
+		HorsesConfig cfg = getPlugin().getHorsesConfig();
+		HorsesPermissionConfig pcfg = cfg.getPermConfig(player);
+		
+		if (!pcfg.allowDismissCommand)
+		{
+			Misc_Command_Error_ConfigDenyPerm.sendMessage(sender, getMainCommand());
+			return;
+		}
+		
 		// Fetch the players stable
 		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
 		
@@ -47,8 +57,6 @@ public class DismissCommand extends ForgeCommand
 			return;
 		}
 		
-		// Fetch Config
-		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		// Check if the player is in the correct region to use this command
 		if (cfg.worldGuardCfg != null && !cfg.worldGuardCfg.allowCommand(cfg.worldGuardCfg.commandDismissAllowedRegions, player.getLocation(cacheLoc)))
 		{

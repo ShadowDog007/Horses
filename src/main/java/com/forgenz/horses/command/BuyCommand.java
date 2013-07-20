@@ -80,6 +80,12 @@ public class BuyCommand extends ForgeCommand
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		HorsesPermissionConfig pcfg = cfg.getPermConfig(player);
 		
+		if (!pcfg.allowBuyCommand)
+		{
+			Misc_Command_Error_ConfigDenyPerm.sendMessage(sender, getMainCommand());
+			return;
+		}
+		
 		String name = args.getArg(0);
 		
 		// Fetch the horse type

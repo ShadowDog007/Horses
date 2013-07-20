@@ -2,6 +2,7 @@ package com.forgenz.horses.command;
 
 import static com.forgenz.horses.Messages.Command_Delete_Description;
 import static com.forgenz.horses.Messages.Command_Delete_Success_DeletedHorse;
+import static com.forgenz.horses.Messages.Misc_Command_Error_ConfigDenyPerm;
 import static com.forgenz.horses.Messages.Misc_Command_Error_InvalidName;
 import static com.forgenz.horses.Messages.Misc_Command_Error_NoHorseNamed;
 import static com.forgenz.horses.Messages.Misc_Words_Horse;
@@ -18,6 +19,7 @@ import com.forgenz.forgecore.v1_0.command.ForgeCommandArgument;
 import com.forgenz.horses.Horses;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class DeleteCommand extends ForgeCommand
 {
@@ -41,6 +43,14 @@ public class DeleteCommand extends ForgeCommand
 	protected void onCommand(CommandSender sender, ForgeArgs args)
 	{
 		Player player = (Player) sender;
+		
+		HorsesPermissionConfig pcfg = getPlugin().getHorsesConfig().getPermConfig(player);
+		
+		if (!pcfg.allowDeleteCommand)
+		{
+			Misc_Command_Error_ConfigDenyPerm.sendMessage(sender, getMainCommand());
+			return;
+		}
 		
 		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
 		

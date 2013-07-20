@@ -79,6 +79,12 @@ public class SummonCommand extends ForgeCommand
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		HorsesPermissionConfig pcfg = cfg.getPermConfig(player);
 		
+		if (!pcfg.allowSummonCommand)
+		{
+			Misc_Command_Error_ConfigDenyPerm.sendMessage(sender, getMainCommand());
+			return;
+		}
+		
 		Long lastSummon = summonTasks.get(playerName);
 		if (lastSummon != null)
 		{

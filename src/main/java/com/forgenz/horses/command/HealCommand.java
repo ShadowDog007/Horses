@@ -45,6 +45,7 @@ import com.forgenz.horses.Horses;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
 import com.forgenz.horses.config.HorseTypeConfig;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class HealCommand extends ForgeCommand
 {
@@ -68,9 +69,22 @@ public class HealCommand extends ForgeCommand
 	{
 		Player player = (Player) sender;
 		
-		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
+		HorsesPermissionConfig pcfg = getPlugin().getHorsesConfig().getPermConfig(player);
 		
-		PlayerHorse horse = stable.getActiveHorse();
+		if (!pcfg.allowHealCommand)
+		{
+			Misc_Command_Error_ConfigDenyPerm.sendMessage(sender, getMainCommand());
+			return;
+		}
+		
+		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player, false);
+		
+		PlayerHorse horse = null;
+		
+		if (stable != null)
+		{
+			horse = stable.getActiveHorse();
+		}
 		
 		if (horse == null)
 		{
@@ -83,7 +97,7 @@ public class HealCommand extends ForgeCommand
 		
 		if (getPlugin().getEconomy() != null)
 		{
-			HorseTypeConfig cfg = getPlugin().getHorsesConfig().getHorseTypeConfig(player, horse.getType());
+			HorseTypeConfig cfg = pcfg.getHorseTypeConfig(horse.getType());
 			
 			double cost = cfg.healCost * actualHealAmount;
 			

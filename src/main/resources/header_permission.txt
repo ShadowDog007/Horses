@@ -31,6 +31,16 @@ SummonDelay
 The delay in seconds to wait after a player using /horses summon
     before their horse is actually summoned.
 
+#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#
+Commands
+#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#
+The settings in this group allow you to deny/allow certain commands
+
+NOTE: Players must first have the correct permission to use the command
+    or this setting will have no effect
+
+Using this and aditional world configs, you can easily deny
+    summoning (and other commands) in certain worlds
 
 #$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#
 Renaming

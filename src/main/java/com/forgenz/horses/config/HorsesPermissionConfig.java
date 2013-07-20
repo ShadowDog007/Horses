@@ -61,6 +61,23 @@ public class HorsesPermissionConfig extends AbstractConfig
 	
 	public final Map<String, HorseTypeConfig> horseTypeConfigs;
 	
+	// ######## COMMANDS ######## //
+	public final boolean allowBuyCommand;
+	
+	public final boolean allowDeleteCommand;
+	
+	public final boolean allowDismissCommand;
+	
+	public final boolean allowHealCommand;
+	
+	public final boolean allowListCommand;
+	
+	public final boolean allowRenameCommand;
+	
+	public final boolean allowSummonCommand;
+	
+	public final boolean allowTypesCommand;
+	
 	// ######## RENAMING ######## //	
 	/** If true players will be unable to rename wild horses */
 	public final boolean blockRenamingOnWildHorses;
@@ -141,6 +158,20 @@ public class HorsesPermissionConfig extends AbstractConfig
 			
 			maxHorses = getAndSet("MaxHorses", 5, Number.class).intValue();
 			summonDelay = getAndSet("SummonDelay", 10, Number.class).intValue();
+		}
+		
+		// Commands
+		{
+			ConfigurationSection sect = getConfigSect("Commands");
+			
+			allowBuyCommand = getAndSet("AllowBuyCommand", true, Boolean.class);
+			allowDeleteCommand = getAndSet("AllowDeleteCommand", true, Boolean.class);
+			allowDismissCommand = getAndSet("AllowDismissCommand", true, Boolean.class);
+			allowHealCommand = getAndSet("AllowHealCommand", true, Boolean.class);
+			allowListCommand = getAndSet("AllowListCommand", true, Boolean.class);
+			allowRenameCommand = getAndSet("AllowRenameCommand", true, Boolean.class);
+			allowSummonCommand = getAndSet("AllowSummonCommand", true, Boolean.class);
+			allowTypesCommand = getAndSet("AllowTypesCommand", true, Boolean.class);
 		}
 		
 		// Renaming

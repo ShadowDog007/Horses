@@ -41,6 +41,7 @@ import com.forgenz.forgecore.v1_0.command.ForgeCommandArgument;
 import com.forgenz.horses.HorseType;
 import com.forgenz.horses.Horses;
 import com.forgenz.horses.config.HorseTypeConfig;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class TypeCommand extends ForgeCommand
 {
@@ -65,6 +66,14 @@ public class TypeCommand extends ForgeCommand
 	{
 		boolean player = sender instanceof Player;
 		
+		HorsesPermissionConfig pcfg = getPlugin().getHorsesConfig().getPermConfig((Player) (player ? sender : null));
+		
+		if (!pcfg.allowTypesCommand)
+		{
+			Misc_Command_Error_ConfigDenyPerm.sendMessage(sender, getMainCommand());
+			return;
+		}
+		
 		if (args.getNumArgs() > 0)
 		{
 			HorseType type = HorseType.closeValueOf(args.getArg(0));
@@ -79,7 +88,7 @@ public class TypeCommand extends ForgeCommand
 			}
 			else
 			{
-				HorseTypeConfig cfg = getPlugin().getHorsesConfig().getHorseTypeConfig((Player) (player ? sender : null), type);
+				HorseTypeConfig cfg = pcfg.getHorseTypeConfig(type);
 				sender.sendMessage(String.format((getPlugin().getEconomy() != null ? Command_Type_SingleTypeFormatEco : Command_Type_SingleTypeFormat).toString(), cfg.displayName, cfg.horseHp, cfg.horseMaxHp, cfg.jumpStrength, cfg.buyCost));
 			}
 			return;
@@ -100,7 +109,7 @@ public class TypeCommand extends ForgeCommand
 				bldr.append(Command_Type_TypeSeparator);
 			}
 			
-			HorseTypeConfig cfg = getPlugin().getHorsesConfig().getHorseTypeConfig(player ? (Player) sender : null, type);
+			HorseTypeConfig cfg = pcfg.getHorseTypeConfig(type);
 			
 			bldr.append(Command_Type_HorseTypePrefix).append(cfg.displayName);
 		}

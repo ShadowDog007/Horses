@@ -72,6 +72,15 @@ public class RenameCommand extends ForgeCommand
 	{
 		Player player = (Player) sender;
 		
+		HorsesConfig cfg = getPlugin().getHorsesConfig();
+		HorsesPermissionConfig pcfg = cfg.getPermConfig(player);
+		
+		if (!pcfg.allowRenameCommand)
+		{
+			Misc_Command_Error_ConfigDenyPerm.sendMessage(sender, getMainCommand());
+			return;
+		}
+		
 		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
 		
 		String name = args.getArg(1);
@@ -110,9 +119,6 @@ public class RenameCommand extends ForgeCommand
 			Misc_Command_Error_HorseNameEmpty.sendMessage(player);
 			return;
 		}
-			
-		
-		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		
 		// Check the horses name is valid
 		if (cfg.rejectedHorseNamePattern.matcher(name).find())
@@ -120,8 +126,6 @@ public class RenameCommand extends ForgeCommand
 			Misc_Command_Error_IllegalHorseNamePattern.sendMessage(player);
 			return;
 		}
-		
-		HorsesPermissionConfig pcfg = cfg.getPermConfig(player);
 		
 		if (pcfg.requireNameTagForRenaming)
 		{
