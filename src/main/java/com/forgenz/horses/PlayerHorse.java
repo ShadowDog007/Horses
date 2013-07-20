@@ -236,7 +236,7 @@ public class PlayerHorse implements ForgeCore
 	
 	public double getJumpStrength()
 	{
-		if (horse != null && horse.isValid())
+		if (horse != null)
 		{
 			jumpStrength = horse.getJumpStrength();
 		}
