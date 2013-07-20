@@ -52,7 +52,10 @@ public class TeleportListener extends ForgeListener
 	public void onPlayerTeleport(PlayerTeleportEvent event)
 	{
 		// Fetch the players stable
-		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(event.getPlayer());
+		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(event.getPlayer(), false);
+		
+		if (stable == null)
+			return;
 		
 		// Check if the player has an active horse
 		PlayerHorse horse = stable.getActiveHorse();

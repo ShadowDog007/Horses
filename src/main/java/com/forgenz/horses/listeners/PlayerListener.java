@@ -30,6 +30,7 @@ package com.forgenz.horses.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgeListener;
 import com.forgenz.horses.Horses;
@@ -46,22 +47,37 @@ public class PlayerListener extends ForgeListener
 	}
 	
 	@EventHandler
+	public void onPlayerRespawn(PlayerRespawnEvent event)
+	{
+		// Try find the players stable
+		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(event.getPlayer(), false);
+		
+		// Check if a stable was loaded
+		if (stable != null)
+		{
+			PlayerHorse horse = stable.getActiveHorse();
+			
+			// Check if the player has an active horse
+			if (horse != null)
+			{
+				// Remove the horse from the world
+				horse.removeHorse();
+			}
+		}
+	}
+	
+	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event)
 	{
 		// Fetch the players stable
-		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(event.getPlayer());
+		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(event.getPlayer(), false);
 		
-		// Fetch the players active horse
-		PlayerHorse horse = stable.getActiveHorse();
-		
-		// Check if the player has an active horse
-		if (horse != null)
+		// Check if the player has a loaded stable
+		if (stable != null)
 		{
-			// If they do we remove it
-			horse.removeHorse();
+			// Unload the stable
+			getPlugin().getHorseDatabase().unload(stable);
 		}
-		
-		getPlugin().getHorseDatabase().unload(stable);
 	}
 	
 	@Override
