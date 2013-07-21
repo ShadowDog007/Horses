@@ -40,6 +40,7 @@ import org.bukkit.entity.Player;
 
 import com.forgenz.horses.HorseType;
 import com.forgenz.horses.Horses;
+import com.forgenz.horses.database.HorseDatabase;
 
 public class HorsesWorldConfig extends AbstractConfig
 {
@@ -47,6 +48,8 @@ public class HorsesWorldConfig extends AbstractConfig
 	
 	protected final HorsesPermissionConfig worldCfg;
 	private final Map<String, HorsesPermissionConfig> permissionConfigs;
+	
+	public final String stableGroup;
 	
 	public HorsesWorldConfig(Horses plugin, YamlConfiguration cfg)
 	{
@@ -76,6 +79,11 @@ public class HorsesWorldConfig extends AbstractConfig
 			permissionConfigs.put(permission, new HorsesPermissionConfig(plugin, this, permission));
 		}
 		set(cfg, "PermissionConfigs", permissions);
+		
+		if (standalone)
+			stableGroup = getAndSet("StableGroup", HorseDatabase.DEFAULT_GROUP, String.class).toLowerCase();
+		else
+			stableGroup = HorseDatabase.DEFAULT_GROUP;
 		
 		worldCfg = new HorsesPermissionConfig(plugin, cfg);
 		

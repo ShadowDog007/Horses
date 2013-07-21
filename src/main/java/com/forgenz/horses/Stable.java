@@ -37,7 +37,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import com.forgenz.forgecore.v1_0.ForgeCore;
 import com.forgenz.horses.config.HorseTypeConfig;
@@ -45,6 +44,7 @@ import com.forgenz.horses.config.HorseTypeConfig;
 public class Stable implements ForgeCore, Iterable<PlayerHorse>
 {
 	private final Horses plugin;
+	private final String group;
 	private final String player;
 	private int id;
 	
@@ -53,14 +53,15 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 	private PlayerHorse activeHorse;
 	private PlayerHorse lastActiveHorse;
 	
-	public Stable(Horses plugin, String player)
+	public Stable(Horses plugin, String group, String player)
 	{
-		this(plugin, player, -1);
+		this(plugin, group, player, -1);
 	}
 	
-	public Stable(Horses plugin, String player, int id)
+	public Stable(Horses plugin, String group, String player, int id)
 	{
 		this.plugin = plugin;
+		this.group = group;
 		this.player = player;
 		this.id = id;
 	}
@@ -94,6 +95,11 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 	public void setId(int id)
 	{
 		this.id = id;
+	}
+	
+	public String getGroup()
+	{
+		return group;
 	}
 	
 	public int getHorseCount()

@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -124,9 +125,19 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 		this.saveConfiguration();
 	}
 	
+	public HorsesWorldConfig getWorldConfig(World world)
+	{
+		if (world == null)
+			return globalCfg;
+		
+		
+		HorsesWorldConfig cfg = worldConfigs.get(world.getName().toLowerCase());
+		return cfg != null ? cfg : globalCfg;
+	}
+	
 	public HorsesPermissionConfig getPermConfig(Player player)
 	{
-		HorsesWorldConfig cfg = player != null ? worldConfigs.get(player.getWorld().getName().toLowerCase()) : null;
+		HorsesWorldConfig cfg = player != null ? getWorldConfig(player.getWorld()) : null;
 		
 		if (cfg == null)
 			cfg = globalCfg;
@@ -147,6 +158,11 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 	public HorseTypeConfig getHorseTypeConfig(Player player, String typeStr)
 	{
 		return getPermConfig(player).getHorseTypeConfig(typeStr);
+	}
+	
+	public String getStableGroup(World world)
+	{
+		return getWorldConfig(world).stableGroup;
 	}
 	
 	public boolean isProtecting()

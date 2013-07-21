@@ -58,13 +58,13 @@ public class DummyDatabase extends HorseDatabase implements Listener
 	}
 
 	@Override
-	protected Stable loadStable(String player)
+	protected Stable loadStable(String player, String stableGroup)
 	{
-		return new Stable(getPlugin(), player);
+		return new Stable(getPlugin(), stableGroup, player);
 	}
 
 	@Override
-	protected void loadHorses(Stable stable)
+	protected void loadHorses(Stable stable, String stableGroup)
 	{
 	}
 

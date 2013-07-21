@@ -49,23 +49,27 @@ import com.forgenz.horses.Stable;
 
 public class YamlDatabase extends HorseDatabase
 {
-	private static final String PLAYER_DATA_LOCATION = String.format("playerdata%s%s.yml", File.separator, "%s");
+	private static final String PLAYER_DATA_LOCATION = "playerdata" + File.separatorChar + "%s.yml";
+	private static final String GROUPED_PLAYER_DATA_LOCATION = "playerdata" + File.separatorChar + "%s" + File.separatorChar + "%s.yml";
 	
 	public YamlDatabase(Horses plugin)
 	{
 		super(plugin, HorseDatabaseStorageType.YAML);
 	}
 	
-	private File getPlayersConfigFile(String player)
+	private File getPlayersConfigFile(String player, String stableGroup)
 	{
-		return new File(getPlugin().getDataFolder(), String.format(PLAYER_DATA_LOCATION, player));
+		if (stableGroup.equals(HorseDatabase.DEFAULT_GROUP))
+			return new File(getPlugin().getDataFolder(), String.format(PLAYER_DATA_LOCATION, player));
+		else
+			return new File(getPlugin().getDataFolder(), String.format(GROUPED_PLAYER_DATA_LOCATION, stableGroup, player));
 	}
 	
-	private YamlConfiguration getPlayerConfig(String player)
+	private YamlConfiguration getPlayerConfig(String player, String stableGroup)
 	{
 		YamlConfiguration cfg = new YamlConfiguration();
 		
-		File file = getPlayersConfigFile(player);
+		File file = getPlayersConfigFile(player, stableGroup);
 		
 		if (file.exists())
 		{
@@ -91,19 +95,19 @@ public class YamlDatabase extends HorseDatabase
 	}
 
 	@Override
-	protected Stable loadStable(String player)
+	protected Stable loadStable(String player, String stableGroup)
 	{
-		Stable stable = new Stable(getPlugin(), player);
+		Stable stable = new Stable(getPlugin(), stableGroup, player);
 		
-		loadHorses(stable);
+		loadHorses(stable, stableGroup);
 		
 		return stable;
 	}
 
 	@Override
-	protected void loadHorses(Stable stable)
+	protected void loadHorses(Stable stable, String stableGroup)
 	{
-		YamlConfiguration cfg = getPlayerConfig(stable.getOwner());
+		YamlConfiguration cfg = getPlayerConfig(stable.getOwner(), stableGroup);
 		
 		ConfigurationSection sect = BukkitConfigUtil.getAndSetConfigurationSection(cfg, "Horses");
 		
@@ -185,7 +189,7 @@ public class YamlDatabase extends HorseDatabase
 	public void saveStable(Stable stable)
 	{
 		// Fetch the file to save data to
-		File playerDataFile = getPlayersConfigFile(stable.getOwner());
+		File playerDataFile = getPlayersConfigFile(stable.getOwner(), stable.getGroup());
 		
 		// Delete the players config file if the player has no horses
 		if (stable.getHorseCount() == 0)

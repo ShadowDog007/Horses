@@ -72,18 +72,66 @@ public class MysqlDatabase  extends HorseDatabase
 		
 		try
 		{
-			// Check that the table is valid
-			Statement stmt = conn.createStatement();
-			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS `Stables` ( `id` INT NOT NULL AUTO_INCREMENT, `user` VARCHAR(16), `lastactive` VARCHAR(30), PRIMARY KEY (`id`), INDEX (`user`) ) ENGINE=InnoDB");
-			stmt = conn.createStatement();
-			stmt.execute("CREATE TABLE IF NOT EXISTS `Horses` ( `id` INT NOT NULL AUTO_INCREMENT, `stableid` INT, `name` VARCHAR(30), `type` VARCHAR(16), `lastDeath` BIGINT, "
-					+ "`maxhealth` DOUBLE, `health` DOUBLE, `jumpstrength` DOUBLE, `chested` TINYINT, `inventory` VARCHAR(10000), PRIMARY KEY (`id`) ) ENGINE=InnoDB");
+			createTables("Horses", "Stables");
+			
+			checkColumn("Stables", "user", "VARCHAR(16) NOT NULL");
+			checkColumn("Stables", "lastactive", "VARCHAR(30) NOT NULL");
+			addUniqueIndex("Stables", "user");
+			
+			checkColumn("Horses", "stableid", "INT NOT NULL DEFAULT '0' AFTER `id`");
+			checkColumn("Horses", "stablegroup", "VARCHAR(30) NOT NULL DEFAULT '" + HorseDatabase.DEFAULT_GROUP + "' COLLATE utf8_general_ci AFTER `stableid`");
+			checkColumn("Horses", "name", "VARCHAR(30) NOT NULL DEFAULT '' COLLATE utf8_general_ci AFTER `stablegroup`");
+			checkColumn("Horses", "type", "VARCHAR(16) NOT NULL DEFAULT '' COLLATE utf8_general_ci AFTER `name`");
+			checkColumn("Horses", "lastDeath", "BIGINT NOT NULL DEFAULT '0' AFTER `type`");
+			checkColumn("Horses", "maxhealth", "DOUBLE NOT NULL DEFAULT '20' AFTER `lastDeath`");
+			checkColumn("Horses", "health", "DOUBLE NOT NULL DEFAULT '20' AFTER `maxhealth`");
+			checkColumn("Horses", "jumpstrength", "DOUBLE NOT NULL DEFAULT '0.7' AFTER `health`");
+			checkColumn("Horses", "chested", "TINYINT NOT NULL DEFAULT '0' AFTER `jumpstrength`");
+			checkColumn("Horses", "inventory", "VARCHAR(10000) NOT NULL DEFAULT 'i: []' COLLATE utf8_general_ci AFTER `chested`");
+			
 		}
 		catch (SQLException e)
 		{
 			plugin.severe("Failed to create MySQL Tables");
 			throw e;
 		}
+	}
+	
+	private void createTables(String ...tables) throws SQLException
+	{
+		for (String table : tables)
+		{
+			Statement stmt = conn.createStatement();
+			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS `" + table + "` ("
+					+ "`id` INT NOT NULL AUTO_INCREMENT,"
+					+ "PRIMARY KEY (`id`)) ENGINE=InnoDB");
+		}
+	}
+	
+	private void checkColumn(String table, String column, String settings) throws SQLException
+	{
+		try
+		{
+			Statement stmt = conn.createStatement();
+			stmt.executeUpdate(String.format("ALTER TABLE `%1$s` CHANGE `%2$s` `%2$s` %3$s", table, column, settings));
+		}
+		catch (SQLException e)
+		{
+			Statement stmt = conn.createStatement();
+			stmt.executeUpdate(String.format("ALTER TABLE `%1$s` ADD `%2$s` %3$s", table, column, settings));
+		}
+	}
+	
+	private void addUniqueIndex(String table, String column) throws SQLException
+	{
+		Statement stmt = conn.createStatement();
+		ResultSet result = stmt.executeQuery(String.format("SELECT * FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema=DATABASE() AND table_name='%s' AND index_name='%s'", table, column));
+		
+		if (result.next())
+			return;
+		
+		stmt = conn.createStatement();
+		stmt.executeUpdate(String.format("ALTER TABLE `%s` ADD UNIQUE (`$s`)", table, column));
 	}
 	
 	private boolean connect()
@@ -133,7 +181,7 @@ public class MysqlDatabase  extends HorseDatabase
 	}
 
 	@Override
-	protected Stable loadStable(String player)
+	protected Stable loadStable(String player, String stableGroup)
 	{
 		if (!connect())
 			return null;
@@ -142,7 +190,7 @@ public class MysqlDatabase  extends HorseDatabase
 		{
 			Statement stmt = conn.createStatement();
 			
-			ResultSet result = stmt.executeQuery(String.format("SELECT * FROM `Stables` WHERE `user` = '%s'", player));
+			ResultSet result = stmt.executeQuery(String.format("SELECT * FROM `Stables` WHERE `user`='%s'", player));
 			
 			int id = -1;
 			String lastActive = null;
@@ -154,10 +202,10 @@ public class MysqlDatabase  extends HorseDatabase
 				lastActive = result.getString("lastactive");
 			}
 				
-			Stable stable = new Stable(getPlugin(), player, id);
+			Stable stable = new Stable(getPlugin(), stableGroup, player, id);
 			
 			// Load the horses
-			loadHorses(stable);
+			loadHorses(stable, stableGroup);
 			
 			// Try to find the last active horse
 			if (lastActive != null)
@@ -178,7 +226,7 @@ public class MysqlDatabase  extends HorseDatabase
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void loadHorses(Stable stable)
+	protected void loadHorses(Stable stable, String stableGroup)
 	{
 		// Assume we have a connection as this is only called from loadStable
 		
@@ -186,7 +234,7 @@ public class MysqlDatabase  extends HorseDatabase
 		{
 			// Query the SQL server for horse data for the stable
 			Statement stmt = conn.createStatement();
-			ResultSet result = stmt.executeQuery(String.format("SELECT * FROM `Horses` WHERE `stableid`='%d'", stable.getId()));
+			ResultSet result = stmt.executeQuery(String.format("SELECT * FROM `Horses` WHERE `stableid`='%d' AND `stablegroup`='%s'", stable.getId(), stableGroup));
 			
 			// Create each horse
 			while (result.next())
@@ -396,8 +444,8 @@ public class MysqlDatabase  extends HorseDatabase
 			try
 			{
 				// Insert the horses data into the database
-				String query = String.format("INSERT INTO `Horses` (`stableid`, `name`, `type`, `lastdeath`, `maxhealth`, `health`, `jumpstrength`, `chested`, `inventory`) VALUES ('%d', '%s', '%s', '%d', '%f', '%f', '%f', '%d', '%s')",
-						horse.getStable().getId(), name, type.toString(), lastDeath, maxhealth, health, jumpstrength, chested ? 1 : 0, inventoryString);
+				String query = String.format("INSERT INTO `Horses` (`stableid`, `stablegroup`, `name`, `type`, `lastdeath`, `maxhealth`, `health`, `jumpstrength`, `chested`, `inventory`) VALUES ('%d', '%s', '%s', '%s', '%d', '%f', '%f', '%f', '%d', '%s')",
+						horse.getStable().getId(), horse.getStable().getGroup(), name, type.toString(), lastDeath, maxhealth, health, jumpstrength, chested ? 1 : 0, inventoryString);
 				
 				stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 				
@@ -418,8 +466,8 @@ public class MysqlDatabase  extends HorseDatabase
 			try
 			{
 				// Update existing values
-				String query = String.format("UPDATE `Horses` SET `name`='%s', `type`='%s', `lastdeath`='%d', `maxhealth`='%f', `health`='%f', `jumpstrength`='%f', `chested`='%d', `inventory`='%s' WHERE `id`='%d'",
-						name, type.toString(), lastDeath, maxhealth, health, jumpstrength, chested ? 1 : 0, inventoryString, horse.getId());
+				String query = String.format("UPDATE `Horses` SET `name`='%s', `lastdeath`='%d', `maxhealth`='%f', `health`='%f', `jumpstrength`='%f', `chested`='%d', `inventory`='%s' WHERE `id`='%d'",
+						name, lastDeath, maxhealth, health, jumpstrength, chested ? 1 : 0, inventoryString, horse.getId());
 				
 				stmt.executeUpdate(query);
 			}

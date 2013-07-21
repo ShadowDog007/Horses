@@ -41,6 +41,7 @@ import com.forgenz.horses.Stable;
 
 public abstract class HorseDatabase implements ForgeCore
 {
+	public static final String DEFAULT_GROUP = "default";
 	protected static final Pattern COLOUR_CHAR_REPLACE = Pattern.compile(Character.toString(ChatColor.COLOR_CHAR));
 	
 	private final Horses plugin;
@@ -54,9 +55,9 @@ public abstract class HorseDatabase implements ForgeCore
 		this.dbType = dbType;
 	}
 	
-	protected abstract Stable loadStable(String player);
+	protected abstract Stable loadStable(String player, String stableGroup);
 	
-	protected abstract void loadHorses(Stable stable);
+	protected abstract void loadHorses(Stable stable, String stableGroup);
 	
 	protected abstract void saveStable(Stable stable);
 	
@@ -72,10 +73,21 @@ public abstract class HorseDatabase implements ForgeCore
 	public Stable getPlayersStable(Player player, boolean load)
 	{
 		Stable stable = playerStables.get(player.getName());
+		String stableGroup = getPlugin().getHorsesConfig().getStableGroup(player.getWorld());
+		
+		// Check if a stable is loaded
+		if (stable != null && !stableGroup.equals(stable.getGroup()))
+		{
+			// If the stable is not in the same group as the one we want we unload it
+			// And load the new horses
+				unload(stable);
+				stable = null;
+				playerStables.remove(player.getName());
+		}
 		
 		if (stable == null && load)
 		{
-			stable = loadStable(player.getName());
+			stable = loadStable(player.getName(), stableGroup);
 			playerStables.put(player.getName(), stable);
 		}
 		

@@ -30,3 +30,13 @@ Two new files would be created. One named 'forge.admin.yml'
     And then the default config would be used for anyone who does not
     have either of those permissions.
 
+#######################################################################
+StableGroup
+#######################################################################
+Defines the stable group to use when players are inside the
+    given world.
+
+Can be defined in all world configurations but the global one and
+    permission configs.
+
+If set to 'default' the global stable will be used.
