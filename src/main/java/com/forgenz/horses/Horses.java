@@ -125,15 +125,6 @@ public class Horses extends ForgePlugin
 			setupWorldGuard(config.worldGuardCfg != null);
 			setupNoCheatPlus();
 			
-			// Register the Listeners
-			if (config.isProtecting())
-				new DamageListener(this);
-			new PlayerMoveListener(this);
-			new HorseDeathListener(this);
-			new InteractListener(this);
-			new PlayerListener(this);
-			new TeleportListener(this);
-			
 			spawnListener = new HorseSpawnListener(this);
 			
 			horseDismissTask = new HorseDismissTask(this);
@@ -168,6 +159,15 @@ public class Horses extends ForgePlugin
 			
 			// Admin commands
 			commandHandler.registerCommand(new ReloadCommand(this));
+			
+			// Register the Listeners
+			if (config.isProtecting())
+				new DamageListener(this);
+			new PlayerMoveListener(this);
+			new HorseDeathListener(this);
+			new InteractListener(this);
+			new PlayerListener(this);
+			new TeleportListener(this);
 			
 			// Start metrics
 			try
