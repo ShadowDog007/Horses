@@ -152,6 +152,8 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 			Iterator<PlayerHorse> it = horses.iterator();
 			
 			name = name.toLowerCase();
+			int length = 0;
+			boolean startsWith = false;
 			
 			while (it.hasNext())
 			{
@@ -164,8 +166,15 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 				else if (exact)
 					continue;
 				else if (horseName.startsWith(name))
-					bestMatch = horse;
-				else if (bestMatch != null && horseName.contains(name))
+				{
+					if (length < name.length())
+					{
+						length = name.length();
+						bestMatch = horse;
+						startsWith = true;
+					}
+				}
+				else if (!startsWith && bestMatch != null && horseName.contains(name))
 					bestMatch = horse;
 			}
 		}
