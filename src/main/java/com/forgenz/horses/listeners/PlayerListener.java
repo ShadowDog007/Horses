@@ -28,7 +28,9 @@
 
 package com.forgenz.horses.listeners;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
@@ -67,10 +69,21 @@ public class PlayerListener extends ForgeListener
 	}
 	
 	@EventHandler
+	public void onPlayerKick(PlayerKickEvent event)
+	{
+		handleQuit(event.getPlayer());
+	}
+	
+	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event)
 	{
+		handleQuit(event.getPlayer());
+	}
+	
+	public void handleQuit(Player player)
+	{
 		// Fetch the players stable
-		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(event.getPlayer(), false);
+		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player, false);
 		
 		// Check if the player has a loaded stable
 		if (stable != null)
