@@ -37,6 +37,7 @@ import com.forgenz.forgecore.v1_0.bukkit.ForgeListener;
 import com.forgenz.forgecore.v1_0.command.ForgeCommand;
 import com.forgenz.horses.Horses;
 import com.forgenz.horses.command.SummonCommand;
+import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class PlayerMoveListener extends ForgeListener
 {
@@ -59,6 +60,11 @@ public class PlayerMoveListener extends ForgeListener
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerMove(PlayerMoveEvent event)
 	{
+		HorsesPermissionConfig cfg = getPlugin().getHorsesConfig().getPermConfig(event.getPlayer());
+		
+		if (cfg.cancelSummonOnMove)
+			return;
+		
 		Location from = event.getFrom();
 		Location to = event.getTo();
 		
