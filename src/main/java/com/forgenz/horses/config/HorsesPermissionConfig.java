@@ -59,6 +59,9 @@ public class HorsesPermissionConfig extends AbstractConfig
 	/** The delay in seconds a player has to wait for their horse to be summoned */
 	public final int summonDelay;
 	
+	/** If true summons will be canceled if the player moves */
+	public final boolean cancelSummonOnMove;
+	
 	public final Map<String, HorseTypeConfig> horseTypeConfigs;
 	
 	// ######## COMMANDS ######## //
@@ -158,6 +161,7 @@ public class HorsesPermissionConfig extends AbstractConfig
 			
 			maxHorses = getAndSet("MaxHorses", 5, Number.class).intValue();
 			summonDelay = getAndSet("SummonDelay", 10, Number.class).intValue();
+			cancelSummonOnMove = getAndSet("CancelSummonOnMove", true, Boolean.class);
 		}
 		
 		// Commands

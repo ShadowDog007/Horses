@@ -31,6 +31,12 @@ SummonDelay
 The delay in seconds to wait after a player using /horses summon
     before their horse is actually summoned.
 
+#######################################################################
+CancelSummonOnMove
+#######################################################################
+If true players summon will be cancelled when they move from their
+    current position
+
 #$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#
 Commands
 #$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#

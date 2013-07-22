@@ -57,6 +57,7 @@ import com.forgenz.horses.listeners.HorseDeathListener;
 import com.forgenz.horses.listeners.HorseSpawnListener;
 import com.forgenz.horses.listeners.InteractListener;
 import com.forgenz.horses.listeners.PlayerListener;
+import com.forgenz.horses.listeners.PlayerMoveListener;
 import com.forgenz.horses.listeners.TeleportListener;
 import com.forgenz.horses.metrics.Metrics;
 import com.forgenz.horses.tasks.HorseDismissTask;
@@ -127,6 +128,7 @@ public class Horses extends ForgePlugin
 			// Register the Listeners
 			if (config.isProtecting())
 				new DamageListener(this);
+			new PlayerMoveListener(this);
 			new HorseDeathListener(this);
 			new InteractListener(this);
 			new PlayerListener(this);
@@ -238,6 +240,11 @@ public class Horses extends ForgePlugin
 	public HorseSpawnListener getHorseSpawnListener()
 	{
 		return spawnListener;
+	}
+	
+	public ForgeCommandHandler getCommandHandler()
+	{
+		return commandHandler;
 	}
 	
 	public boolean isNoCheatPlusEnabled()

@@ -189,7 +189,7 @@ public final class ForgeCommandHandler extends ForgeCommand implements ForgeCore
 		}
 	}
 	
-	private final ForgeCommand findCommand(String like)
+	public final ForgeCommand findCommand(String like)
 	{
 		ForgeCommand command = aliases.get(like);
 		

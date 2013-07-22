@@ -92,6 +92,7 @@ public enum Messages implements ForgeLocaleEnum
 	Command_Summon_Error_OnDeathCooldown("&b%1$s &cdied too recently, wait &b%2$d seconds"),
 	Command_Summon_Error_WorldGuard_CantUseSummonHere("&cYou can't summon horses in this area"),
 	Command_Summon_Error_AlreadySummoning("&cYou are already summoning a horse"),
+	Command_Summon_Error_MovedWhileSummoning("&cSummoning canceled due to movement"),
 	Command_Summon_Success_SummoningHorse("&eYou are summoning &b%1$s&e. Wait &b%2$d &eseconds"),
 	Command_Summon_Success_SummonedHorse("&eSummoned &b%1$s"),
 	Command_Summon_Description("Summons the given horse to your side"),

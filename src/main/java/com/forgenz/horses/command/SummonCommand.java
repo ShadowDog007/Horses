@@ -58,7 +58,7 @@ public class SummonCommand extends ForgeCommand
 		super(plugin);
 		
 		registerAlias("summon", true);
-		registerAlias("s", true);
+		registerAlias("s", false);
 		registerPermission("horses.command.summon");
 		
 		registerArgument(new ForgeCommandArgument(getPlugin().getHorsesConfig().forceEnglishCharacters ? "^[a-z0-9_&]+$" : "^[^ ]+$", Pattern.CASE_INSENSITIVE, true, Misc_Command_Error_InvalidName.toString()));
@@ -147,25 +147,41 @@ public class SummonCommand extends ForgeCommand
 		}
 		else
 		{
+			final long startTime = System.currentTimeMillis();
+			
 			BukkitRunnable task = new BukkitRunnable()
 			{
 				@Override
 				public void run()
 				{
+					// Validate that this task should run
+					Long storedStartTime = summonTasks.get(playerName);
+					// If the key does not exist or the value is incorrect we return
+					if (storedStartTime == null || storedStartTime.longValue() != startTime)
+						return;
+					
+					// Remove the time from the map
+					summonTasks.remove(playerName);
+					
+					// Only summon the horse if the player is still alive
 					if (player.isValid())
 					{
 						horse.spawnHorse(player);
 						Command_Summon_Success_SummonedHorse.sendMessage(player, horse.getDisplayName());
 					}
-
-					summonTasks.remove(playerName);
 				}
 			};
 
 			task.runTaskLater(getPlugin(), tickDelay);
-			summonTasks.put(playerName, System.currentTimeMillis());
+			summonTasks.put(playerName, startTime);
 			Command_Summon_Success_SummoningHorse.sendMessage(player, horse.getDisplayName(), pcfg.summonDelay);
 		}
+	}
+	
+	public void cancelSummon(Player player)
+	{
+		if (summonTasks.remove(player.getName()) != null)
+			Command_Summon_Error_MovedWhileSummoning.sendMessage(player);
 	}
 
 	@Override

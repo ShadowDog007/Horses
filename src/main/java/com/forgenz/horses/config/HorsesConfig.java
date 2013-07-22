@@ -175,4 +175,23 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 		
 		return globalCfg.isProtecting();
 	}
+
+	/**
+	 * @return true if players movements should be tracked
+	 */
+	public boolean trackMovements()
+	{
+		for (HorsesWorldConfig worldCfg : worldConfigs.values())
+		{
+			for (HorsesPermissionConfig permCfg : worldCfg.permissionConfigs.values())
+			{
+				if (permCfg.allowSummonCommand)
+				{
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 }

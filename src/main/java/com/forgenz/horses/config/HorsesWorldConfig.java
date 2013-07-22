@@ -47,7 +47,7 @@ public class HorsesWorldConfig extends AbstractConfig
 	private static final String WORLDS_FOLDER = "worlds" + File.separator;
 	
 	protected final HorsesPermissionConfig worldCfg;
-	private final Map<String, HorsesPermissionConfig> permissionConfigs;
+	protected final Map<String, HorsesPermissionConfig> permissionConfigs;
 	
 	public final String stableGroup;
 	
