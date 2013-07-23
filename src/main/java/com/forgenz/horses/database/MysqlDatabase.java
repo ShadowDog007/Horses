@@ -131,7 +131,7 @@ public class MysqlDatabase  extends HorseDatabase
 			return;
 		
 		stmt = conn.createStatement();
-		stmt.executeUpdate(String.format("ALTER TABLE `%s` ADD UNIQUE (`$s`)", table, column));
+		stmt.executeUpdate(String.format("ALTER TABLE `%s` ADD UNIQUE (`%s`)", table, column));
 	}
 	
 	private boolean connect()
