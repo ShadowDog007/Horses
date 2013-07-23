@@ -214,15 +214,15 @@ public class InteractListener extends ForgeListener
 					// Check if the player can afford to buy the horse
 					if (getPlugin().getEconomy() != null && typecfg.wildClaimCost > 0.0)
 					{
-						EconomyResponse responce = getPlugin().getEconomy().withdrawPlayer(player.getName(), typecfg.buyCost);
+						EconomyResponse responce = getPlugin().getEconomy().withdrawPlayer(player.getName(), typecfg.wildClaimCost);
 						
 						if (!responce.transactionSuccess())
 						{
-							Command_Buy_Error_CantAffordHorse.sendMessage(player, typecfg.buyCost);
+							Command_Buy_Error_CantAffordHorse.sendMessage(player, typecfg.wildClaimCost);
 							return;
 						}
 						
-						Command_Buy_Success_BoughtHorse.sendMessage(player, typecfg.buyCost);
+						Command_Buy_Success_BoughtHorse.sendMessage(player, typecfg.wildClaimCost);
 					}
 					
 					PlayerHorse horseData = stable.createHorse(displayName, typecfg, horse);
