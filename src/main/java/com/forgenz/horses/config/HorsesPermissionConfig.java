@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -148,7 +149,7 @@ public class HorsesPermissionConfig extends AbstractConfig
 	{
 		super(plugin, cfg, parent, null, permission, standalone);
 		
-		this.loadConfiguration();
+		Configuration config = this.loadConfiguration();
 		
 		this.addResourseToHeader("header_permission.txt");
 		
@@ -168,14 +169,22 @@ public class HorsesPermissionConfig extends AbstractConfig
 		{
 			ConfigurationSection sect = getConfigSect("Commands");
 			
-			allowBuyCommand = getAndSet("AllowBuyCommand", true, Boolean.class);
-			allowDeleteCommand = getAndSet("AllowDeleteCommand", true, Boolean.class);
-			allowDismissCommand = getAndSet("AllowDismissCommand", true, Boolean.class);
-			allowHealCommand = getAndSet("AllowHealCommand", true, Boolean.class);
-			allowListCommand = getAndSet("AllowListCommand", true, Boolean.class);
-			allowRenameCommand = getAndSet("AllowRenameCommand", true, Boolean.class);
-			allowSummonCommand = getAndSet("AllowSummonCommand", true, Boolean.class);
-			allowTypesCommand = getAndSet("AllowTypesCommand", true, Boolean.class);
+			allowBuyCommand = getAndSet(sect, "AllowBuyCommand", config.getBoolean("AllowBuyCommand", true), Boolean.class);
+			config.set("AllowBuyCommand", null);
+			allowDeleteCommand = getAndSet(sect, "AllowDeleteCommand", config.getBoolean("AllowDeleteCommand", true), Boolean.class);
+			config.set("AllowDeleteCommand", null);
+			allowDismissCommand = getAndSet(sect, "AllowDismissCommand", config.getBoolean("AllowDismissCommand", true), Boolean.class);
+			config.set("AllowDismissCommand", null);
+			allowHealCommand = getAndSet(sect, "AllowHealCommand", config.getBoolean("AllowHealCommand", true), Boolean.class);
+			config.set("AllowHealCommand", null);
+			allowListCommand = getAndSet(sect, "AllowListCommand", config.getBoolean("AllowListCommand", true), Boolean.class);
+			config.set("AllowListCommand", null);
+			allowRenameCommand = getAndSet(sect, "AllowRenameCommand", config.getBoolean("AllowRenameCommand", true), Boolean.class);
+			config.set("AllowRenameCommand", null);
+			allowSummonCommand = getAndSet(sect, "AllowSummonCommand", config.getBoolean("AllowSummonCommand", true), Boolean.class);
+			config.set("AllowSummonCommand", null);
+			allowTypesCommand = getAndSet(sect, "AllowTypesCommand", config.getBoolean("AllowTypesCommand", true), Boolean.class);
+			config.set("AllowTypesCommand", null);
 		}
 		
 		// Renaming
