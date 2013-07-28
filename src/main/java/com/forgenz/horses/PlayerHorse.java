@@ -96,6 +96,9 @@ public class PlayerHorse implements ForgeCore
 		this.maxHealth = maxHealth;
 		this.health = health;
 		
+		if (getPlugin().getHorsesConfig().fixZeroJumpStrength && jumpStrength <= 0.0)
+			jumpStrength = 0.7;
+			
 		this.jumpStrength = jumpStrength;
 		
 		this.horse = horse;
