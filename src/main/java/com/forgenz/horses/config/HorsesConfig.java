@@ -56,6 +56,8 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 	public final boolean showAuthor;
 	public final boolean forceEnglishCharacters;
 	
+	public final boolean fixZeroJumpStrength;
+	
 	public final Pattern rejectedHorseNamePattern;
 	
 	public HorsesConfig(Horses plugin)
@@ -116,6 +118,8 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 		{
 			rejectedHorseNamePattern = testPattern;
 		}
+		
+		fixZeroJumpStrength = getAndSet("FixZeroJumpStrength", true, Boolean.class);
 		
 		// Finally setup the global config
 		globalCfg = new HorsesWorldConfig(plugin, cfg);
