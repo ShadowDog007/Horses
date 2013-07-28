@@ -88,4 +88,10 @@ public class BukkitConfigUtil
 		
 		return sect;
 	}
+	
+	public static void set(ConfigurationSection cfg, String path, Object value)
+	{
+		cfg.set(path, null);
+		cfg.set(path, value);
+	}
 }

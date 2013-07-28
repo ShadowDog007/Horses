@@ -59,8 +59,29 @@ public class HorseTypeConfig implements ForgeCore
 		
 		displayName = BukkitConfigUtil.getAndSet(cfg, "DisplayName", String.class, type.toString());
 		
-		horseHp = BukkitConfigUtil.getAndSet(cfg, "DefaultHealth", Number.class, 12.0).doubleValue();
-		horseMaxHp = BukkitConfigUtil.getAndSet(cfg, "DefaultMaxHealth", Number.class, 12.0).doubleValue();
+		double horseHp = BukkitConfigUtil.getAndSet(cfg, "DefaultHealth", Number.class, 12.0).doubleValue();
+		if (horseHp < 0)
+		{
+			horseHp = 12.0;
+			BukkitConfigUtil.set(cfg, "DefaultHealth", horseHp);
+			
+		}
+		this.horseHp = horseHp;
+			
+		double horseMaxHp = BukkitConfigUtil.getAndSet(cfg, "DefaultMaxHealth", Number.class, horseHp).doubleValue();
+		if (horseMaxHp < 0)
+		{
+			horseMaxHp = horseHp;
+			BukkitConfigUtil.set(cfg, "DefaultMaxHealth", horseMaxHp);
+		}
+		else if (horseHp > horseMaxHp)
+		{
+			horseMaxHp = horseHp;
+			BukkitConfigUtil.set(cfg, "DefaultMaxHealth", horseMaxHp);
+		}
+		this.horseMaxHp = horseMaxHp;
+		
+		
 		jumpStrength = BukkitConfigUtil.getAndSet(cfg, "JumpStrength", Number.class, 0.7).doubleValue();
 		
 		horseMaximumHpUpgrade = BukkitConfigUtil.getAndSet(cfg, "MaxHpUpgrade", Number.class, 30.0).doubleValue();

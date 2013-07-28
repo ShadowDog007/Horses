@@ -87,6 +87,12 @@ public class PlayerHorse implements ForgeCore
 		this.name = ChatColor.stripColor(this.displayName);
 		
 		this.type = type;
+		
+		if (health <= 0)
+			health = getPlugin().getHorsesConfig().getHorseTypeConfig(null, type).horseHp;
+		if (health > maxHealth || maxHealth <= 0)
+			maxHealth = health;
+			
 		this.maxHealth = maxHealth;
 		this.health = health;
 		
