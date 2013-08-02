@@ -23,6 +23,7 @@ public class DismissCommand extends ForgeCommand
 		super(plugin);
 		
 		registerAlias("dismiss", true);
+		registerAlias("d", false);
 		registerPermission("horses.command.dismiss");
 		
 		setAllowOp(true);
