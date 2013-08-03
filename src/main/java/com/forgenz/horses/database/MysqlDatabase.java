@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -244,8 +245,20 @@ public class MysqlDatabase  extends HorseDatabase
 	@Override
 	protected void importStables(List<Stable> stables)
 	{
+		HashMap<String, Integer> stableIds = new HashMap<String, Integer>();
+		
 		for (Stable stable : stables)
 		{
+			Integer id = stableIds.get(stable.getOwner());
+			
+			if (id != null)
+				stable.setId(id);
+			
+			saveStable(stable);
+			
+			if (id == null)
+				stableIds.put(stable.getOwner(), id);
+			
 			for (PlayerHorse horse : stable)
 			{
 				saveHorse(horse);
