@@ -126,7 +126,7 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 	
 	public PlayerHorse getLastActiveHorse()
 	{
-		return lastActiveHorse;
+		return lastActiveHorse != null || horses.isEmpty() ? lastActiveHorse : horses.get(0);
 	}
 	
 	public void setLastActiveHorse(PlayerHorse horse)
