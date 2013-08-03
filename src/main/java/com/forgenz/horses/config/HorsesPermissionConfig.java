@@ -245,6 +245,10 @@ public class HorsesPermissionConfig extends AbstractConfig
 		
 		ConfigurationSection typeSect = getConfigSect("Types");
 		
+		// Temporary fix for broken horse type
+		set(typeSect, HorseType.PaintCreamy.toString(), getConfigSect(typeSect, "PaintCREAMY"));
+		set(typeSect, "PaintCREAMY", null);
+		
 		for (HorseType type : HorseType.values())
 		{
 			ConfigurationSection sect = getConfigSect(typeSect, type.toString());

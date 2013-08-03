@@ -56,7 +56,7 @@ public enum HorseType
 	
 	// White field ?
 	PaintWhite(Color.WHITE, Style.WHITEFIELD),
-	PaintCREAMY(Color.CREAMY, Style.WHITEFIELD),
+	PaintCreamy(Color.CREAMY, Style.WHITEFIELD),
 	PaintChestnut(Color.CHESTNUT, Style.WHITEFIELD),
 	PaintBrown(Color.BROWN, Style.WHITEFIELD),
 	PaintBlack(Color.BLACK, Style.WHITEFIELD),
