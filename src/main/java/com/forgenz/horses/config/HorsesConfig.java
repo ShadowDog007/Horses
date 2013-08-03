@@ -159,11 +159,6 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 		return getPermConfig(player).getHorseTypeConfigLike(like);
 	}
 	
-	public HorseTypeConfig getHorseTypeConfig(Player player, String typeStr)
-	{
-		return getPermConfig(player).getHorseTypeConfig(typeStr);
-	}
-	
 	public String getStableGroup(World world)
 	{
 		return getWorldConfig(world).stableGroup;
