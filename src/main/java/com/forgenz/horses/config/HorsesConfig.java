@@ -94,7 +94,7 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 		}
 		this.databaseType = databaseType;
 		
-		dbString = getAndSet("ImportDatabaseType", HorseDatabaseStorageType.YAML.toString(), String.class).toUpperCase();
+		dbString = getAndSet("ImportDatabaseType", "NONE", String.class).toUpperCase();
 		databaseType = HorseDatabaseStorageType.getFromString(dbString);
 		if (databaseType == this.databaseType)
 		{
