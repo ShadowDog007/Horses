@@ -58,6 +58,8 @@ public abstract class HorseDatabase implements ForgeCore
 	
 	protected abstract List<Stable> loadEverything();
 	
+	protected abstract void importStables(List<Stable> stables);
+	
 	protected abstract Stable loadStable(String player, String stableGroup);
 	
 	protected abstract void loadHorses(Stable stable, String stableGroup);
@@ -80,11 +82,7 @@ public abstract class HorseDatabase implements ForgeCore
 		if (db == null)
 			return;
 		
-		// Save the stable in the current database
-		for (Stable stable : db.loadEverything())
-		{
-			saveStable(stable);
-		}
+		importStables(db.loadEverything());
 	}
 	
 	public Stable getPlayersStable(Player player)

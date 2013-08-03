@@ -65,6 +65,12 @@ public class DummyDatabase extends HorseDatabase implements Listener
 	{
 		return Collections.emptyList();
 	}
+	
+	@Override
+	protected void importStables(List<Stable> stables)
+	{
+		getPlugin().warning("Can not import horses into the Dummy database");
+	}
 
 	@Override
 	protected Stable loadStable(String player, String stableGroup)

@@ -240,6 +240,18 @@ public class MysqlDatabase  extends HorseDatabase
 			return Collections.emptyList();
 		}
 	}
+	
+	@Override
+	protected void importStables(List<Stable> stables)
+	{
+		for (Stable stable : stables)
+		{
+			for (PlayerHorse horse : stable)
+			{
+				saveHorse(horse);
+			}
+		}
+	}
 
 	@Override
 	protected Stable loadStable(String player, String stableGroup)

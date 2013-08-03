@@ -115,6 +115,13 @@ public class YamlDatabase extends HorseDatabase
 		return stables;
 	}
 	
+	@Override
+	protected void importStables(List<Stable> stables)
+	{
+		for (Stable stable : stables)
+			saveStable(stable);
+	}
+	
 	private void loadStableGroup(File folder, ArrayList<Stable> stables, boolean recursive)
 	{
 		String groupName = folder.getName().equals(PLAYER_DATA_FOLDER) ? DEFAULT_GROUP : folder.getName();
