@@ -78,6 +78,8 @@ public abstract class HorseDatabase implements ForgeCore
 		if (type == null)
 			return;
 		
+		getPlugin().info("Attempting import of %s database into %s database", type, getType());
+		
 		HorseDatabase db = type.create(getPlugin(), false);
 		if (db == null)
 			return;
