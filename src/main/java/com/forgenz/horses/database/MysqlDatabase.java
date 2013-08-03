@@ -34,6 +34,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -178,6 +180,65 @@ public class MysqlDatabase  extends HorseDatabase
 		
 		lastCheck = System.currentTimeMillis();
 		return conn != null;
+	}
+	
+	@Override
+	protected List<Stable> loadEverything()
+	{
+		if (!connect())
+		{
+			getPlugin().severe("Failed to connect to database to copy contents");
+			return Collections.emptyList();
+		}
+		
+		List <String> stableGroups = new ArrayList<String>();
+		List<Stable> stables = new ArrayList<Stable>();
+		
+		try
+		{
+			Statement stmt;
+			ResultSet result;
+			
+			// Fetch distinct stable groups
+			stmt = conn.createStatement();
+			result = stmt.executeQuery("SELECT DISTINCT(`stablegroup`) FROM `Horses`");
+			
+			while (result.next())
+			{
+				stableGroups.add(result.getString("stablegroup"));
+			}
+			
+			// Fetch every stable from the database
+			stmt = conn.createStatement();
+			result = stmt.executeQuery("SELECT * FROM `Stables`");
+			
+			while (result.next())
+			{
+				int id = result.getInt("id");
+				String playerName = result.getString("user");
+				String lastActive = result.getString("lastactive");
+				
+				for (String group : stableGroups)
+				{
+					Stable stable = new Stable(getPlugin(), group, playerName, id);
+					loadHorses(stable, group);
+					
+					// Only add stables with horses in them
+					if (stable.getHorseCount() > 0)
+					{
+						stable.setLastActiveHorse(stable.findHorse(lastActive, true));
+						stables.add(stable);
+					}
+				}
+			}
+			
+			return stables;
+		}
+		catch (SQLException e)
+		{
+			getPlugin().severe("Failed to fetch horse data from MySQL database", e);
+			return Collections.emptyList();
+		}
 	}
 
 	@Override

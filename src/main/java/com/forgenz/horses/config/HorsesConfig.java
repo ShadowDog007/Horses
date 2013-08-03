@@ -52,6 +52,7 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 	private final Map<String, HorsesWorldConfig> worldConfigs;
 	
 	public final HorseDatabaseStorageType databaseType;
+	public final HorseDatabaseStorageType importDatabaseType;
 	
 	public final boolean showAuthor;
 	public final boolean forceEnglishCharacters;
@@ -92,6 +93,15 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 			databaseType = HorseDatabaseStorageType.DUMMY;
 		}
 		this.databaseType = databaseType;
+		
+		dbString = getAndSet("ImportDatabaseType", HorseDatabaseStorageType.YAML.toString(), String.class).toUpperCase();
+		databaseType = HorseDatabaseStorageType.getFromString(dbString);
+		if (databaseType == this.databaseType)
+		{
+			databaseType = null;
+		}
+		set("ImportDatabaseType", "NONE");
+		this.importDatabaseType = databaseType;
 		
 		if (getAndSet("EnableWorldGuardIntegration", false, Boolean.class))
 			worldGuardCfg = new WorldGuardConfig(plugin);

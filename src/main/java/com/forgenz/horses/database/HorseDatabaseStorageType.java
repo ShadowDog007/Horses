@@ -58,7 +58,7 @@ public enum HorseDatabaseStorageType
 		this.clazz = clazz;
 	}
 	
-	public HorseDatabase create(Horses plugin)
+	public HorseDatabase create(Horses plugin, boolean fallback)
 	{
 		try
 		{
@@ -68,7 +68,7 @@ public enum HorseDatabaseStorageType
 			}
 			catch (NoSuchMethodException e)
 			{
-				plugin.severe("Failed to find constructor for this database type", e);
+				plugin.severe("Failed to find constructor for the %s database type", e, toString());
 				throw e;
 			}
 			catch (InvocationTargetException e)
@@ -79,11 +79,14 @@ public enum HorseDatabaseStorageType
 		}
 		catch (Throwable e)
 		{
-			plugin.severe("#################################");
-			plugin.severe("Falling back to a dummy database");
-			plugin.severe("WARNING: No data will be saved");
-			plugin.severe("#################################");
-			return DUMMY.create(plugin);
+			if (fallback)
+			{
+				plugin.severe("#################################");
+				plugin.severe("Falling back to a dummy database");
+				plugin.severe("WARNING: No data will be saved");
+				plugin.severe("#################################");
+			}
+			return fallback ? DUMMY.create(plugin, false) : null;
 		}
 	}
 	

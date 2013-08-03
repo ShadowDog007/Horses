@@ -131,7 +131,8 @@ public class Horses extends ForgePlugin
 			horseDismissTask.runTaskTimer(this, 100L, 100L);
 			
 			// Setup the database
-			database = config.databaseType.create(this);
+			database = config.databaseType.create(this, true);
+			database.importHorses(config.importDatabaseType);
 			
 			// Setup commands
 			commandHandler = new ForgeCommandHandler(this);

@@ -43,6 +43,23 @@ Types:
     To be used for testing purposes.
 
 #######################################################################
+ImportDatabaseType
+#######################################################################
+Specifies a database type to be imported into the current database type
+
+Note that you should NOT use this to import into a database unless
+    the database you are importing to is empty.
+    
+    Unexpected errors can occur if this is done.
+
+At startup/reload the selected database will be loaded and then saved
+    into the current database. This can take some time and may slow
+    startup/reload considerably.
+
+After the import has been run this setting is reset to 'NONE' so
+    multiple imports do not occur.
+
+#######################################################################
 EnableWorldGuardIntegration
 #######################################################################
 If true the world guard configuration settings will be generated

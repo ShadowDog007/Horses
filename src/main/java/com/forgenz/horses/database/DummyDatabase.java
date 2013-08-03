@@ -28,6 +28,9 @@
 
 package com.forgenz.horses.database;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -55,6 +58,12 @@ public class DummyDatabase extends HorseDatabase implements Listener
 		{
 			event.getPlayer().sendMessage(ChatColor.RED + "Horses is running in DUMMY mode. Horses data will be lost upon disconnecting");
 		}
+	}
+	
+	@Override
+	protected List<Stable> loadEverything()
+	{
+		return Collections.emptyList();
 	}
 
 	@Override

@@ -29,6 +29,7 @@
 package com.forgenz.horses.database;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
@@ -55,6 +56,8 @@ public abstract class HorseDatabase implements ForgeCore
 		this.dbType = dbType;
 	}
 	
+	protected abstract List<Stable> loadEverything();
+	
 	protected abstract Stable loadStable(String player, String stableGroup);
 	
 	protected abstract void loadHorses(Stable stable, String stableGroup);
@@ -64,6 +67,25 @@ public abstract class HorseDatabase implements ForgeCore
 	public abstract void saveHorse(PlayerHorse horse);
 	
 	public abstract boolean deleteHorse(PlayerHorse horse);
+	
+	public void importHorses(HorseDatabaseStorageType type)
+	{
+		if (type == HorseDatabaseStorageType.DUMMY)
+			type = null;
+		
+		if (type == null)
+			return;
+		
+		HorseDatabase db = type.create(getPlugin(), false);
+		if (db == null)
+			return;
+		
+		// Save the stable in the current database
+		for (Stable stable : db.loadEverything())
+		{
+			saveStable(stable);
+		}
+	}
 	
 	public Stable getPlayersStable(Player player)
 	{

@@ -32,8 +32,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -49,8 +52,9 @@ import com.forgenz.horses.Stable;
 
 public class YamlDatabase extends HorseDatabase
 {
-	private static final String PLAYER_DATA_LOCATION = "playerdata" + File.separatorChar + "%s.yml";
-	private static final String GROUPED_PLAYER_DATA_LOCATION = "playerdata" + File.separatorChar + "%s" + File.separatorChar + "%s.yml";
+	private static final String PLAYER_DATA_FOLDER = "playerdata";
+	private static final String PLAYER_DATA_LOCATION = PLAYER_DATA_FOLDER + File.separatorChar + "%s.yml";
+	private static final String GROUPED_PLAYER_DATA_LOCATION = PLAYER_DATA_FOLDER + File.separatorChar + "%s" + File.separatorChar + "%s.yml";
 	
 	public YamlDatabase(Horses plugin)
 	{
@@ -93,6 +97,48 @@ public class YamlDatabase extends HorseDatabase
 		
 		return cfg;
 	}
+	
+	@Override
+	protected List<Stable> loadEverything()
+	{
+		File playerDataFolder = new File(getPlugin().getDataFolder(), PLAYER_DATA_FOLDER);
+		
+		if (!playerDataFolder.isDirectory())
+		{
+			return Collections.emptyList();
+		}
+		
+		ArrayList<Stable> stables = new ArrayList<Stable>();
+		
+		loadStableGroup(playerDataFolder, stables, true);
+		
+		return stables;
+	}
+	
+	private void loadStableGroup(File folder, ArrayList<Stable> stables, boolean recursive)
+	{
+		String groupName = folder.getName().equals(PLAYER_DATA_FOLDER) ? DEFAULT_GROUP : folder.getName();
+		Pattern extentionReplace = Pattern.compile("\\.yml$", Pattern.CASE_INSENSITIVE);
+		
+		File[] fileList = folder.listFiles();
+		// Don't waste time expanding the list
+		stables.ensureCapacity(fileList.length + stables.size());
+		
+		for (File file : fileList)
+		{
+			// Check for additional stable groups
+			if (file.isDirectory())
+			{
+				// Load the groups stables
+				if (recursive)
+					loadStableGroup(file, stables, false);
+				continue;
+			}
+			
+			String playerName = extentionReplace.matcher(file.getName()).replaceAll("");
+			stables.add(loadStable(playerName, groupName));
+		}
+	}
 
 	@Override
 	protected Stable loadStable(String player, String stableGroup)
@@ -122,12 +168,12 @@ public class YamlDatabase extends HorseDatabase
 			double jumpStrength = horseSect.getDouble("jumpstrength", 0.7);
 			boolean hasChest = type == HorseType.Mule || type == HorseType.Donkey ? horseSect.getBoolean("chest", false) : false;
 			
-			// Tempory Hack to fix old storage
+			// Temporary Hack to fix old storage
 			boolean saddle = false;
 			if (horseSect.isBoolean("saddle"))
 				saddle = horseSect.getBoolean("saddle", false);
 			
-			// Tempory hack for old storage
+			// Temporary hack for old storage
 			Material armour = null;
 			if (horseSect.isString("armour"))
 				armour = Material.getMaterial(horseSect.getString("armour", "null"));
@@ -186,7 +232,7 @@ public class YamlDatabase extends HorseDatabase
 	}
 
 	@Override
-	public void saveStable(Stable stable)
+	protected void saveStable(Stable stable)
 	{
 		// Fetch the file to save data to
 		File playerDataFile = getPlayersConfigFile(stable.getOwner(), stable.getGroup());
