@@ -444,7 +444,7 @@ public class MysqlDatabase  extends HorseDatabase
 			try
 			{
 				// Insert the horses data into the database
-				String query = String.format("INSERT INTO `Horses` (`stableid`, `stablegroup`, `name`, `type`, `lastdeath`, `maxhealth`, `health`, `jumpstrength`, `chested`, `inventory`) VALUES ('%d', '%s', '%s', '%s', '%d', '%.4F', '%.4F', '%.4F', '%d', '%s')",
+				String query = String.format("INSERT INTO `Horses` (`stableid`, `stablegroup`, `name`, `type`, `lastdeath`, `maxhealth`, `health`, `jumpstrength`, `chested`, `inventory`) VALUES ('%d', '%s', '%s', '%s', '%d', '%.4f', '%.4f', '%.4f', '%d', '%s')",
 						horse.getStable().getId(), horse.getStable().getGroup(), name, type.toString(), lastDeath, maxhealth, health, jumpstrength, chested ? 1 : 0, inventoryString);
 				
 				stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
@@ -466,7 +466,7 @@ public class MysqlDatabase  extends HorseDatabase
 			try
 			{
 				// Update existing values
-				String query = String.format("UPDATE `Horses` SET `name`='%s', `lastdeath`='%d', `maxhealth`='%.4F', `health`='%.4F', `jumpstrength`='%.4F', `chested`='%d', `inventory`='%s' WHERE `id`='%d'",
+				String query = String.format("UPDATE `Horses` SET `name`='%s', `lastdeath`='%d', `maxhealth`='%.4f', `health`='%.4f', `jumpstrength`='%.4f', `chested`='%d', `inventory`='%s' WHERE `id`='%d'",
 						name, lastDeath, maxhealth, health, jumpstrength, chested ? 1 : 0, inventoryString, horse.getId());
 				
 				stmt.executeUpdate(query);
