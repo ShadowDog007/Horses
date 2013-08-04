@@ -76,19 +76,18 @@ public class TypeCommand extends ForgeCommand
 		
 		if (args.getNumArgs() > 0)
 		{
-			HorseType type = HorseType.closeValueOf(args.getArg(0));
+			HorseTypeConfig cfg = pcfg.getHorseTypeConfigLike(args.getArg(0));
 			
-			if (type == null)
+			if (cfg == null)
 			{
 				Command_Buy_Error_InvalidHorseType.sendMessage(sender, args.getArg(0));
 			}
-			else if (player && !sender.hasPermission(type.getPermission()))
+			else if (player && !sender.hasPermission(cfg.type.getPermission()))
 			{
 				Command_Type_Error_NoPermForHorse.sendMessage(sender);
 			}
 			else
 			{
-				HorseTypeConfig cfg = pcfg.getHorseTypeConfig(type);
 				sender.sendMessage(String.format((getPlugin().getEconomy() != null ? Command_Type_SingleTypeFormatEco : Command_Type_SingleTypeFormat).toString(), cfg.displayName, cfg.horseHp, cfg.horseMaxHp, cfg.jumpStrength, cfg.buyCost));
 			}
 			return;
