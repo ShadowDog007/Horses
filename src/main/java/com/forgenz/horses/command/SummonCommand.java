@@ -31,6 +31,7 @@ package com.forgenz.horses.command;
 import static com.forgenz.horses.Messages.*;
 
 import java.util.HashMap;
+import java.util.WeakHashMap;
 import java.util.regex.Pattern;
 
 import org.bukkit.Location;
@@ -50,7 +51,7 @@ import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class SummonCommand extends ForgeCommand
 {
-	private final HashMap<String, Long> summonTasks = new HashMap<String, Long>();
+	private final WeakHashMap<Player, Long> summonTasks = new WeakHashMap<Player, Long>();
 	private final Location cacheLoc = new Location(null, 0.0, 0.0, 0.0);
 	
 	public SummonCommand(ForgePlugin plugin)
@@ -74,8 +75,6 @@ public class SummonCommand extends ForgeCommand
 	{
 		final Player player = (Player) sender;
 		
-		final String playerName = player.getName();
-		
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		HorsesPermissionConfig pcfg = cfg.getPermConfig(player);
 		
@@ -85,12 +84,12 @@ public class SummonCommand extends ForgeCommand
 			return;
 		}
 		
-		Long lastSummon = summonTasks.get(playerName);
+		Long lastSummon = summonTasks.get(player);
 		if (lastSummon != null)
 		{
 			if (System.currentTimeMillis() - lastSummon > pcfg.summonDelay * 1000)
 			{
-				summonTasks.remove(playerName);
+				summonTasks.remove(player);
 			}
 			else
 			{
@@ -155,13 +154,13 @@ public class SummonCommand extends ForgeCommand
 				public void run()
 				{
 					// Validate that this task should run
-					Long storedStartTime = summonTasks.get(playerName);
+					Long storedStartTime = summonTasks.get(player);
 					// If the key does not exist or the value is incorrect we return
 					if (storedStartTime == null || storedStartTime.longValue() != startTime)
 						return;
 					
 					// Remove the time from the map
-					summonTasks.remove(playerName);
+					summonTasks.remove(player);
 					
 					// Only summon the horse if the player is still alive
 					if (player.isValid())
@@ -173,14 +172,14 @@ public class SummonCommand extends ForgeCommand
 			};
 
 			task.runTaskLater(getPlugin(), tickDelay);
-			summonTasks.put(playerName, startTime);
+			summonTasks.put(player, startTime);
 			Command_Summon_Success_SummoningHorse.sendMessage(player, horse.getDisplayName(), pcfg.summonDelay);
 		}
 	}
 	
 	public void cancelSummon(Player player)
 	{
-		if (summonTasks.remove(player.getName()) != null)
+		if (summonTasks.remove(player) != null)
 			Command_Summon_Error_MovedWhileSummoning.sendMessage(player);
 	}
 
