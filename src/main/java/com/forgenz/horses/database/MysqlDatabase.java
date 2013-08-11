@@ -89,7 +89,8 @@ public class MysqlDatabase  extends HorseDatabase
 			checkColumn("Horses", "lastDeath", "BIGINT NOT NULL DEFAULT '0' AFTER `type`");
 			checkColumn("Horses", "maxhealth", "DOUBLE NOT NULL DEFAULT '20' AFTER `lastDeath`");
 			checkColumn("Horses", "health", "DOUBLE NOT NULL DEFAULT '20' AFTER `maxhealth`");
-			checkColumn("Horses", "jumpstrength", "DOUBLE NOT NULL DEFAULT '0.7' AFTER `health`");
+			checkColumn("Horses", "speed", "DOUBLE NOT NULL DEFAULT '0.225' AFTER `health`");
+			checkColumn("Horses", "jumpstrength", "DOUBLE NOT NULL DEFAULT '0.7' AFTER `speed`");
 			checkColumn("Horses", "chested", "TINYINT NOT NULL DEFAULT '0' AFTER `jumpstrength`");
 			checkColumn("Horses", "inventory", "VARCHAR(10000) NOT NULL DEFAULT 'i: []' COLLATE utf8_general_ci AFTER `chested`");
 			
@@ -338,6 +339,7 @@ public class MysqlDatabase  extends HorseDatabase
 					long lastDeath = result.getLong("lastdeath");
 					double maxHealth = result.getDouble("maxhealth");
 					double health = result.getDouble("health");
+					double speed = result.getDouble("speed");
 					double jumpStrength = result.getDouble("jumpstrength");
 					boolean hasChest = type == HorseType.Mule || type == HorseType.Donkey ? result.getBoolean("chested") : false;
 					
@@ -390,7 +392,7 @@ public class MysqlDatabase  extends HorseDatabase
 					}
 					
 					// Create the horse
-					PlayerHorse horseData = new PlayerHorse(getPlugin(), stable, name, type, maxHealth, health,jumpStrength, null, horseId);
+					PlayerHorse horseData = new PlayerHorse(getPlugin(), stable, name, type, maxHealth, health, speed, jumpStrength, null, horseId);
 					// Set aditional data
 					horseData.setLastDeath(lastDeath);
 					
@@ -521,6 +523,7 @@ public class MysqlDatabase  extends HorseDatabase
 		long lastDeath = horse.getLastDeath();
 		double maxhealth = horse.getMaxHealth();
 		double health = horse.getHealth();
+		double speed = horse.getSpeed();
 		double jumpstrength = horse.getJumpStrength();
 		boolean chested = horse.hasChest();
 		String inventoryString = getInventoryString(horse);
@@ -531,8 +534,8 @@ public class MysqlDatabase  extends HorseDatabase
 			try
 			{
 				// Insert the horses data into the database
-				String query = String.format(Locale.US, "INSERT INTO `Horses` (`stableid`, `stablegroup`, `name`, `type`, `lastdeath`, `maxhealth`, `health`, `jumpstrength`, `chested`, `inventory`) VALUES ('%d', '%s', '%s', '%s', '%d', '%f', '%f', '%f', '%d', '%s')",
-						horse.getStable().getId(), horse.getStable().getGroup(), name, type.toString(), lastDeath, maxhealth, health, jumpstrength, chested ? 1 : 0, inventoryString);
+				String query = String.format(Locale.US, "INSERT INTO `Horses` (`stableid`, `stablegroup`, `name`, `type`, `lastdeath`, `maxhealth`, `health`, `speed`, `jumpstrength`, `chested`, `inventory`) VALUES ('%d', '%s', '%s', '%s', '%d', '%f', '%f', '%f', '%f', '%d', '%s')",
+						horse.getStable().getId(), horse.getStable().getGroup(), name, type.toString(), lastDeath, maxhealth, health, speed, jumpstrength, chested ? 1 : 0, inventoryString);
 				
 				stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 				
@@ -553,8 +556,8 @@ public class MysqlDatabase  extends HorseDatabase
 			try
 			{
 				// Update existing values
-				String query = String.format(Locale.US, "UPDATE `Horses` SET `name`='%s', `lastdeath`='%d', `maxhealth`='%f', `health`='%f', `jumpstrength`='%f', `chested`='%d', `inventory`='%s' WHERE `id`='%d'",
-						name, lastDeath, maxhealth, health, jumpstrength, chested ? 1 : 0, inventoryString, horse.getId());
+				String query = String.format(Locale.US, "UPDATE `Horses` SET `name`='%s', `type`='%s', `lastdeath`='%d', `maxhealth`='%f', `health`='%f', `speed`='%f', `jumpstrength`='%f', `chested`='%d', `inventory`='%s' WHERE `id`='%d'",
+						name, type.toString(), lastDeath, maxhealth, health, speed, jumpstrength, chested ? 1 : 0, inventoryString, horse.getId());
 				
 				stmt.executeUpdate(query);
 			}

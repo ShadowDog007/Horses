@@ -45,6 +45,7 @@ public class HorseTypeConfig implements ForgeCore
 	public final double horseHp;
 	public final double horseMaxHp;
 	public final double horseMaximumHpUpgrade;
+	public final double speed;
 	public final double jumpStrength;
 	
 	public final boolean protectFromDeletionOnDeath;
@@ -82,6 +83,7 @@ public class HorseTypeConfig implements ForgeCore
 		this.horseMaxHp = horseMaxHp;
 		
 		
+		speed = BukkitConfigUtil.getAndSet(cfg, "Speed", Number.class, 0.225).doubleValue();
 		jumpStrength = BukkitConfigUtil.getAndSet(cfg, "JumpStrength", Number.class, 0.7).doubleValue();
 		
 		horseMaximumHpUpgrade = BukkitConfigUtil.getAndSet(cfg, "MaxHpUpgrade", Number.class, 30.0).doubleValue();

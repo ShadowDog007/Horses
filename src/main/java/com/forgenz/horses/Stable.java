@@ -194,7 +194,7 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 	
 	private PlayerHorse createHorse(String name, HorseTypeConfig typecfg, Horse horse, boolean saddle)
 	{
-		PlayerHorse horseData = new PlayerHorse(plugin, this, name, typecfg.type, typecfg.horseHp, typecfg.horseMaxHp, typecfg.jumpStrength, horse);
+		PlayerHorse horseData = new PlayerHorse(plugin, this, name, typecfg.type, typecfg.horseHp, typecfg.horseMaxHp, typecfg.speed, typecfg.jumpStrength, horse);
 		
 		horses.add(horseData);
 		

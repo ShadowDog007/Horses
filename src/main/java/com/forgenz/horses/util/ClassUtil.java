@@ -29,6 +29,7 @@
 package com.forgenz.horses.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class ClassUtil
 {
@@ -50,6 +51,26 @@ public class ClassUtil
 			else
 			{
 				return getField(superClass, fieldName);
+			}
+		}
+	}
+	
+	public static Method getMethod(Class<?> clazz, String methodName, Class<?> ...params) throws NoSuchMethodException
+	{
+		try
+		{
+			return clazz.getDeclaredMethod(methodName, params);
+		}
+		catch (NoSuchMethodException e)
+		{
+			Class<?> superClass = clazz.getSuperclass();
+			if (superClass == null)
+			{
+				throw e;
+			}
+			else
+			{
+				return getMethod(superClass, methodName, params);
 			}
 		}
 	}

@@ -43,6 +43,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import com.forgenz.forgecore.v1_0.ForgeCore;
+import com.forgenz.horses.util.HorseSpeedUtil;
 
 public class PlayerHorse implements ForgeCore
 {
@@ -66,18 +67,19 @@ public class PlayerHorse implements ForgeCore
 	private double maxHealth;
 	private double health;
 	
+	private double speed;
 	private double jumpStrength;
 
 	private boolean hasChest = false;
 	
 	private final ArrayList<ItemStack> inventory = new ArrayList<ItemStack>();
 	
-	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, double jumpStrength, Horse horse)
+	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, double speed, double jumpStrength, Horse horse)
 	{
-		this(plugin, stable, name, type, maxHealth, health, jumpStrength, horse, -1);
+		this(plugin, stable, name, type, maxHealth, health, speed, jumpStrength, horse, -1);
 	}
 	
-	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, double jumpStrength, Horse horse, int id)
+	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, double speed, double jumpStrength, Horse horse, int id)
 	{
 		this.plugin = plugin;
 		this.stable = stable;
@@ -98,7 +100,8 @@ public class PlayerHorse implements ForgeCore
 		
 		if (getPlugin().getHorsesConfig().fixZeroJumpStrength && jumpStrength <= 0.0)
 			jumpStrength = 0.7;
-			
+		
+		this.speed = speed;
 		this.jumpStrength = jumpStrength;
 		
 		this.horse = horse;
@@ -109,6 +112,7 @@ public class PlayerHorse implements ForgeCore
 			getHealth();
 			hasChest();
 			getItems();
+			getSpeed();
 			getJumpStrength();
 			this.horse = null;
 			horse.remove();
@@ -252,6 +256,16 @@ public class PlayerHorse implements ForgeCore
 		
 		return jumpStrength;
 	}
+	
+	public double getSpeed()
+	{
+		if (horse != null)
+		{
+			speed = HorseSpeedUtil.getHorseSpeed(horse);
+		}
+		
+		return speed;
+	}
 
 	public void setSaddle(Material saddle)
 	{
@@ -352,6 +366,7 @@ public class PlayerHorse implements ForgeCore
 
 			getItems();
 			hasChest();
+			getSpeed();
 			getJumpStrength();
 			
 			// Handle the horses death
@@ -446,6 +461,7 @@ public class PlayerHorse implements ForgeCore
 			horse.setMaxHealth(maxHealth);
 			horse.setHealth(health);
 			
+			HorseSpeedUtil.setHorseSpeed(horse, getSpeed());
 			horse.setJumpStrength(getJumpStrength());
 			
 			// Make the horse follow the player
