@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -116,25 +117,25 @@ public class MysqlDatabase  extends HorseDatabase
 		try
 		{
 			Statement stmt = conn.createStatement();
-			stmt.executeUpdate(String.format("ALTER TABLE `%1$s` CHANGE `%2$s` `%2$s` %3$s", table, column, settings));
+			stmt.executeUpdate(String.format(Locale.US, "ALTER TABLE `%1$s` CHANGE `%2$s` `%2$s` %3$s", table, column, settings));
 		}
 		catch (SQLException e)
 		{
 			Statement stmt = conn.createStatement();
-			stmt.executeUpdate(String.format("ALTER TABLE `%1$s` ADD `%2$s` %3$s", table, column, settings));
+			stmt.executeUpdate(String.format(Locale.US, "ALTER TABLE `%1$s` ADD `%2$s` %3$s", table, column, settings));
 		}
 	}
 	
 	private void addUniqueIndex(String table, String column) throws SQLException
 	{
 		Statement stmt = conn.createStatement();
-		ResultSet result = stmt.executeQuery(String.format("SELECT * FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema=DATABASE() AND table_name='%s' AND index_name='%s'", table, column));
+		ResultSet result = stmt.executeQuery(String.format(Locale.US, "SELECT * FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema=DATABASE() AND table_name='%s' AND index_name='%s'", table, column));
 		
 		if (result.next())
 			return;
 		
 		stmt = conn.createStatement();
-		stmt.executeUpdate(String.format("ALTER TABLE `%s` ADD UNIQUE (`%s`)", table, column));
+		stmt.executeUpdate(String.format(Locale.US, "ALTER TABLE `%s` ADD UNIQUE (`%s`)", table, column));
 	}
 	
 	private boolean connect()
@@ -157,7 +158,7 @@ public class MysqlDatabase  extends HorseDatabase
 			catch (SQLException e){}
 		}
 		
-		String connection = String.format("jdbc:mysql://%s/%s", settings.host, settings.database);
+		String connection = String.format(Locale.US, "jdbc:mysql://%s/%s", settings.host, settings.database);
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver");
@@ -276,7 +277,7 @@ public class MysqlDatabase  extends HorseDatabase
 		{
 			Statement stmt = conn.createStatement();
 			
-			ResultSet result = stmt.executeQuery(String.format("SELECT * FROM `Stables` WHERE `user`='%s'", player));
+			ResultSet result = stmt.executeQuery(String.format(Locale.US, "SELECT * FROM `Stables` WHERE `user`='%s'", player));
 			
 			int id = -1;
 			String lastActive = null;
@@ -320,7 +321,7 @@ public class MysqlDatabase  extends HorseDatabase
 		{
 			// Query the SQL server for horse data for the stable
 			Statement stmt = conn.createStatement();
-			ResultSet result = stmt.executeQuery(String.format("SELECT * FROM `Horses` WHERE `stableid`='%d' AND `stablegroup`='%s'", stable.getId(), stableGroup));
+			ResultSet result = stmt.executeQuery(String.format(Locale.US, "SELECT * FROM `Horses` WHERE `stableid`='%d' AND `stablegroup`='%s'", stable.getId(), stableGroup));
 			
 			// Create each horse
 			while (result.next())
@@ -446,7 +447,7 @@ public class MysqlDatabase  extends HorseDatabase
 			// NOTE: We must have at least one horse due to the check at the top
 			try
 			{
-				String query = String.format("INSERT INTO `Stables` (`user`, `lastactive`) VALUES ('%s', '%s')", stable.getOwner(), stable.getLastActiveHorse() != null ? stable.getLastActiveHorse().getName() : "");
+				String query = String.format(Locale.US, "INSERT INTO `Stables` (`user`, `lastactive`) VALUES ('%s', '%s')", stable.getOwner(), stable.getLastActiveHorse() != null ? stable.getLastActiveHorse().getName() : "");
 				stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 				
 				// Save the stables ID
@@ -466,7 +467,7 @@ public class MysqlDatabase  extends HorseDatabase
 		{
 			try
 			{
-				String query = String.format("UPDATE `Stables` SET `lastactive`='%s' WHERE `id`='%d'", stable.getLastActiveHorse() != null ? stable.getLastActiveHorse().getName() : "", stable.getId());
+				String query = String.format(Locale.US, "UPDATE `Stables` SET `lastactive`='%s' WHERE `id`='%d'", stable.getLastActiveHorse() != null ? stable.getLastActiveHorse().getName() : "", stable.getId());
 				stmt.executeUpdate(query);
 			}
 			catch (SQLException e)
@@ -479,7 +480,7 @@ public class MysqlDatabase  extends HorseDatabase
 		{
 			try
 			{
-				String query = String.format("DELETE FROM `Stables` WHERE `id`='%d'", stable.getId());
+				String query = String.format(Locale.US, "DELETE FROM `Stables` WHERE `id`='%d'", stable.getId());
 				stmt.executeUpdate(query);
 			}
 			catch (SQLException e)
@@ -530,7 +531,7 @@ public class MysqlDatabase  extends HorseDatabase
 			try
 			{
 				// Insert the horses data into the database
-				String query = String.format("INSERT INTO `Horses` (`stableid`, `stablegroup`, `name`, `type`, `lastdeath`, `maxhealth`, `health`, `jumpstrength`, `chested`, `inventory`) VALUES ('%d', '%s', '%s', '%s', '%d', '%.4f', '%.4f', '%.4f', '%d', '%s')",
+				String query = String.format(Locale.US, "INSERT INTO `Horses` (`stableid`, `stablegroup`, `name`, `type`, `lastdeath`, `maxhealth`, `health`, `jumpstrength`, `chested`, `inventory`) VALUES ('%d', '%s', '%s', '%s', '%d', '%f', '%f', '%f', '%d', '%s')",
 						horse.getStable().getId(), horse.getStable().getGroup(), name, type.toString(), lastDeath, maxhealth, health, jumpstrength, chested ? 1 : 0, inventoryString);
 				
 				stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
@@ -552,7 +553,7 @@ public class MysqlDatabase  extends HorseDatabase
 			try
 			{
 				// Update existing values
-				String query = String.format("UPDATE `Horses` SET `name`='%s', `lastdeath`='%d', `maxhealth`='%.4f', `health`='%.4f', `jumpstrength`='%.4f', `chested`='%d', `inventory`='%s' WHERE `id`='%d'",
+				String query = String.format(Locale.US, "UPDATE `Horses` SET `name`='%s', `lastdeath`='%d', `maxhealth`='%f', `health`='%f', `jumpstrength`='%f', `chested`='%d', `inventory`='%s' WHERE `id`='%d'",
 						name, lastDeath, maxhealth, health, jumpstrength, chested ? 1 : 0, inventoryString, horse.getId());
 				
 				stmt.executeUpdate(query);
@@ -578,7 +579,7 @@ public class MysqlDatabase  extends HorseDatabase
 		{
 			Statement stmt = conn.createStatement();
 			
-			String query = String.format("DELETE FROM `Horses` WHERE `id`='%d'", horse.getId());
+			String query = String.format(Locale.US, "DELETE FROM `Horses` WHERE `id`='%d'", horse.getId());
 			stmt.executeUpdate(query);
 			return true;
 		}
