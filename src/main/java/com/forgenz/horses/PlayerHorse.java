@@ -85,7 +85,7 @@ public class PlayerHorse implements ForgeCore
 		this.stable = stable;
 		this.id = id;
 		
-		this.displayName = ChatColor.translateAlternateColorCodes('&', name).replaceAll("&", "").replaceAll(" ", "_");
+		this.displayName = ChatColor.translateAlternateColorCodes('&', name).replaceAll("&", "").replaceAll(" ", "_").replaceAll("\\.", "");
 		this.name = ChatColor.stripColor(this.displayName);
 		
 		this.type = type;

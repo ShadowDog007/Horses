@@ -43,7 +43,7 @@ import com.forgenz.horses.Stable;
 public abstract class HorseDatabase implements ForgeCore
 {
 	public static final String DEFAULT_GROUP = "default";
-	protected static final Pattern COLOUR_CHAR_REPLACE = Pattern.compile(Character.toString(ChatColor.COLOR_CHAR));
+	protected static final Pattern COLOUR_CHAR_REPLACE = Pattern.compile(Character.toString(ChatColor.COLOR_CHAR), Pattern.LITERAL);
 	
 	private final Horses plugin;
 	private final HorseDatabaseStorageType dbType;
