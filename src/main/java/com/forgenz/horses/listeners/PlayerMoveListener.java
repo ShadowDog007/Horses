@@ -37,24 +37,16 @@ import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgeListener;
-import com.forgenz.forgecore.v1_0.command.ForgeCommand;
 import com.forgenz.horses.Horses;
-import com.forgenz.horses.command.SummonCommand;
 import com.forgenz.horses.config.HorsesPermissionConfig;
 
 public class PlayerMoveListener extends ForgeListener
 {
-	private final SummonCommand summonCmd;
-	
 	public PlayerMoveListener(Horses plugin)
 	{
 		super(plugin);
 		
-		ForgeCommand cmd = plugin.getCommandHandler().findCommand("summon");
-		
-		summonCmd = (SummonCommand) (cmd instanceof SummonCommand ? cmd : null);
-		
-		if (summonCmd != null && getPlugin().getHorsesConfig().trackMovements())
+		if (getPlugin().getSummonCmd() != null && getPlugin().getHorsesConfig().trackMovements())
 		{
 			register();
 		}
@@ -68,10 +60,9 @@ public class PlayerMoveListener extends ForgeListener
 		
 		// If the player moves a block cancel the summoning
 		if (from.getBlockX() != to.getBlockX()
-			&& from.getBlockZ() != to.getBlockZ()
-			&& from.getBlockY() != to.getBlockY())
+			|| from.getBlockZ() != to.getBlockZ()
+			|| from.getBlockY() != to.getBlockY())
 			handleMovement(event.getPlayer());
-				
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -88,12 +79,15 @@ public class PlayerMoveListener extends ForgeListener
 	
 	private void handleMovement(Player player)
 	{
-		HorsesPermissionConfig cfg = getPlugin().getHorsesConfig().getPermConfig(player);
-		
-		if (cfg.cancelSummonOnMove)
+		if (!getPlugin().getSummonCmd().isSummoning(player))
 			return;
 		
-		summonCmd.cancelSummon(player);
+		HorsesPermissionConfig cfg = getPlugin().getHorsesConfig().getPermConfig(player);
+		
+		if (!cfg.cancelSummonOnMove)
+			return;
+		
+		getPlugin().getSummonCmd().cancelSummon(player);
 	}
 	
 	@Override

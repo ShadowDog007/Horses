@@ -190,17 +190,32 @@ public class HorsesConfig extends AbstractConfig implements ForgeCore
 	 */
 	public boolean trackMovements()
 	{
-		for (HorsesWorldConfig worldCfg : worldConfigs.values())
+		if (trackMovements(this.globalCfg))
+			return true;
+		
+		for (HorsesWorldConfig cfg : worldConfigs.values())
 		{
-			for (HorsesPermissionConfig permCfg : worldCfg.permissionConfigs.values())
-			{
-				if (permCfg.allowSummonCommand)
-				{
-					return true;
-				}
-			}
+			if (trackMovements(cfg))
+				return true;
 		}
 		
+		return false;
+	}
+	
+	private boolean trackMovements(HorsesPermissionConfig cfg)
+	{
+		return cfg.summonDelay > 0 && cfg.cancelSummonOnMove;
+	}
+	
+	private boolean trackMovements(HorsesWorldConfig cfg)
+	{
+		if (trackMovements(cfg.worldCfg))
+			return true;
+		for (HorsesPermissionConfig permCfg : cfg.permissionConfigs.values())
+		{
+			if (trackMovements(permCfg))
+				return true;
+		}
 		return false;
 	}
 }

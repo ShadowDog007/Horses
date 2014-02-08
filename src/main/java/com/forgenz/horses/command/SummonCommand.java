@@ -28,9 +28,20 @@
 
 package com.forgenz.horses.command;
 
-import static com.forgenz.horses.Messages.*;
+import static com.forgenz.horses.Messages.Command_Summon_Description;
+import static com.forgenz.horses.Messages.Command_Summon_Error_AlreadySummoning;
+import static com.forgenz.horses.Messages.Command_Summon_Error_MovedWhileSummoning;
+import static com.forgenz.horses.Messages.Command_Summon_Error_NoLastActiveHorse;
+import static com.forgenz.horses.Messages.Command_Summon_Error_OnDeathCooldown;
+import static com.forgenz.horses.Messages.Command_Summon_Error_WorldGuard_CantUseSummonHere;
+import static com.forgenz.horses.Messages.Command_Summon_Success_SummonedHorse;
+import static com.forgenz.horses.Messages.Command_Summon_Success_SummoningHorse;
+import static com.forgenz.horses.Messages.Misc_Command_Error_ConfigDenyPerm;
+import static com.forgenz.horses.Messages.Misc_Command_Error_InvalidName;
+import static com.forgenz.horses.Messages.Misc_Command_Error_NoHorseNamed;
+import static com.forgenz.horses.Messages.Misc_Words_Horse;
+import static com.forgenz.horses.Messages.Misc_Words_Name;
 
-import java.util.HashMap;
 import java.util.WeakHashMap;
 import java.util.regex.Pattern;
 
@@ -52,11 +63,14 @@ import com.forgenz.horses.config.HorsesPermissionConfig;
 public class SummonCommand extends ForgeCommand
 {
 	private final WeakHashMap<Player, Long> summonTasks = new WeakHashMap<Player, Long>();
+	private final int pluginLoadCount;
 	private final Location cacheLoc = new Location(null, 0.0, 0.0, 0.0);
 	
 	public SummonCommand(ForgePlugin plugin)
 	{
 		super(plugin);
+		
+		pluginLoadCount = plugin.getLoadCount();
 		
 		registerAlias("summon", true);
 		registerAlias("s", false);
@@ -98,7 +112,7 @@ public class SummonCommand extends ForgeCommand
 			}
 		}
 		
-		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
+		final Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
 		final PlayerHorse horse;
 		
 		// Check if we are summoning the last active horse
@@ -159,6 +173,10 @@ public class SummonCommand extends ForgeCommand
 					if (storedStartTime == null || storedStartTime.longValue() != startTime)
 						return;
 					
+					// Don't let horses summon after reload
+					if (pluginLoadCount != getPlugin().getLoadCount())
+						return;
+					
 					// Remove the time from the map
 					summonTasks.remove(player);
 					
@@ -179,8 +197,13 @@ public class SummonCommand extends ForgeCommand
 	
 	public void cancelSummon(Player player)
 	{
-		if (summonTasks.remove(player) != null)
+		if (player != null && summonTasks.remove(player) != null)
 			Command_Summon_Error_MovedWhileSummoning.sendMessage(player);
+	}
+	
+	public boolean isSummoning(Player player)
+	{
+		return player != null && summonTasks.containsKey(player);
 	}
 
 	@Override

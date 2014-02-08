@@ -102,9 +102,9 @@ public abstract class HorseDatabase implements ForgeCore
 		{
 			// If the stable is not in the same group as the one we want we unload it
 			// And load the new horses
-				unload(stable);
-				stable = null;
-				playerStables.remove(player.getName());
+			unload(stable);
+			stable = null;
+			playerStables.remove(player.getName());
 		}
 		
 		if (stable == null && load)
@@ -137,6 +137,8 @@ public abstract class HorseDatabase implements ForgeCore
 
 	public void unload(Stable stable)
 	{
+		getPlugin().getSummonCmd().cancelSummon(stable.getPlayerOwner());
+		
 		if (stable.getActiveHorse() != null)
 		{
 			stable.getActiveHorse().removeHorse();

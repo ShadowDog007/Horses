@@ -77,6 +77,8 @@ public class Horses extends ForgePlugin
 	
 	private HorseSpawnListener spawnListener;
 	
+	private SummonCommand summonCmd;
+	
 	public static Horses getInstance()
 	{
 		return plugin;
@@ -90,6 +92,7 @@ public class Horses extends ForgePlugin
 	@Override
 	public void onEnable()
 	{
+		super.onEnable();
 		try
 		{
 			plugin = this;
@@ -155,7 +158,7 @@ public class Horses extends ForgePlugin
 			commandHandler.registerCommand(new HealCommand(this));
 			commandHandler.registerCommand(new ListCommand(this));
 			commandHandler.registerCommand(new RenameCommand(this));
-			commandHandler.registerCommand(new SummonCommand(this));
+			commandHandler.registerCommand(summonCmd = new SummonCommand(this));
 			commandHandler.registerCommand(new TypeCommand(this));
 			
 			// Admin commands
@@ -216,6 +219,7 @@ public class Horses extends ForgePlugin
 			database.saveAll();
 		if (horseDismissTask != null)
 			horseDismissTask.cancel();
+		summonCmd = null;
 		commandHandler = null;
 		database = null;
 		config = null;
@@ -251,5 +255,10 @@ public class Horses extends ForgePlugin
 	public boolean isNoCheatPlusEnabled()
 	{
 		return noCheatPlus != null && noCheatPlus.isEnabled();
+	}
+	
+	public SummonCommand getSummonCmd()
+	{
+		return summonCmd;
 	}
 }

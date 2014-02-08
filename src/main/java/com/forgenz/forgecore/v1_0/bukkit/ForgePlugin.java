@@ -44,6 +44,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public abstract class ForgePlugin extends JavaPlugin implements ForgeCoreEntity
 {
+	private int loadCount = 0;
+	
 	private String listenerKey;
 	
 	private WorldGuardPlugin worldGuard;
@@ -60,7 +62,10 @@ public abstract class ForgePlugin extends JavaPlugin implements ForgeCoreEntity
 	public abstract void onLoad();
 	
 	@Override
-	public abstract void onEnable();
+	public void onEnable()
+	{
+		++loadCount;
+	}
 	
 	public abstract void onDisable();
 	
@@ -188,6 +193,11 @@ public abstract class ForgePlugin extends JavaPlugin implements ForgeCoreEntity
 	public ForgePlugin getPlugin()
 	{
 		return this;
+	}
+	
+	public int getLoadCount()
+	{
+		return loadCount;
 	}
 	
 	@Override
