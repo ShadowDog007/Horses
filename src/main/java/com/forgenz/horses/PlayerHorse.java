@@ -360,14 +360,11 @@ public class PlayerHorse implements ForgeCore
 		{
 			if (!horse.isDead())
 			{
-				maxHealth = horse.getMaxHealth();
 				health = horse.getHealth();
 			}
 
 			getItems();
 			hasChest();
-			getSpeed();
-			getJumpStrength();
 			
 			// Handle the horses death
 			if (horse.isDead())
