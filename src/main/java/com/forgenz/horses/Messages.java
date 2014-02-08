@@ -47,6 +47,12 @@ public enum Messages implements ForgeLocaleEnum
 	Command_Buy_Success_Completion("&eType &b/%1$s summon &3%2$s &eto summon your new horse"),
 	Command_Buy_Description("Buys a horse of the given type"),
 	
+	// Command GIVE messages
+	Command_Give_Error_AlreadyHaveAHorseWithThatName("&c%s already has a horse named &b%s"),
+	Command_Give_Success_Completion("&b%1$s &ewas given a new horse named &3%2$s"),
+	Command_Give_Success_Completion_Player("&eType &b/%1$s summon &3%2$s &eto summon your new horse"),
+	Command_Give_Description("Gives a horse to the provided player (Must be online)"),
+	
 	// Command Delete messages
 	Command_Delete_Success_DeletedHorse("&eDeleted &b%1$s &efrom your stable"),
 	Command_Delete_Description("Deletes the given horse from your stable"),

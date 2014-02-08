@@ -14,6 +14,14 @@ permissions:
   horses.vip:
     description: Gives the player special bonuses
     default: false
+    
+  horses.set.admin:
+    default: op
+    description: Give access to admin commands
+    children:
+      horses.set.user: true
+      horses.command.give: true
+      horses.command.reload: true
 
   horses.set.user:
     default: true
@@ -71,8 +79,8 @@ permissions:
   
       horses.type.donkey: true
       horses.type.mule: true
-      horses.type.undead: true
-      horses.type.skeleton: true
+      horses.type.undead: false
+      horses.type.skeleton: false
 
   horses.command.list:
     description: Gives access to the /horses list command
@@ -90,7 +98,9 @@ permissions:
     description: Gives access to the /horses buy command
   horses.command.delete:
     description: Gives access to the /horses delete command
-  
+
+  horses.command.give:
+    description: Gives access to the /horses give command
   horses.command.reload:
     description: Gives access to the /horses reload command
 

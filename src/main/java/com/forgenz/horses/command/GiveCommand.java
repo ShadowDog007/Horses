@@ -32,10 +32,8 @@ import static com.forgenz.horses.Messages.*;
 
 import java.util.regex.Pattern;
 
-import net.milkbowl.vault.economy.EconomyResponse;
-
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -43,7 +41,6 @@ import com.forgenz.forgecore.v1_0.bukkit.ForgePlugin;
 import com.forgenz.forgecore.v1_0.command.ForgeArgs;
 import com.forgenz.forgecore.v1_0.command.ForgeCommand;
 import com.forgenz.forgecore.v1_0.command.ForgeCommandArgument;
-import com.forgenz.horses.HorseType;
 import com.forgenz.horses.Horses;
 import com.forgenz.horses.PlayerHorse;
 import com.forgenz.horses.Stable;
@@ -51,82 +48,60 @@ import com.forgenz.horses.config.HorseTypeConfig;
 import com.forgenz.horses.config.HorsesConfig;
 import com.forgenz.horses.config.HorsesPermissionConfig;
 
-public class BuyCommand extends ForgeCommand
+public class GiveCommand extends ForgeCommand
 {
-	private final Location cacheLoc = new Location(null, 0.0, 0.0, 0.0);
-	
-	public BuyCommand(ForgePlugin plugin)
+	public GiveCommand(ForgePlugin plugin)
 	{
 		super(plugin);
 		
-		registerAlias("buy", true);
-		registerAlias("b", false);
-		registerPermission("horses.command.buy");
+		registerAlias("give", true);
+		registerPermission("horses.command.give");
 		
+		registerArgument(new ForgeCommandArgument("^[a-z0-9_&]+$", Pattern.CASE_INSENSITIVE, false, Command_List_Error_InvalidCharactersPlayerName.toString()));
 		registerArgument(new ForgeCommandArgument(getPlugin().getHorsesConfig().forceEnglishCharacters ? "^[a-z0-9_&]+$" : "^[^ ]+$", Pattern.CASE_INSENSITIVE, false, Misc_Command_Error_NameValidCharacters.toString()));
 		registerArgument(new ForgeCommandArgument(getPlugin().getHorsesConfig().forceEnglishCharacters ? "^[a-z0-9_&]+$" : "^[^ ]+$", Pattern.CASE_INSENSITIVE, false, Command_Buy_Error_Type.toString()));
 		
 		setAllowOp(true);
-		setAllowConsole(false);
-		setArgumentString(String.format("<%1$s%2$s> <%1$s%3$s>", Misc_Words_Horse, Misc_Words_Name, Misc_Words_Type));
-		setDescription(Command_Buy_Description.toString());
+		setAllowConsole(true);
+		setArgumentString(String.format("<%1$s%3$s> <%2$s%3$s> <%2$s%4$s>", Misc_Words_Player, Misc_Words_Horse, Misc_Words_Name, Misc_Words_Type));
+		setDescription(Command_Give_Description.toString());
 	}
 
 	@Override
 	protected void onCommand(CommandSender sender, ForgeArgs args)
 	{
-		Player player = (Player) sender;
+		Player player = Bukkit.getPlayerExact(args.getArg(0));
+		
+		if (player == null || !player.isOnline())
+		{
+			Command_List_Error_InvalidCharactersPlayerName.sendMessage(sender);
+			return;
+		}
 		
 		HorsesConfig cfg = getPlugin().getHorsesConfig();
 		HorsesPermissionConfig pcfg = cfg.getPermConfig(player);
 		
-		if (!pcfg.allowBuyCommand)
-		{
-			Misc_Command_Error_ConfigDenyPerm.sendMessage(sender, getMainCommand());
-			return;
-		}
-		
-		String name = args.getArg(0);
-		
 		// Fetch the horse type
-		HorseTypeConfig typecfg = pcfg.getHorseTypeConfigLike(args.getArg(1));
+		HorseTypeConfig typecfg = pcfg.getHorseTypeConfigLike(args.getArg(2));
 		
 		// Check if it is a valid horse type
 		if (typecfg == null)
 		{
-			Command_Buy_Error_InvalidHorseType.sendMessage(player, args.getArg(1));
+			Command_Buy_Error_InvalidHorseType.sendMessage(sender, args.getArg(2));
 			return;
 		}
 		
-		HorseType type = typecfg.type;
-		
-		// Check if the player has permission to use this horse type
-		if (!player.hasPermission(type.getPermission()))
-		{
-			Command_Buy_Error_NoPermissionForThisType.sendMessage(player, typecfg.displayName);
-			return;
-		}
+		String name = args.getArg(1);
 		
 		if (name.length() > pcfg.maxHorseNameLength)
 		{
-			Misc_Command_Error_HorseNameTooLong.sendMessage(player, pcfg.maxHorseNameLength);
+			Misc_Command_Error_HorseNameTooLong.sendMessage(sender, pcfg.maxHorseNameLength);
 			return;
 		}
 		
 		// Check if the player is allowed to use coloured names
 		if (name.contains("&"))
 		{
-			if (!player.hasPermission("horses.colour"))
-			{
-				Misc_Command_Error_CantUseColor.sendMessage(player);
-				return;
-			}
-			else if (!player.hasPermission("horses.formattingcodes") && PlayerHorse.FORMATTING_CODES_PATTERN.matcher(args.getArg(1)).find())
-			{
-				Misc_Command_Error_CantUseFormattingCodes.sendMessage(player);
-				return;
-			}
-			
 			// Filter out colour for use elsewhere
 			name = ChatColor.translateAlternateColorCodes('&', name);
 			name = ChatColor.stripColor(name);
@@ -135,58 +110,31 @@ public class BuyCommand extends ForgeCommand
 		// Make sure the name is more than one character
 		if (name.length() == 0)
 		{
-			Misc_Command_Error_HorseNameEmpty.sendMessage(player);
-			return;
-		}
-		
-		// Check if the player is in the correct region to use this command
-		if (cfg.worldGuardCfg != null && !cfg.worldGuardCfg.allowCommand(cfg.worldGuardCfg.commandBuyAllowedRegions, player.getLocation(cacheLoc)))
-		{
-			Command_Buy_Error_WorldGuard_CantUseBuyHere.sendMessage(player);
+			Misc_Command_Error_HorseNameEmpty.sendMessage(sender);
 			return;
 		}
 		
 		Stable stable = getPlugin().getHorseDatabase().getPlayersStable(player);
 		
-		// Check if the player has too many horses
-		if (stable.getHorseCount() >= pcfg.maxHorses)
-		{
-			Command_Buy_Error_TooManyHorses.sendMessage(player, pcfg.maxHorses);
-			return;
-		}
-		
 		// Check if the player already has a horse with this name
 		if (stable.findHorse(name, true) != null)
 		{
-			Command_Buy_Error_AlreadyHaveAHorseWithThatName.sendMessage(player, args.getArg(0));
+			Command_Give_Error_AlreadyHaveAHorseWithThatName.sendMessage(sender, player.getName(), name);
 			return;
 		}
 		
 		// Check the horses name is valid
 		if (cfg.rejectedHorseNamePattern.matcher(name).find())
 		{
-			Misc_Command_Error_IllegalHorseNamePattern.sendMessage(player);
+			Misc_Command_Error_IllegalHorseNamePattern.sendMessage(sender);
 			return;
 		}
 		
-		// Check if the player can afford to buy the horse
-		if (getPlugin().getEconomy() != null && typecfg.buyCost > 0.0)
-		{
-			EconomyResponse responce = getPlugin().getEconomy().withdrawPlayer(player.getName(), typecfg.buyCost);
-			
-			if (!responce.transactionSuccess())
-			{
-				Command_Buy_Error_CantAffordHorse.sendMessage(player, typecfg.buyCost);
-				return;
-			}
-			
-			Command_Buy_Success_BoughtHorse.sendMessage(player, typecfg.buyCost);
-		}
-		
 		// Create the horse for the player
-		PlayerHorse horse = stable.createHorse(args.getArg(0), typecfg, pcfg.startWithSaddle);
+		PlayerHorse horse = stable.createHorse(name, typecfg, pcfg.startWithSaddle);
 		
-		Command_Buy_Success_Completion.sendMessage(player, args.getCommandUsed(), horse.getName());
+		Command_Give_Success_Completion.sendMessage(sender, player.getName(), horse.getName());
+		Command_Give_Success_Completion_Player.sendMessage(player, args.getCommandUsed(), horse.getName());
 	}
 	
 	@Override

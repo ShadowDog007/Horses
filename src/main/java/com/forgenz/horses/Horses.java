@@ -44,6 +44,7 @@ import com.forgenz.forgecore.v1_0.locale.ForgeLocale;
 import com.forgenz.horses.command.BuyCommand;
 import com.forgenz.horses.command.DeleteCommand;
 import com.forgenz.horses.command.DismissCommand;
+import com.forgenz.horses.command.GiveCommand;
 import com.forgenz.horses.command.HealCommand;
 import com.forgenz.horses.command.ListCommand;
 import com.forgenz.horses.command.ReloadCommand;
@@ -152,6 +153,7 @@ public class Horses extends ForgePlugin
 			}
 					
 			// Register each sub-command
+			commandHandler.registerCommand(new GiveCommand(this));
 			commandHandler.registerCommand(new BuyCommand(this));
 			commandHandler.registerCommand(new DeleteCommand(this));
 			commandHandler.registerCommand(new DismissCommand(this));
