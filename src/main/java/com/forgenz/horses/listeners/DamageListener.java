@@ -39,6 +39,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 import com.forgenz.forgecore.v1_0.bukkit.ForgeListener;
 import com.forgenz.horses.Horses;
@@ -211,7 +212,11 @@ public class DamageListener extends ForgeListener
 			return castPlayer(((TNTPrimed) entity).getSource());
 		
 		if (entity instanceof Projectile)
-			return castPlayer(((Projectile) entity).getShooter());
+		{
+			ProjectileSource source = ((Projectile) entity).getShooter();
+			if (source instanceof Player)
+				castPlayer((Entity) source);
+		}
 		
 		return null;
 	}
