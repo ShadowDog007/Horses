@@ -28,7 +28,7 @@
 
 # Gradle Stuff #
 /.gradle
-~/gradle/wrapper/*
+!/gradle/wrapper/*
 
 # Libraries #
 !/lib/integration/*.jar
