@@ -79,8 +79,6 @@ permissions:
   
       horses.type.donkey: true
       horses.type.mule: true
-      horses.type.undead: false
-      horses.type.skeleton: false
 
   horses.command.list:
     description: Gives access to the /horses list command
