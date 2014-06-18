@@ -33,3 +33,4 @@
 # Libraries #
 !/lib/integration/*.jar
 
+/target

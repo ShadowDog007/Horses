@@ -424,6 +424,7 @@ public class PlayerHorse implements ForgeCore
 			// Setup the horses type
 			getType().setHorseType(horse);
 			
+			horse.setAdult();
 			horse.setTamed(true);
 			horse.setOwner(getStable().getPlayerOwner());
 			
