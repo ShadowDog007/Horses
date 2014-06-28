@@ -1,6 +1,6 @@
 main: com.forgenz.horses.Horses
 name: Horses
-version: __PROJECT_VERSION__
+version: $(PROJECT_VERSION)
 author: ShadowDog007
 website: 'http://dev.bukkit.org/bukkit-plugins/horse-stables/'
 softdepend: [Vault, NoCheatPlus]

@@ -56,7 +56,7 @@ shadow {
     // Relocations
     relocation {
         pattern = 'lombok'
-        shadedPattern = 'net.michaelmcknight.mobmanger.dependencies.lombok'
+        shadedPattern = 'net.michaelmcknight.horses.dependencies.lombok'
     }
 }
 
