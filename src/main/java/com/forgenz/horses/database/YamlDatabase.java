@@ -35,10 +35,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -69,7 +72,28 @@ public class YamlDatabase extends HorseDatabase
 			return new File(getPlugin().getDataFolder(), String.format(GROUPED_PLAYER_DATA_LOCATION, stableGroup, player));
 	}
 	
-	private YamlConfiguration getPlayerConfig(String player, String stableGroup)
+	private File getPlayersConfigFile(OfflinePlayer player, String stableGroup) {
+		if (!Bukkit.getOnlineMode()) {
+			return this.getPlayersConfigFile(player.getName(), stableGroup);
+		}
+		
+		File uuidFile = this.getPlayersConfigFile(player.getUniqueId().toString(), stableGroup);
+		
+		if (uuidFile.exists()) {
+			return uuidFile;
+		}
+		
+		File nameFile = this.getPlayersConfigFile(player.getName(), stableGroup);
+		
+		if (nameFile.exists()) {
+			// Move file
+			return nameFile.renameTo(uuidFile) ? uuidFile : nameFile;
+		}
+		
+		return uuidFile;
+	}
+	
+	private YamlConfiguration getPlayerConfig(OfflinePlayer player, String stableGroup)
 	{
 		YamlConfiguration cfg = new YamlConfiguration();
 		
@@ -160,7 +184,7 @@ public class YamlDatabase extends HorseDatabase
 	@Override
 	protected void loadHorses(Stable stable, String stableGroup)
 	{
-		YamlConfiguration cfg = getPlayerConfig(stable.getOwner(), stableGroup);
+		YamlConfiguration cfg = getPlayerConfig(Bukkit.getOfflinePlayer(stable.getOwner()), stableGroup);
 		
 		ConfigurationSection sect = BukkitConfigUtil.getAndSetConfigurationSection(cfg, "Horses");
 		
@@ -243,7 +267,7 @@ public class YamlDatabase extends HorseDatabase
 	protected void saveStable(Stable stable)
 	{
 		// Fetch the file to save data to
-		File playerDataFile = getPlayersConfigFile(stable.getOwner(), stable.getGroup());
+		File playerDataFile = getPlayersConfigFile(Bukkit.getOfflinePlayer(stable.getOwner()), stable.getGroup());
 		
 		// Delete the players config file if the player has no horses
 		if (stable.getHorseCount() == 0)
@@ -325,5 +349,54 @@ public class YamlDatabase extends HorseDatabase
 	{
 		saveStable(horse.getStable());
 		return true;
+	}
+
+	public boolean migrateToUuidDb() {
+		File dataFolder = new File(super.getPlugin().getDataFolder(), PLAYER_DATA_FOLDER);
+		
+		return migrateFile(dataFolder, true);
+	}
+	
+	private boolean migrateFile(File file, boolean top) {
+		if (file.isDirectory()) {
+			if (!top) {
+				return true;
+			}
+			boolean success = true;
+			for (File data : file.listFiles()) {
+				success = success && this.migrateFile(data, false);
+			}
+			return success;
+		}
+		
+		if (!file.getName().endsWith(".yml")) {
+			return true;
+		}
+		
+		String fileName = file.getName().substring(0, file.getName().length() - ".yml".length());
+		
+		try {
+			UUID.fromString(fileName);
+			// Already migrated
+			return true;
+		} catch (IllegalArgumentException e) {
+		}
+		
+		OfflinePlayer player = Bukkit.getOfflinePlayer(fileName);
+		
+		UUID id = player.getUniqueId();
+		
+		if (id == null) {
+			return false;
+		}
+		
+		File migratedFile = new File(file.getParentFile(), id.toString() + ".yml");
+		
+		if (migratedFile.exists()) {
+			this.getPlugin().getLogger().info(String.format("Player has two datafiles '%s' and '%s'", migratedFile.getPath(), file.getPath()));
+			return false;
+		}
+		
+		return file.renameTo(migratedFile);
 	}
 }

@@ -47,6 +47,7 @@ import com.forgenz.horses.command.DismissCommand;
 import com.forgenz.horses.command.GiveCommand;
 import com.forgenz.horses.command.HealCommand;
 import com.forgenz.horses.command.ListCommand;
+import com.forgenz.horses.command.RebuildCommand;
 import com.forgenz.horses.command.ReloadCommand;
 import com.forgenz.horses.command.RenameCommand;
 import com.forgenz.horses.command.SummonCommand;
@@ -162,6 +163,7 @@ public class Horses extends ForgePlugin
 			commandHandler.registerCommand(new RenameCommand(this));
 			commandHandler.registerCommand(summonCmd = new SummonCommand(this));
 			commandHandler.registerCommand(new TypeCommand(this));
+			commandHandler.registerCommand(new RebuildCommand(this));
 			
 			// Admin commands
 			commandHandler.registerCommand(new ReloadCommand(this));
