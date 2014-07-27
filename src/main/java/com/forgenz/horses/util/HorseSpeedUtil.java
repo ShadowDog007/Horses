@@ -71,7 +71,7 @@ public class HorseSpeedUtil
 			Class<?> genAttributes = null;
 			try
 			{
-				genAttributes = Class.forName("net.minecraft.server.v1_7_R3.GenericAttributes");
+				genAttributes = Class.forName("net.minecraft.server.v1_7_R4.GenericAttributes");
 			}
 			catch (Throwable e)
 			{
@@ -87,7 +87,7 @@ public class HorseSpeedUtil
 			getHandle = ClassUtil.getMethod(horse.getClass(), "getHandle");
 			
 			Object mcHorse = getHandle.invoke(horse); 
-			Class<?> iattribute = Class.forName("net.minecraft.server.v1_7_R3.IAttribute");
+			Class<?> iattribute = Class.forName("net.minecraft.server.v1_7_R4.IAttribute");
 			getAttributeInstance = ClassUtil.getMethod(mcHorse.getClass(), "getAttributeInstance", iattribute);
 			
 			Object attributeRanged = getAttributeInstance.invoke(mcHorse, speedAttribute);
