@@ -64,7 +64,7 @@ public class HorseDismissTask extends BukkitRunnable implements ForgeCore
 	{
 		if (players == null)
 		{
-			players = Bukkit.getOnlinePlayers();
+			players = (Player[]) Bukkit.getOnlinePlayers().toArray();
 			index = 0;
 		}
 		
