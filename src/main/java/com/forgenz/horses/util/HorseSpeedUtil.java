@@ -1,6 +1,7 @@
 package com.forgenz.horses.util;
 
 import java.lang.reflect.Method;
+import java.util.regex.Pattern;
 
 import org.bukkit.entity.Horse;
 
@@ -68,10 +69,14 @@ public class HorseSpeedUtil
 		
 		try
 		{
+			String horseClassName = horse.getClass().getName();
+			String mcVersion = Pattern.compile("\\.(v.+)\\.").matcher(horseClassName).group(1);
+			String mcPackage = "net.minecraft.server." + mcVersion;
+
 			Class<?> genAttributes = null;
 			try
 			{
-				genAttributes = Class.forName("net.minecraft.server.v1_8_R1.GenericAttributes");
+				genAttributes = Class.forName(mcPackage+".GenericAttributes");
 			}
 			catch (Throwable e)
 			{
@@ -87,7 +92,7 @@ public class HorseSpeedUtil
 			getHandle = ClassUtil.getMethod(horse.getClass(), "getHandle");
 			
 			Object mcHorse = getHandle.invoke(horse); 
-			Class<?> iattribute = Class.forName("net.minecraft.server.v1_8_R1.IAttribute");
+			Class<?> iattribute = Class.forName(mcPackage+".IAttribute");
 			getAttributeInstance = ClassUtil.getMethod(mcHorse.getClass(), "getAttributeInstance", iattribute);
 			
 			Object attributeRanged = getAttributeInstance.invoke(mcHorse, speedAttribute);
