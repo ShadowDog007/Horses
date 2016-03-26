@@ -10,8 +10,9 @@ import com.forgenz.horses.Horses;
 public class HorseSpeedUtil
 {
 	private static int version = 1;
-	
-	private static int spam = 0;
+
+	private static boolean init = false;
+	private static boolean spam = true;
 	private static Object speedAttribute;
 	private static Method getHandle;
 	private static Method getAttributeInstance;
@@ -28,8 +29,9 @@ public class HorseSpeedUtil
 		}
 		catch (Exception e)
 		{
-			if (spam++ < 10)
-				Horses.getInstance().severe("Error getting horse speed. This version of minecraft may not be fully supported", e);
+			if (spam)
+				Horses.getInstance().severe("Error getting horse speed. This version of minecraft may not be fully supported: {init="+init+"}", e);
+			spam = false;
 			return 0.225;
 		}
 	}
@@ -43,8 +45,9 @@ public class HorseSpeedUtil
 		}
 		catch (Exception e)
 		{
-			if (spam++ < 10)
-				Horses.getInstance().severe("Error setting horse speed. This version of minecraft may not be fully supported", e);
+			if (spam)
+				Horses.getInstance().severe("Error setting horse speed. This version of minecraft may not be fully supported: {init="+init+"}", e);
+			spam = false;
 		}
 	}
 	
@@ -56,15 +59,16 @@ public class HorseSpeedUtil
 		}
 		catch (Throwable e)
 		{
-			if (spam++ < 10)
-				Horses.getInstance().severe("Error getting/setting horse speed. This version of minecraft may not be fully supported", e);
+			if (spam)
+				Horses.getInstance().severe("Error getting/setting horse speed. This version of minecraft may not be fully supported: {init="+init+"}", e);
+			spam = false;
 			return null;
 		}
 	}
 	
 	private static void setup(Horse horse)
 	{
-		if (speedAttribute != null)
+		if (init)
 			return;
 		
 		try
@@ -87,7 +91,7 @@ public class HorseSpeedUtil
 				return;
 			}
 			
-			speedAttribute = genAttributes.getField("d").get(null);
+			speedAttribute = genAttributes.getField("MOVEMENT_SPEED").get(null);
 			
 			getHandle = ClassUtil.getMethod(horse.getClass(), "getHandle");
 			
@@ -99,10 +103,12 @@ public class HorseSpeedUtil
 			
 			setValue = ClassUtil.getMethod(attributeRanged.getClass(), "setValue", double.class);
 			getValue = ClassUtil.getMethod(attributeRanged.getClass(), "getValue");
+
+			init = true;
 		}
 		catch (Throwable e)
 		{
-			Horses.getInstance().severe("Error when setting up HorseSpeedUtil. This version of minecraft may not be fully supported.", e);
+			Horses.getInstance().severe("Error when setting up HorseSpeedUtil. This version of minecraft may not be fully supported: {init="+init+"}", e);
 		}
 	}
 	

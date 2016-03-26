@@ -3,6 +3,10 @@
 /.project
 /.settings
 
+# IDEA
+.idea
+*.iml
+
 # NetBeans
 /nbproject
 /build.xml
