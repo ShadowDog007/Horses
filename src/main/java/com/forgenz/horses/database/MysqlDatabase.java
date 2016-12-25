@@ -393,7 +393,7 @@ public class MysqlDatabase  extends HorseDatabase
 					
 					// Create the horse
 					PlayerHorse horseData = new PlayerHorse(getPlugin(), stable, name, type, maxHealth, health, speed, jumpStrength, null, horseId);
-					// Set aditional data
+					// Set additional data
 					horseData.setLastDeath(lastDeath);
 					
 					if (items != null)

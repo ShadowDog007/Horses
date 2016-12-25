@@ -38,8 +38,7 @@ import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -67,13 +66,13 @@ public class InteractListener extends ForgeListener
 	public void onPlayerInteract(PlayerInteractEntityEvent event)
 	{
 		// We are only interested in interactions with horses
-		if (event.getRightClicked().getType() != EntityType.HORSE)
+		if (!(event.getRightClicked() instanceof AbstractHorse))
 		{
 			return;
 		}
 		
 		// Fetch our lovely horse :)
-		Horse horse = (Horse) event.getRightClicked();
+		AbstractHorse horse = (AbstractHorse) event.getRightClicked();
 		
 		// Check if the Horse is owned
 		PlayerHorse horseData = PlayerHorse.getFromEntity(horse); 
@@ -140,11 +139,11 @@ public class InteractListener extends ForgeListener
 		}
 	}
 	
-	private void handleUnownedHorse(PlayerInteractEntityEvent event, Horse horse, Player player)
+	private void handleUnownedHorse(PlayerInteractEntityEvent event, AbstractHorse horse, Player player)
 	{
 		HorsesPermissionConfig cfg = getPlugin().getHorsesConfig().getPermConfig(event.getPlayer());
 		
-		if (event.getPlayer().getItemInHand().getType() == Material.NAME_TAG)
+		if (event.getPlayer().getInventory().getItemInMainHand().getType() == Material.NAME_TAG)
 		{
 			if (cfg.allowClaimingWithNameTag)
 			{

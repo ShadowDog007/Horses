@@ -28,10 +28,12 @@
 
 package com.forgenz.horses;
 
+import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Color;
 import org.bukkit.entity.Horse.Style;
-import org.bukkit.entity.Horse.Variant;
+import org.bukkit.entity.Llama;
 
 
 public enum HorseType
@@ -82,44 +84,51 @@ public enum HorseType
 	SootyDarkBrown(Color.DARK_BROWN, Style.BLACK_DOTS),
 	
 	// Special
-	Donkey(Variant.DONKEY),
-	Mule(Variant.MULE),
-	Undead(Variant.UNDEAD_HORSE),
-	Skeleton(Variant.SKELETON_HORSE);
-	
+	Donkey(EntityType.DONKEY),
+	Mule(EntityType.MULE),
+	Undead(EntityType.ZOMBIE_HORSE),
+	Skeleton(EntityType.SKELETON_HORSE),
+
+	LlamaBrown(Llama.Color.BROWN),
+	LlamaCreamy(Llama.Color.CREAMY),
+	LlamaGray(Llama.Color.GRAY),
+	LlamaWhite(Llama.Color.WHITE);
+
 	private final String permission;
-	private final Variant variant;
+	private final EntityType variantType;
 	private final Color colour;
+	private final Llama.Color llamaColour;
 	private final Style style;
-	
-	private HorseType(Variant variant)
+
+	private HorseType(Llama.Color llamaColour)  {
+		this(EntityType.LLAMA, null, null, llamaColour);
+	}
+	private HorseType(EntityType variantType)
 	{
-		this(variant, null, null);
+		this(variantType, null, null, null);
 	}
 	
 	private HorseType(Color colour)
 	{
-		this(Variant.HORSE, colour, Style.NONE);
+		this(EntityType.HORSE, colour, Style.NONE, null);
 	}
 	
 	private HorseType(Color colour, Style style)
 	{
-		this(Variant.HORSE, colour, style);
+		this(EntityType.HORSE, colour, style, null);
 	}
 	
-	private HorseType(Variant variant, Color colour, Style style)
+	private HorseType(EntityType variantType, Color colour, Style style, Llama.Color llamaColour)
 	{
-		this.variant = variant;
+		this.variantType = variantType;
 		this.colour = colour;
 		this.style = style;
+		this.llamaColour = llamaColour;
 		
 		this.permission = "horses.type." + toString().toLowerCase();
 	}
-	
-	public Variant getVariant()
-	{
-		return variant;
-	}
+
+	public EntityType getVariantType() { return variantType; }
 	
 	public Color getColour()
 	{
@@ -130,21 +139,23 @@ public enum HorseType
 	{
 		return style;
 	}
+
+	public Llama.Color getLlamaColour() { return llamaColour; }
 	
 	public String getPermission()
 	{
 		return permission;
 	}
-	
+
 	public void setHorseType(Horse horse)
 	{
-		horse.setVariant(getVariant());
-		
-		if (getVariant() == Variant.HORSE)
-		{
-			horse.setColor(getColour());
-			horse.setStyle(getStyle());
-		}
+		horse.setColor(getColour());
+		horse.setStyle(getStyle());
+	}
+
+	public void setHorseType(Llama horse)
+	{
+		horse.setColor(getLlamaColour());
 	}
 	
 	public static HorseType closeValueOf(String like)
@@ -173,25 +184,34 @@ public enum HorseType
 		return null;
 	}
 	
-	public static HorseType valueOf(Horse horse)
-	{		
-		switch (horse.getVariant())
+	public static HorseType valueOf(AbstractHorse horse)
+	{
+		switch (horse.getType())
 		{
 			case HORSE:
+				Horse h = (Horse) horse;
 				HorseType[] a = values();
-				org.bukkit.entity.Horse.Color colour = horse.getColor();
-				for (int i = horse.getStyle().ordinal() * Color.values().length; i < a.length; ++i)
+				org.bukkit.entity.Horse.Color colour = h.getColor();
+				for (int i = h.getStyle().ordinal() * Color.values().length; i < a.length; ++i)
 					if (a[i].getColour() == colour)
 						return a[i];
+				return Brown;
 			case DONKEY:
 				return Donkey;
 			case MULE:
 				return Mule;
-			case UNDEAD_HORSE:
+			case ZOMBIE_HORSE:
 				return Undead;
 			case SKELETON_HORSE:
 				return Skeleton;
-			default:	
+			case LLAMA:
+				Llama llama = (Llama) horse;
+				HorseType[] b = values();
+				for (int i = b.length; i >= 0; --i)
+					if (b[i].getLlamaColour() == llama.getColor())
+						return b[i];
+				return LlamaGray;
+			default:
 				return null;
 		}
 	}

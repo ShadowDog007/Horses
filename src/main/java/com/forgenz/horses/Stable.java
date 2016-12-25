@@ -35,7 +35,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Horse;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
 import com.forgenz.forgecore.v1_0.ForgeCore;
@@ -187,12 +187,12 @@ public class Stable implements ForgeCore, Iterable<PlayerHorse>
 		return createHorse(name, typecfg, null, saddle);
 	}
 	
-	public PlayerHorse createHorse(String name, HorseTypeConfig typecfg, Horse horse)
+	public PlayerHorse createHorse(String name, HorseTypeConfig typecfg, AbstractHorse horse)
 	{		
 		return createHorse(name, typecfg, horse, false);
 	}
 	
-	private PlayerHorse createHorse(String name, HorseTypeConfig typecfg, Horse horse, boolean saddle)
+	private PlayerHorse createHorse(String name, HorseTypeConfig typecfg, AbstractHorse horse, boolean saddle)
 	{
 		PlayerHorse horseData = new PlayerHorse(plugin, this, name, typecfg.type, typecfg.horseHp, typecfg.horseMaxHp, typecfg.speed, typecfg.jumpStrength, horse);
 		

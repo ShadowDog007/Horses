@@ -79,6 +79,10 @@ permissions:
   
       horses.type.donkey: true
       horses.type.mule: true
+      horses.type.llamabrown: true
+      horses.type.llamacreamy: true
+      horses.type.llamagray: true
+      horses.type.llamawhite: true
 
   horses.command.list:
     description: Gives access to the /horses list command
@@ -149,3 +153,4 @@ permissions:
   horses.type.mule: {}
   horses.type.undead: {}
   horses.type.skeleton: {}
+  horses.type.llamma: {}

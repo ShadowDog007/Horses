@@ -29,8 +29,7 @@
 package com.forgenz.horses.listeners;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -58,13 +57,13 @@ public class HorseDeathListener extends ForgeListener
 	public void onHorseDie(EntityDeathEvent event)
 	{
 		// We are only interested in horses which die
-		if (event.getEntityType() != EntityType.HORSE)
+		if (event.getEntity() == null || !(event.getEntity() instanceof AbstractHorse))
 		{
 			return;
 		}
 		
 		// Fetch the horse involved
-		Horse horse = (Horse) event.getEntity();
+		AbstractHorse horse = (AbstractHorse) event.getEntity();
 		
 		// Fetch data for the horse
 		PlayerHorse horseData = PlayerHorse.getFromEntity(horse);

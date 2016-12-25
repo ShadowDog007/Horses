@@ -34,10 +34,11 @@ import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Player;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.HorseInventory;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -56,7 +57,7 @@ public class PlayerHorse implements ForgeCore
 	private final Stable stable;
 	private int id;
 	
-	private Horse horse;
+	private AbstractHorse horse;
 	
 	private long lastDeath = 0;
 	
@@ -74,12 +75,12 @@ public class PlayerHorse implements ForgeCore
 	
 	private final ArrayList<ItemStack> inventory = new ArrayList<ItemStack>();
 	
-	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, double speed, double jumpStrength, Horse horse)
+	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, double speed, double jumpStrength, AbstractHorse horse)
 	{
 		this(plugin, stable, name, type, maxHealth, health, speed, jumpStrength, horse, -1);
 	}
 	
-	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, double speed, double jumpStrength, Horse horse, int id)
+	public PlayerHorse(Horses plugin, Stable stable, String name, HorseType type, double maxHealth, double health, double speed, double jumpStrength, AbstractHorse horse, int id)
 	{
 		this.plugin = plugin;
 		this.stable = stable;
@@ -130,7 +131,7 @@ public class PlayerHorse implements ForgeCore
 		return plugin;
 	}
 	
-	public Horse getHorse()
+	public AbstractHorse getHorse()
 	{
 		return horse;
 	}
@@ -204,7 +205,9 @@ public class PlayerHorse implements ForgeCore
 		
 		if (horse != null)
 		{
-			horse.setMaxHealth(amount);
+			AttributeInstance maxHealth = horse.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+			if (maxHealth != null)
+				maxHealth.setBaseValue(amount);
 		}
 	}
 	
@@ -285,9 +288,9 @@ public class PlayerHorse implements ForgeCore
 		if (type != HorseType.Mule && type != HorseType.Donkey)
 			return false;
 		
-		if (horse != null)
+		if (horse != null && horse instanceof Donkey)
 		{
-			hasChest = horse.isCarryingChest();
+			hasChest = ((Donkey) horse).isCarryingChest();
 		}
 		
 		return hasChest;
@@ -372,7 +375,8 @@ public class PlayerHorse implements ForgeCore
 				if (getPlugin().getHorsesConfig().getPermConfig(getStable().getPlayerOwner()).keepEquipmentOnDeath)
 				{
 					horse.getInventory().clear();
-					horse.setCarryingChest(false);
+					if (horse instanceof Donkey)
+						((Donkey) horse).setCarryingChest(false);
 				}
 				else
 				{
@@ -416,47 +420,64 @@ public class PlayerHorse implements ForgeCore
 		// Prevent the horse from not being spawned
 		if (getPlugin().getHorsesConfig().getPermConfig(getStable().getPlayerOwner()).bypassSpawnProtection)
 			getPlugin().getHorseSpawnListener().setSpawning();
-		
-		Horse horse = (Horse) loc.getWorld().spawnEntity(loc, EntityType.HORSE);
+
+		EntityType entityType = getType().getVariantType();
+		AbstractHorse horse = (AbstractHorse) loc.getWorld().spawnEntity(loc, entityType);
 		
 		if (horse != null)
 		{
-			// Setup the horses type
-			getType().setHorseType(horse);
+			if (entityType == EntityType.HORSE)
+			{
+				// Setup the horses type
+				getType().setHorseType((Horse) horse);
+			}
+
+			if (entityType == EntityType.LLAMA) {
+				getType().setHorseType((Llama) horse);
+			}
 			
 			horse.setAdult();
 			horse.setTamed(true);
 			horse.setOwner(getStable().getPlayerOwner());
-			
-			// Check if it has a chest?
-			if (hasChest())
-				horse.setCarryingChest(true);
+
+			if (entityType == EntityType.DONKEY && hasChest())
+			{
+				Donkey donkey = (Donkey) horse;
+				// Check if it has a chest?
+				if (hasChest())
+					donkey.setCarryingChest(true);
+			}
 			
 			// Setup the horses inventory
-			HorseInventory inv = horse.getInventory();
+			Inventory inv = horse.getInventory();
 			
 			ItemStack[] items = inv.getContents();
-			for (int i = 2; i < items.length; ++i)
-			{
+			for (int i = 2; i < items.length; ++i) {
 				if (i >= inventory.size())
 					items[i] = null;
 				else
 					items[i] = inventory.get(i);
 			}
 			inv.setContents(items);
-			
-			// Temp fix for saddles/armour
-			if (inventory.size() > 0)
-				inv.setSaddle(inventory.get(0));
-			if (inventory.size() > 1)
-				inv.setArmor(inventory.get(1));
+
+			if (entityType == EntityType.HORSE) {
+				Horse normalHorse = (Horse) horse;
+				HorseInventory horseInv = normalHorse.getInventory();
+				// Temp fix for saddles/armour
+				if (inventory.size() > 0)
+					horseInv.setSaddle(inventory.get(0));
+				if (inventory.size() > 1)
+					horseInv.setArmor(inventory.get(1));
+			}
 			
 			// Set the horses name
 			horse.setCustomName(displayName);
 			horse.setCustomNameVisible(true);
 			
 			// Set the horses HP
-			horse.setMaxHealth(maxHealth);
+			AttributeInstance maxHealthAttr = horse.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+			if (maxHealthAttr != null)
+				maxHealthAttr.setBaseValue(maxHealth);
 			horse.setHealth(health);
 			
 			HorseSpeedUtil.setHorseSpeed(horse, getSpeed());
@@ -508,7 +529,7 @@ public class PlayerHorse implements ForgeCore
 		saveChanges();
 	}
 	
-	public static PlayerHorse getFromEntity(Horse horse)
+	public static PlayerHorse getFromEntity(AbstractHorse horse)
 	{
 		for (MetadataValue meta : horse.getMetadata(OWNERSHIP_METADATA_KEY))
 		{

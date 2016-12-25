@@ -29,12 +29,7 @@
 package com.forgenz.horses.listeners;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -68,13 +63,13 @@ public class DamageListener extends ForgeListener
 	public void onEntityDamage(EntityDamageEvent event)
 	{
 		// Ignore any entities which are not horses
-		if (event.getEntityType() != EntityType.HORSE)
+		if (event.getEntity() == null || !(event.getEntity() instanceof AbstractHorse))
 		{
 			return;
 		}
 
 		// Fetch our lovely horse :)
-		Horse horse = (Horse) event.getEntity();
+		AbstractHorse horse = (AbstractHorse) event.getEntity();
 
 		// Check if the Horse is owned
 		PlayerHorse horseData = PlayerHorse.getFromEntity(horse); 
@@ -170,7 +165,7 @@ public class DamageListener extends ForgeListener
 		}
 	}
 	
-	public void onEntityDamageByEntity(EntityDamageByEntityEvent event, Horse horse, PlayerHorse horseData, HorsesPermissionConfig cfg)
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event, AbstractHorse horse, PlayerHorse horseData, HorsesPermissionConfig cfg)
 	{
 		// Find a player which tried to hurt the horse
 		Player player = getPlayerDamager(event.getDamager());
